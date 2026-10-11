@@ -1,0 +1,5 @@
+node_modules/
+Sessions/
+*.log
+*.bak.*
+.DS_Store
