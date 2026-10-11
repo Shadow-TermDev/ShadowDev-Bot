@@ -1,5 +1,6 @@
-// Menú principal — banner local + link del grupo (sin URLs externas que se caigan).
-import fs from 'fs';
+// Menú principal — preview por URL (no llena la media del chat, estilo Hutao).
+// El banner vive en https://Shadow-TermDev.github.io/assets/shadowdev-banner.png
+import { prepareWAMessageMedia } from '@whiskeysockets/baileys';
 
 export default {
   command: ['menu', 'help', 'allmenu'],
@@ -49,17 +50,32 @@ export default {
       }
       menu += `\n> *${global.botname2} • ${global.dev}*`;
 
-      // Banner local: nunca falla por APIs caídas
+      // Preview con miniatura por URL: se ve el banner sin guardar imagen en la media
+      let linkPreview;
       try {
-        const banner = fs.readFileSync(global.banner);
-        await sock.sendMessage(
-          msg.chat,
-          { image: banner, caption: menu.trim() },
-          { quoted: msg.key ? { key: msg.key, message: {} } : undefined }
+        const { imageMessage } = await prepareWAMessageMedia(
+          { image: { url: global.banner } },
+          { upload: sock.waUploadToServer, mediaTypeOverride: 'thumbnail-link' }
         );
-      } catch {
-        await msg.reply(menu.trim());
+        linkPreview = {
+          'canonical-url': global.link,
+          'matched-text': global.link,
+          title: global.botname,
+          description: `${global.botname2} • ${global.dev}`,
+          jpegThumbnail: imageMessage?.jpegThumbnail
+            ? Buffer.from(imageMessage.jpegThumbnail)
+            : undefined
+        };
+      } catch (e) {
+        console.error('Fail menu preview:', e?.message || e);
+        linkPreview = undefined;
       }
+
+      await sock.sendMessage(
+        msg.chat,
+        { text: menu.trim(), linkPreview },
+        { quoted: { key: msg.key, message: {} } }
+      );
     } catch (e) {
       console.error('Fail: [menu.js]', e?.stack || e);
       await msg.reply(global.msgglobal);

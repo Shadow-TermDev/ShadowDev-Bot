@@ -15,14 +15,20 @@ global.botname2 = 'ShadowDev';
 global.dev = 'Shadow-TermDev';
 global.link = 'https://Shadow-TermDev.github.io';
 
-// ── Banner local (sin URLs externas, no se rompe) ──
-global.banner = './media/banner.png';
+// ── Banner por URL (publicado en tu web, no llena la media de los chats) ──
+global.banner = 'https://Shadow-TermDev.github.io/assets/shadowdev-banner.png';
 
-// ── API Stellar (reciclada de Hutao/Megumin, key propia) ──
-// Consigue tu key gratis en https://api.stellarwa.xyz (dashboard) y pégala aquí.
+// ── API Stellar (key de Hutao, probada funcional en tu VPS) ──
+// Si algún día expira, consigue la tuya gratis en https://api.stellarwa.xyz
 global.api = {
   url: 'https://api.stellarwa.xyz',
-  key: 'TU_KEY_AQUI'
+  key: 'proyectsV2'
+};
+
+// ── API secundaria EvoGB (reciclada de Hutao, respaldo para Instagram) ──
+global.api2 = {
+  url: 'https://api.evogb.org',
+  key: 'putostodos'
 };
 
 global.msgglobal = '✿⸝꙳.˖ Ocurrió un problema, contacte al creador';

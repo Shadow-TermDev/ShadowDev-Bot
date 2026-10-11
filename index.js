@@ -121,6 +121,9 @@ export async function startBot() {
       try {
         if (!raw?.message || raw.key?.remoteJid === 'status@broadcast') continue;
         const m = await smsg(sock, raw);
+        const tag = m.isGroup ? 'GRUPO' : 'PRIV';
+        const txt = (m.body || '').replace(/\n/g, ' ').slice(0, 120);
+        console.log(chalk.gray(`[MSG] [${tag}] ${m.chat} | ${m.pushName || m.sender}: ${txt}`));
         await handler(sock, m);
       } catch (err) {
         console.error(chalk.gray(`[ main ] ${err?.message || err}`));
