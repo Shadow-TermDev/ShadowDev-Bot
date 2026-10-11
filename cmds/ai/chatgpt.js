@@ -1,4 +1,4 @@
-// .ia — vía Pollinations (gratis, sin key, reemplaza Stellar muerto).
+// .ia — vía Pollinations (gratis, sin key). Edita el mensaje (no duplica).
 import fetch from 'node-fetch';
 
 export default {
@@ -10,14 +10,29 @@ export default {
     try {
       const text = args.join(' ');
       if (!text) return msg.reply('✎ Escribe una petición. Ej: *.ia* ¿quién eres?');
-      await msg.reply('✎ *IA* procesando tu respuesta...');
+      const { key } = await sock.sendMessage(
+        msg.chat,
+        { text: '✎ *IA* procesando tu respuesta...' },
+        { quoted: { key: msg.key, message: {} } }
+      );
       const ctrl = new AbortController();
       const t = setTimeout(() => ctrl.abort(), 90000);
-      const res = await fetch(`https://text.pollinations.ai/${encodeURIComponent(text)}`, { signal: ctrl.signal });
-      clearTimeout(t);
-      const out = (await res.text()).trim();
-      if (!out) return msg.reply('✎ La IA no respondió, intenta de nuevo.');
-      await sock.sendMessage(msg.chat, { text: out }, { quoted: { key: msg.key, message: {} } });
+      let out = '';
+      try {
+        const res = await fetch(`https://text.pollinations.ai/${encodeURIComponent(text)}`, { signal: ctrl.signal });
+        out = (await res.text()).trim();
+      } finally {
+        clearTimeout(t);
+      }
+      if (!out) {
+        await sock.sendMessage(msg.chat, { text: '✎ La IA no respondió, intenta de nuevo.', edit: key });
+        return;
+      }
+      try {
+        await sock.sendMessage(msg.chat, { text: out, edit: key });
+      } catch {
+        await sock.sendMessage(msg.chat, { text: out }, { quoted: { key: msg.key, message: {} } });
+      }
     } catch (e) {
       console.error('[ia]', e?.message || e);
       await msg.reply(global.msgglobal);

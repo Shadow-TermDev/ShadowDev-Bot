@@ -1,5 +1,34 @@
 // Menú estilo Rem — cabecera con datos + secciones 『 』 + preview del banner por URL.
 import { prepareWAMessageMedia } from '@whiskeysockets/baileys';
+import fs from 'fs';
+
+const BANNER_URLS = [
+  'https://Shadow-TermDev.github.io/assets/shadowdev-banner-mini.jpg',
+  'https://Shadow-TermDev.github.io/assets/shadowdev-banner.png'
+];
+const BANNER_CACHE = './media/banner-cache.jpg';
+
+// Descarga el banner una vez y lo reutiliza (la red móvil tumba descargas de 2MB)
+async function bannerBuffer() {
+  try {
+    const b = fs.readFileSync(BANNER_CACHE);
+    if (b.length > 5000) return b;
+  } catch {}
+  for (const u of BANNER_URLS) {
+    try {
+      const r = await fetch(u, { signal: AbortSignal.timeout(25000) });
+      if (!r.ok) continue;
+      const b = Buffer.from(await r.arrayBuffer());
+      if (b.length < 5000) continue;
+      fs.mkdirSync('./media', { recursive: true });
+      fs.writeFileSync(BANNER_CACHE, b);
+      return b;
+    } catch (e) {
+      console.error('Fail banner dl:', u, e?.message || e);
+    }
+  }
+  return null;
+}
 
 function fmt(ms) {
   const s = Math.floor(ms / 1000);
@@ -54,11 +83,13 @@ export default {
       }
       menu += `\n> *${global.botname2} • ${global.dev}*\n> ${global.link}`;
 
-      // Preview con la miniatura (185KB): se ve el banner sin llenar la media
+      // Preview con miniatura en caché: se ve el banner sin llenar la media
       let linkPreview;
       try {
+        const buf = await bannerBuffer();
+        if (!buf) throw new Error('sin banner');
         const { imageMessage } = await prepareWAMessageMedia(
-          { image: { url: global.banner } },
+          { image: buf },
           { upload: sock.waUploadToServer }
         );
         linkPreview = {
