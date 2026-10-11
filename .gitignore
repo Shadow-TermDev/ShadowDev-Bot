@@ -1,6 +1,5 @@
 node_modules/
 Sessions/
-media/
 *.log
 *.bak.*
 .DS_Store

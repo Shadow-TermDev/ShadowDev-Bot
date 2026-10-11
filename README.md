@@ -17,7 +17,7 @@ Construido reciclando lo mejor de dos proyectos:
 | `.translate` | Google Translate + MyMemory |
 | `.tourl` | `catbox.moe` |
 | `.wiki` | Wikipedia ES |
-| `.menu` | Banner por URL (preview, no llena la media) |
+| `.menu` | Solo texto + link (la vista previa con el banner la pone WhatsApp desde el `og:image` del sitio) |
 
 ## Instalación
 
@@ -31,8 +31,7 @@ npm install
 ## Configuración (`settings.js`)
 
 1. `global.owner` → tus números con código país, sin `+`.
-2. `global.api.key` → tu key de https://api.stellarwa.xyz (gratis, dashboard).
-3. `global.banner` → por defecto `./media/banner.png` (ya incluida).
+2. El banner del menú sale del `og:image` de tu web (ver `index.html` del sitio).
 
 ## Uso
 
@@ -53,6 +52,5 @@ La sesión se guarda en `Sessions/ShadowDev/` (no se sube a GitHub).
 - `.twitter <url>` — video/foto de X
 - `.translate <idioma> <texto>` — traductor
 - `.tourl` — (con imagen/video adjunto) devuelve URL
-- `.setbanner` — (owner) cambia el banner
 
 Prefijos: `.` `/` `!` `#`

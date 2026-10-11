@@ -1,36 +1,5 @@
-// Menú estilo Rem — cabecera con datos + secciones 『 』 + preview del banner por URL.
-import { prepareWAMessageMedia } from '@whiskeysockets/baileys';
-import fs from 'fs';
-
-const BANNER_URLS = [1, 2, 3, 4, 5, 6].map(
-  (n) => `https://Shadow-TermDev.github.io/assets/images/bot/menu${n}.jpg`
-);
-
-// Banner aleatorio por menú, con caché local (la red móvil tumba descargas)
-async function bannerBuffer() {
-  const n = 1 + Math.floor(Math.random() * BANNER_URLS.length);
-  const cache = `./media/banner-cache-${n}.jpg`;
-  try {
-    const b = fs.readFileSync(cache);
-    if (b.length > 5000) return b;
-  } catch {}
-  const order = [BANNER_URLS[n - 1], ...BANNER_URLS.filter((_, i) => i !== n - 1)];
-  for (const u of order) {
-    try {
-      const r = await fetch(u, { signal: AbortSignal.timeout(25000) });
-      if (!r.ok) continue;
-      const b = Buffer.from(await r.arrayBuffer());
-      if (b.length < 5000) continue;
-      fs.mkdirSync('./media', { recursive: true });
-      fs.writeFileSync(cache, b);
-      return b;
-    } catch (e) {
-      console.error('Fail banner dl:', u, e?.message || e);
-    }
-  }
-  return null;
-}
-
+// Menú estilo Rem — solo texto + link. La vista previa (banner) la genera
+// WhatsApp desde el og:image del sitio, sin descargar nada en el bot.
 function fmt(ms) {
   const s = Math.floor(ms / 1000);
   const m = Math.floor(s / 60);
@@ -84,34 +53,10 @@ export default {
       }
       menu += `\n> *${global.botname2} • ${global.dev}*\n> ${global.link}`;
 
-      // Preview con miniatura en caché: se ve el banner sin llenar la media
-      let linkPreview;
-      try {
-        const buf = await bannerBuffer();
-        if (!buf) throw new Error('sin banner');
-        const { imageMessage } = await prepareWAMessageMedia(
-          { image: buf },
-          { upload: sock.waUploadToServer, mediaTypeOverride: 'thumbnail-link' }
-        );
-        linkPreview = {
-          'canonical-url': global.link,
-          'matched-text': global.link,
-          title: global.botname,
-          description: `${global.botname2} • ${global.dev}`,
-          jpegThumbnail: imageMessage?.jpegThumbnail
-            ? Buffer.from(imageMessage.jpegThumbnail)
-            : undefined
-        };
-      } catch (e) {
-        console.error('Fail menu preview:', e?.message || e);
-        linkPreview = undefined;
-      }
-
       await sock.sendMessage(
         msg.chat,
         {
           text: menu.trim(),
-          linkPreview,
           contextInfo: { mentionedJid: [msg.sender] }
         },
         { quoted: { key: msg.key, message: {} } }

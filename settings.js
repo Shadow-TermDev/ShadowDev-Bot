@@ -15,8 +15,8 @@ global.botname2 = 'ShadowDev';
 global.dev = 'Shadow-TermDev';
 global.link = 'https://Shadow-TermDev.github.io';
 
-// ── Banners del menú (rotan aleatorio menu1-6, viven en tu web) ──
-global.banner = 'https://Shadow-TermDev.github.io/assets/images/bot/menu1.jpg';
+// ── Vista previa del menú: sale del og:image del sitio (sin descargar nada) ──
+// Ver <meta property="og:image"> en Shadow-TermDev.github.io/index.html
 
 // ── Stack de descargas (todo verificado funcionando, SIN keys) ──
 // YouTube audio/video: SaveTube (savetube.me API)
