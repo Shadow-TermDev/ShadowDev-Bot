@@ -9,10 +9,10 @@ export default {
       const mm = msg.message || {};
       const mediaMsg = mm.imageMessage || mm.videoMessage;
       if (!mediaMsg) {
-        return msg.reply('✿ Envía una imagen o video con *.tourl* en el pie de foto.');
+        return msg.reply('❍ Envía una imagen o video con *.tourl* en el pie de foto.');
       }
       const buffer = await msg.download();
-      if (!buffer) return msg.reply('ꕥ No se pudo descargar el archivo.');
+      if (!buffer) return msg.reply('❍ No se pudo descargar el archivo.');
 
       const mime = mediaMsg.mimetype || 'image/jpeg';
       const ext = (mime.split('/')[1] || 'bin').split(';')[0];
@@ -26,7 +26,11 @@ export default {
 
       const kb = (buffer.length / 1024).toFixed(1);
       await msg.reply(
-        `乂 *LINK — ENLACE* 乂\n\n*» Enlace:* ${url}\n*» Tamaño:* ${kb} KB\n*» Tipo:* ${mime}\n\n> *${global.dev}*`
+        `• :･ﾟ⊹˚• \`『 Link-Enlace 』\` •˚⊹:･ﾟ•\n\n` +
+        `ᰔᩚ *Enlace »* ${url}\n` +
+        `ᰔᩚ *Tamaño »* ${kb} KB\n` +
+        `ᰔᩚ *Tipo »* ${mime}\n\n` +
+        `> ✦ *${global.dev}*`
       );
     } catch (e) {
       console.error('[tourl]', e?.message || e);

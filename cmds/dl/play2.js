@@ -9,11 +9,11 @@ export default {
   uso: '<nombre o url>',
   run: async ({ msg, sock, args }) => {
     try {
-      if (!args[0]) return msg.reply('《✧》Escribe el nombre o URL del video');
+      if (!args[0]) return msg.reply('❍ Escribe el nombre o URL del video.');
       const search = await ytsearch(args.join(' '));
       const video = search.videos?.[0];
-      if (!video) return msg.reply('《✧》No se encontró el video.');
-      await msg.reply(`> _Enviando video *${video.title}*, espera..._`);
+      if (!video) return msg.reply('❍ No se encontró el video.');
+      await msg.reply(`> ✦ _Enviando video *${video.title}*, espera..._`);
       const { dl } = await downloadVideo(video.url);
       await sock.sendMessage(
         msg.chat,
@@ -22,7 +22,7 @@ export default {
       );
     } catch (e) {
       console.error('[play2]', e?.message || e);
-      await msg.reply('《✧》No se pudo descargar el video, intenta con otro tema.');
+      await msg.reply('❍ No se pudo descargar el video, intenta con otro tema.');
     }
   }
 };

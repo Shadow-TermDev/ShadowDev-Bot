@@ -11,12 +11,12 @@ export default {
   run: async ({ msg, sock, args }) => {
     try {
       const query = args.join(' ').replace(/https?:\/\/\S+/g, '').trim() || args.join(' ');
-      if (!query) return msg.reply('✎ Escribe el nombre de la canción. Ej: *.sp* get lucky');
+      if (!query) return msg.reply('❍ Escribe el nombre de la canción. Ej: *.sp* get lucky');
       const search = await ytsearch(query);
       const video = search.videos?.[0];
       if (!video) return msg.reply('❖ Sin resultados.');
       const canal = video.author?.name || 'Desconocido';
-      await msg.reply(`➪ Descargando › *${video.title}*\n> ✿ Artista: ${canal}\n> _Enviando audio, espera..._`);
+      await msg.reply(`• :･ﾟ⊹˚• \`『 Music 』\` •˚⊹:･ﾟ•\n\nᰔᩚ *Título »* ${video.title}\nᰔᩚ *Artista »* ${canal}\n\n> ✦ _Enviando audio, espera..._`);
       const { dl } = await downloadAudio(video.url);
       let audio = await getBuffer(dl);
       let thumb = null;

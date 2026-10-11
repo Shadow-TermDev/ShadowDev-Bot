@@ -15,8 +15,8 @@ global.botname2 = 'ShadowDev';
 global.dev = 'Shadow-TermDev';
 global.link = 'https://Shadow-TermDev.github.io';
 
-// ── Banner por URL (mini 185KB, carga rápido con datos malos) ──
-global.banner = 'https://Shadow-TermDev.github.io/assets/shadowdev-banner-mini.jpg';
+// ── Banners del menú (rotan aleatorio menu1-6, viven en tu web) ──
+global.banner = 'https://Shadow-TermDev.github.io/assets/images/bot/menu1.jpg';
 
 // ── Stack de descargas (todo verificado funcionando, SIN keys) ──
 // YouTube audio/video: SaveTube (savetube.me API)
@@ -24,7 +24,7 @@ global.banner = 'https://Shadow-TermDev.github.io/assets/shadowdev-banner-mini.j
 // IA: pollinations.ai — Traductor: Google + MyMemory — Subidas: catbox.moe
 // (Stellar/EvoGB/delirius murieron: 502 / DNS / DEPLOYMENT_NOT_FOUND)
 
-global.msgglobal = '✿⸝꙳.˖ Ocurrió un problema, contacte al creador';
+global.msgglobal = '❍ Ocurrió un problema, contacte al creador.';
 global.mess = {
   socket: '(∩´͈ ᴖ `͈∩ ྀི) Este comando solo puede ser ejecutado por un Socket.',
   admin: '٩ʕ◕౪◕ʔو Este comando solo puede ser ejecutado por los Administradores del Grupo.',

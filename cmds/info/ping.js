@@ -12,11 +12,17 @@ function fmt(ms) {
 export default {
   command: ['ping', 'speed', 'estado'],
   category: 'info',
-  desc: 'Muestra el estado y tiempo activo',
+  desc: 'Ver el estado y tiempo activo del bot',
   run: async ({ msg }) => {
     const t0 = Date.now();
-    const m = await msg.reply('🏓 Pong...');
+    await msg.reply('> ✦ _Midiendo velocidad..._');
     const lat = Date.now() - t0;
-    await msg.reply(`🏓 *Pong!*\n> ✿ Latencia: ${lat}ms\n> ✿ Activo: ${fmt(Date.now() - boot)}\n> ✿ Comandos: ${new Set([...global.cmds.values()].map((c) => c.run)).size}`);
+    const n = new Set([...global.cmds.values()].map((c) => c.run)).size;
+    await msg.reply(
+      `• :･ﾟ⊹˚• \`『 Estado 』\` •˚⊹:･ﾟ•\n\n` +
+      `ᰔᩚ *Latencia »* ${lat}ms\n` +
+      `ᰔᩚ *Activo »* ${fmt(Date.now() - boot)}\n` +
+      `ᰔᩚ *Comandos »* ${n}`
+    );
   }
 };

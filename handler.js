@@ -20,7 +20,7 @@ export default async function handler(sock, m) {
 
     const cmd = global.cmds?.get(command);
     if (!cmd) {
-      await m.reply(`✿ El comando *${prefix}${command}* no existe. Usa *${prefix}menu* para ver la lista.`);
+      await m.reply(`❍ El comando *${prefix}${command}* no existe.\n> ✦ Usa *${prefix}menu* para ver la lista.`);
       return;
     }
 

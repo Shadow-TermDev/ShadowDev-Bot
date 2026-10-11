@@ -2,26 +2,27 @@
 import { prepareWAMessageMedia } from '@whiskeysockets/baileys';
 import fs from 'fs';
 
-const BANNER_URLS = [
-  'https://Shadow-TermDev.github.io/assets/shadowdev-banner-mini.jpg',
-  'https://Shadow-TermDev.github.io/assets/shadowdev-banner.png'
-];
-const BANNER_CACHE = './media/banner-cache.jpg';
+const BANNER_URLS = [1, 2, 3, 4, 5, 6].map(
+  (n) => `https://Shadow-TermDev.github.io/assets/images/bot/menu${n}.jpg`
+);
 
-// Descarga el banner una vez y lo reutiliza (la red móvil tumba descargas de 2MB)
+// Banner aleatorio por menú, con caché local (la red móvil tumba descargas)
 async function bannerBuffer() {
+  const n = 1 + Math.floor(Math.random() * BANNER_URLS.length);
+  const cache = `./media/banner-cache-${n}.jpg`;
   try {
-    const b = fs.readFileSync(BANNER_CACHE);
+    const b = fs.readFileSync(cache);
     if (b.length > 5000) return b;
   } catch {}
-  for (const u of BANNER_URLS) {
+  const order = [BANNER_URLS[n - 1], ...BANNER_URLS.filter((_, i) => i !== n - 1)];
+  for (const u of order) {
     try {
       const r = await fetch(u, { signal: AbortSignal.timeout(25000) });
       if (!r.ok) continue;
       const b = Buffer.from(await r.arrayBuffer());
       if (b.length < 5000) continue;
       fs.mkdirSync('./media', { recursive: true });
-      fs.writeFileSync(BANNER_CACHE, b);
+      fs.writeFileSync(cache, b);
       return b;
     } catch (e) {
       console.error('Fail banner dl:', u, e?.message || e);

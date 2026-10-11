@@ -10,18 +10,19 @@ export default {
   uso: '<nombre o url>',
   run: async ({ msg, sock, args }) => {
     try {
-      if (!args[0]) return msg.reply('《✧》Escribe el nombre o URL del video');
+      if (!args[0]) return msg.reply('❍ Escribe el nombre o URL del video.');
       const search = await ytsearch(args.join(' '));
       const video = search.videos?.[0];
-      if (!video) return msg.reply('《✧》No se encontró el video.');
+      if (!video) return msg.reply('❍ No se encontró el video.');
       const canal = video.author?.name || 'Desconocido';
 
       const caption =
-        `【 ✿ 】 *${video.title}*\n\n` +
-        `> ✐ Canal: ${canal}\n` +
-        `> ⴵ Duración: ${video.timestamp || ''}\n` +
-        `> ✰ Vistas: ${(video.views || 0).toLocaleString()}\n\n` +
-        `> _Enviando audio, espera..._`;
+        `• :･ﾟ⊹˚• \`『 YouTube-Music 』\` •˚⊹:･ﾟ•\n\n` +
+        `ᰔᩚ *Título »* ${video.title}\n` +
+        `ᰔᩚ *Canal »* ${canal}\n` +
+        `ᰔᩚ *Duración »* ${video.timestamp || ''}\n` +
+        `ᰔᩚ *Vistas »* ${(video.views || 0).toLocaleString()}\n\n` +
+        `> ✦ _Enviando audio, espera..._`;
       let thumb = null;
       try {
         thumb = await getBuffer(video.image);
@@ -46,7 +47,7 @@ export default {
       );
     } catch (e) {
       console.error('[play]', e?.message || e);
-      await msg.reply('《✧》No se pudo descargar el audio, intenta con otro tema.');
+      await msg.reply('❍ No se pudo descargar el audio, intenta con otro tema.');
     }
   }
 };

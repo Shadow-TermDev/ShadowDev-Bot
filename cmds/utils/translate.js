@@ -10,7 +10,7 @@ export default {
     try {
       const language = args[0] || 'es';
       const text = args.slice(1).join(' ') || msg.quoted?.extendedTextMessage?.text || '';
-      if (!text) return msg.reply('✐ Ejemplo: *.translate en* hola mundo');
+      if (!text) return msg.reply('❍ Ejemplo: *.translate en* hola mundo');
       let out = '';
       try {
         const g = await fetch(
@@ -24,8 +24,12 @@ export default {
         ).then((r) => r.json());
         out = m?.responseData?.translatedText || '';
       }
-      if (!out) return msg.reply('✐ No se pudo traducir el texto.');
-      await sock.sendMessage(msg.chat, { text: out }, { quoted: { key: msg.key, message: {} } });
+      if (!out) return msg.reply('❍ No se pudo traducir el texto.');
+      await sock.sendMessage(
+        msg.chat,
+        { text: `• :･ﾟ⊹˚• \`『 Traductor 』\` •˚⊹:･ﾟ•\n\nᰔᩚ *${language}* » ${out}` },
+        { quoted: { key: msg.key, message: {} } }
+      );
     } catch {
       await msg.reply(global.msgglobal);
     }

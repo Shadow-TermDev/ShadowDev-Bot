@@ -9,10 +9,10 @@ export default {
   run: async ({ msg, sock, args }) => {
     try {
       const text = args.join(' ');
-      if (!text) return msg.reply('✎ Escribe una petición. Ej: *.ia* ¿quién eres?');
+      if (!text) return msg.reply('❍ Escribe una petición. Ej: *.ia* ¿quién eres?');
       const { key } = await sock.sendMessage(
         msg.chat,
-        { text: '✎ *IA* procesando tu respuesta...' },
+        { text: '> ✦ _La IA está procesando tu respuesta..._' },
         { quoted: { key: msg.key, message: {} } }
       );
       const ctrl = new AbortController();
@@ -25,7 +25,7 @@ export default {
         clearTimeout(t);
       }
       if (!out) {
-        await sock.sendMessage(msg.chat, { text: '✎ La IA no respondió, intenta de nuevo.', edit: key });
+        await sock.sendMessage(msg.chat, { text: '❍ La IA no respondió, intenta de nuevo.', edit: key });
         return;
       }
       try {
