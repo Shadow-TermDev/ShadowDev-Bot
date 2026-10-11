@@ -1,4 +1,4 @@
-// .tiktok — vía API Stellar (reciclada de Hutao).
+// .tiktok — vía tikwm (gratis, sin key).
 import fetch from 'node-fetch';
 
 export default {
@@ -10,16 +10,20 @@ export default {
     try {
       const url = args.find((a) => a.includes('tiktok.com'));
       if (!url) return msg.reply('✿ Envía un enlace válido de TikTok.');
-      const res = await fetch(
-        `${global.api.url}/dl/tiktok?url=${encodeURIComponent(url)}&key=${global.api.key}`
-      ).then((r) => r.json());
-      if (!res?.status || !res.data?.dl) {
-        return msg.reply('✿ No se pudo descargar (algunos videos están bloqueados por TikTok).');
+      const res = await fetch(`https://www.tikwm.com/api/?url=${encodeURIComponent(url)}`).then((r) => r.json());
+      const d = res?.data;
+      const dl = d?.play || d?.wmplay;
+      if (res?.code !== 0 || !dl) {
+        return msg.reply('✿ No se pudo descargar (verifica que el video sea público).');
       }
-      const d = res.data;
+      const caption =
+        `★ *TikTok Download*\n\n` +
+        `> ✿ Título: ${d.title || 'Sin título'}\n` +
+        `> ★ Autor: @${d.author?.unique_id || d.author?.nickname || '?'}\n` +
+        `> ♡ Likes: ${(d.digg_count || 0).toLocaleString()}`;
       await sock.sendMessage(
         msg.chat,
-        { video: { url: d.dl }, caption: `★ ${d.title || 'TikTok'} — @${d.author?.unique_id || ''}` },
+        { video: { url: dl }, caption },
         { quoted: { key: msg.key, message: {} } }
       );
     } catch (e) {

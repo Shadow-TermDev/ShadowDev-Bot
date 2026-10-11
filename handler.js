@@ -5,6 +5,8 @@ const PREFIXES = ['.', '/', '!', '#'];
 
 export default async function handler(sock, m) {
   try {
+    global.seenUsers ||= new Set();
+    if (m.sender) global.seenUsers.add(m.sender);
     const text = (m.body || '').trim();
     if (!text) return;
     const prefix = PREFIXES.find((p) => text.startsWith(p));

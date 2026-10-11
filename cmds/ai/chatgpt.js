@@ -1,4 +1,4 @@
-// .ia — ChatGPT vía API Stellar (reciclado de Hutao).
+// .ia — vía Pollinations (gratis, sin key, reemplaza Stellar muerto).
 import fetch from 'node-fetch';
 
 export default {
@@ -11,11 +11,13 @@ export default {
       const text = args.join(' ');
       if (!text) return msg.reply('✎ Escribe una petición. Ej: *.ia* ¿quién eres?');
       await msg.reply('✎ *IA* procesando tu respuesta...');
-      const res = await fetch(
-        `${global.api.url}/ai/chatgpt?text=${encodeURIComponent(text)}&key=${global.api.key}`
-      ).then((r) => r.json());
-      if (!res?.result) return msg.reply('✎ No se pudo obtener una respuesta válida.');
-      await sock.sendMessage(msg.chat, { text: String(res.result).trim() }, { quoted: { key: msg.key, message: {} } });
+      const ctrl = new AbortController();
+      const t = setTimeout(() => ctrl.abort(), 90000);
+      const res = await fetch(`https://text.pollinations.ai/${encodeURIComponent(text)}`, { signal: ctrl.signal });
+      clearTimeout(t);
+      const out = (await res.text()).trim();
+      if (!out) return msg.reply('✎ La IA no respondió, intenta de nuevo.');
+      await sock.sendMessage(msg.chat, { text: out }, { quoted: { key: msg.key, message: {} } });
     } catch (e) {
       console.error('[ia]', e?.message || e);
       await msg.reply(global.msgglobal);

@@ -1,7 +1,7 @@
-// .play — audio de YouTube vía API Stellar (reciclada de Hutao, funcional).
-import fetch from 'node-fetch';
+// .play — audio de YouTube vía SaveTube (sin Stellar caído).
 import ytsearch from 'yt-search';
 import { getBuffer } from '../../lib/serialize.js';
+import { downloadAudio } from '../../lib/ytdl.js';
 
 export default {
   command: ['play', 'mp3', 'ytmp3', 'playaudio'],
@@ -11,8 +11,7 @@ export default {
   run: async ({ msg, sock, args }) => {
     try {
       if (!args[0]) return msg.reply('《✧》Escribe el nombre o URL del video');
-      const text = args.join(' ');
-      const search = await ytsearch(text);
+      const search = await ytsearch(args.join(' '));
       const video = search.videos?.[0];
       if (!video) return msg.reply('《✧》No se encontró el video.');
 
@@ -29,19 +28,15 @@ export default {
         await msg.reply(caption);
       }
 
-      const dlUrl = `${global.api.url}/dl/ytmp3?url=${encodeURIComponent(video.url)}&key=${global.api.key}`;
-      const res = await fetch(dlUrl).then((r) => r.json());
-      if (!res?.status || !res.data?.dl) {
-        return msg.reply('《✧》No se pudo descargar el audio. Verifica tu API key en settings.js');
-      }
+      const { dl } = await downloadAudio(video.url);
       await sock.sendMessage(
         msg.chat,
-        { audio: { url: res.data.dl }, mimetype: 'audio/mpeg', fileName: `${video.title}.mp3` },
+        { audio: { url: dl }, mimetype: 'audio/mpeg', fileName: `${video.title}.mp3` },
         { quoted: { key: msg.key, message: {} } }
       );
     } catch (e) {
       console.error('[play]', e?.message || e);
-      await msg.reply(global.msgglobal);
+      await msg.reply('《✧》No se pudo descargar el audio, intenta con otro tema.');
     }
   }
 };

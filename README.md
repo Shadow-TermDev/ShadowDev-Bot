@@ -6,14 +6,18 @@ Construido reciclando lo mejor de dos proyectos:
 - **Hutao** → consola estilo (logs con colores, QR y código de 8 dígitos), estructura de comandos.
 - **Megumin-Bot-MD** → filosofía de APIs libres con respaldo (Catbox para subidas, Stellar como API principal).
 
-## APIs usadas (todas verificadas funcionales)
+## APIs usadas (todas verificadas funcionando, sin keys)
 
-| Comando | Servicio | Key |
-|---|---|---|
-| `.play` `.play2` `.tiktok` `.twitter` | `api.stellarwa.xyz` | Sí — pon la tuya en `settings.js` |
-| `.translate` | Google Translate + MyMemory | No |
-| `.tourl` | `catbox.moe` | No |
-| `.menu` | Banner **local** `media/banner.png` | No |
+| Comando | Servicio |
+|---|---|
+| `.play` `.play2` `.sp` | SaveTube (YouTube) |
+| `.tiktok` | tikwm |
+| `.twitter` | fxtwitter |
+| `.ia` | Pollinations |
+| `.translate` | Google Translate + MyMemory |
+| `.tourl` | `catbox.moe` |
+| `.wiki` | Wikipedia ES |
+| `.menu` | Banner por URL (preview, no llena la media) |
 
 ## Instalación
 

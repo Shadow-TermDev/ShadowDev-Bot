@@ -1,11 +1,17 @@
-// Menú principal — preview por URL (no llena la media del chat, estilo Hutao).
-// El banner vive en https://Shadow-TermDev.github.io/assets/shadowdev-banner.png
+// Menú estilo Rem — cabecera con datos + secciones 『 』 + preview del banner por URL.
 import { prepareWAMessageMedia } from '@whiskeysockets/baileys';
+
+function fmt(ms) {
+  const s = Math.floor(ms / 1000);
+  const m = Math.floor(s / 60);
+  const h = Math.floor(m / 60);
+  return `${h % 24}h ${m % 60}m ${s % 60}s`;
+}
 
 export default {
   command: ['menu', 'help', 'allmenu'],
   category: 'info',
-  desc: 'Muestra el menú de comandos',
+  desc: 'Ver la lista de comandos del bot',
   run: async ({ msg, sock, args, prefix }) => {
     try {
       const all = [...global.cmds.values()];
@@ -17,45 +23,43 @@ export default {
         const cat = c.category || 'otros';
         (cats[cat] ||= []).push(c);
       }
+      const totalCmds = Object.values(cats).reduce((n, l) => n + l.length, 0);
+      const users = global.seenUsers?.size || 0;
+      const uptime = fmt(Date.now() - (global.bootTime || Date.now()));
+      const numero = msg.sender.split('@')[0];
 
-      const fecha = new Date().toLocaleDateString('es-PE', {
-        timeZone: 'America/Lima',
-        day: '2-digit',
-        month: 'short',
-        year: 'numeric'
-      });
-      const hora = new Date().toLocaleTimeString('es-PE', {
-        timeZone: 'America/Lima',
-        hour: '2-digit',
-        minute: '2-digit'
-      });
-
-      let menu = `> *¡Hola!* ${msg.pushName || 'amig@'}, soy *${global.botname2}* ʚ♡⃛ɞ\n\n`;
-      menu += `✿ *Grupo:* ${global.dev}\n`;
-      menu += `✿ *Web:* ${global.link}\n`;
-      menu += `✿ *Fecha:* ${fecha} ${hora}\n\n`;
-      menu += `⋆｡ﾟ☁︎ ｡° *COMANDOS* ﾟ｡˚₊ 𓂃\n`;
+      let menu = `Hola! Soy  *${global.botname2}*  ٩(˘◡˘)۶\n`;
+      menu += `Aquí tienes la lista de comandos\n`;
+      menu += `╭┈ ↷\n`;
+      menu += `│ᰔᩚ Cliente » @${numero}\n`;
+      menu += `│❀ Modo » Publico\n`;
+      menu += `│✦ Bot » Principal 🅥\n`;
+      menu += `│ⴵ Activada » ${uptime}\n`;
+      menu += `│✰ Usuarios » ${users}\n`;
+      menu += `│✧ Comandos » ${totalCmds}\n`;
+      menu += `│🜸 Baileys » Multi Device\n`;
+      menu += `╰─────────────────\n`;
 
       const filtro = args[0]?.toLowerCase();
       for (const [cat, cmds] of Object.entries(cats)) {
         if (filtro && cat.toLowerCase() !== filtro) continue;
         const nombre = cat.charAt(0).toUpperCase() + cat.slice(1);
-        menu += `\n╭─ *${nombre}*\n`;
+        menu += `\n• :･ﾟ⊹˚• \`『 ${nombre} 』\` •˚⊹:･ﾟ•\n\n`;
+        menu += `❍ ${cmds[0]?.desc || 'Comandos disponibles.'}\n`;
         for (const c of cmds) {
-          const alias = c.alias.map((a) => `${prefix}${a}`).join(' › ');
-          menu += `│✿ ${alias}${c.uso ? ` + ${c.uso}` : ''}\n`;
-          if (c.desc) menu += `> ✺ ${c.desc}\n`;
+          const alias = c.alias.map((a) => `${prefix}${a}`).join(' • ');
+          menu += `ᰔᩚ *${alias}*\n`;
+          menu += `> ✦ ${c.desc || 'Sin descripción.'}${c.uso ? ` Uso: ${c.uso}` : ''}\n`;
         }
-        menu += `╰────────\n`;
       }
-      menu += `\n> *${global.botname2} • ${global.dev}*`;
+      menu += `\n> *${global.botname2} • ${global.dev}*\n> ${global.link}`;
 
-      // Preview con miniatura por URL: se ve el banner sin guardar imagen en la media
+      // Preview con la miniatura (185KB): se ve el banner sin llenar la media
       let linkPreview;
       try {
         const { imageMessage } = await prepareWAMessageMedia(
           { image: { url: global.banner } },
-          { upload: sock.waUploadToServer, mediaTypeOverride: 'thumbnail-link' }
+          { upload: sock.waUploadToServer }
         );
         linkPreview = {
           'canonical-url': global.link,
@@ -73,7 +77,11 @@ export default {
 
       await sock.sendMessage(
         msg.chat,
-        { text: menu.trim(), linkPreview },
+        {
+          text: menu.trim(),
+          linkPreview,
+          contextInfo: { mentionedJid: [msg.sender] }
+        },
         { quoted: { key: msg.key, message: {} } }
       );
     } catch (e) {

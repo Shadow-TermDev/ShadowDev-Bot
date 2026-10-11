@@ -1,4 +1,4 @@
-// .twitter — vía API Stellar (reemplaza tweeload caído, parche probado en Hutao).
+// .twitter — vía fxtwitter (gratis, sin key, reemplaza Stellar/tweeload muertos).
 import fetch from 'node-fetch';
 
 export default {
@@ -9,22 +9,23 @@ export default {
   run: async ({ msg, sock, args }) => {
     try {
       const url = args[0];
-      if (!url?.includes('x.com') && !url?.includes('twitter.com')) {
-        return msg.reply('✎ Ejemplo: *.twitter* https://x.com/.../status/...');
+      if (!url?.match(/(x\.com|twitter\.com)\/\w+\/status\/\d+/)) {
+        return msg.reply('✎ Ejemplo: *.twitter* https://x.com/usuario/status/123...');
       }
-      const res = await fetch(
-        `${global.api.url}/dl/twitter?url=${encodeURIComponent(url)}&key=${global.api.key}`
-      ).then((r) => r.json());
-      if (!res?.status || !res.data?.result?.length) {
-        return msg.reply('✿ No se encontró contenido descargable.');
+      const id = url.match(/status\/(\d+)/)[1];
+      const res = await fetch(`https://api.fxtwitter.com/i/status/${id}`).then((r) => r.json());
+      const tw = res?.tweet;
+      if (res?.code !== 200 || !tw) return msg.reply('✿ No se pudo obtener el tweet.');
+      const media = tw.media || {};
+      const videos = media.videos || [];
+      const photos = media.photos || [];
+      if (!videos.length && !photos.length) return msg.reply('✿ Ese tweet no tiene multimedia descargable.');
+      const caption = tw.text ? `> ${tw.text.slice(0, 200)}` : '*Aquí tiene su archivo*';
+      for (const v of videos) {
+        await sock.sendMessage(msg.chat, { video: { url: v.url }, caption }, { quoted: { key: msg.key, message: {} } });
       }
-      const d = res.data;
-      for (const item of d.result) {
-        if (item.url?.includes('.mp4')) {
-          await sock.sendMessage(msg.chat, { video: { url: item.url }, caption: d.title || '' }, { quoted: { key: msg.key, message: {} } });
-        } else {
-          await sock.sendMessage(msg.chat, { image: { url: item.url }, caption: d.title || '' }, { quoted: { key: msg.key, message: {} } });
-        }
+      for (const p of photos) {
+        await sock.sendMessage(msg.chat, { image: { url: p.url }, caption }, { quoted: { key: msg.key, message: {} } });
       }
     } catch (e) {
       console.error('[twitter]', e?.message || e);

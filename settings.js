@@ -15,21 +15,14 @@ global.botname2 = 'ShadowDev';
 global.dev = 'Shadow-TermDev';
 global.link = 'https://Shadow-TermDev.github.io';
 
-// ── Banner por URL (publicado en tu web, no llena la media de los chats) ──
-global.banner = 'https://Shadow-TermDev.github.io/assets/shadowdev-banner.png';
+// ── Banner por URL (mini 185KB, carga rápido con datos malos) ──
+global.banner = 'https://Shadow-TermDev.github.io/assets/shadowdev-banner-mini.jpg';
 
-// ── API Stellar (key de Hutao, probada funcional en tu VPS) ──
-// Si algún día expira, consigue la tuya gratis en https://api.stellarwa.xyz
-global.api = {
-  url: 'https://api.stellarwa.xyz',
-  key: 'proyectsV2'
-};
-
-// ── API secundaria EvoGB (reciclada de Hutao, respaldo para Instagram) ──
-global.api2 = {
-  url: 'https://api.evogb.org',
-  key: 'putostodos'
-};
+// ── Stack de descargas (todo verificado funcionando, SIN keys) ──
+// YouTube audio/video: SaveTube (savetube.me API)
+// TikTok: tikwm.com API — X/Twitter: fxtwitter API
+// IA: pollinations.ai — Traductor: Google + MyMemory — Subidas: catbox.moe
+// (Stellar/EvoGB/delirius murieron: 502 / DNS / DEPLOYMENT_NOT_FOUND)
 
 global.msgglobal = '✿⸝꙳.˖ Ocurrió un problema, contacte al creador';
 global.mess = {

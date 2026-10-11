@@ -91,10 +91,12 @@ export async function startBot() {
     },
     markOnlineOnConnect: false,
     syncFullHistory: false,
-    generateHighQualityLinkPreview: true
+    generateHighQualityLinkPreview: true,
+    keepAliveIntervalMs: 25_000
   });
 
   global.sock = sock;
+  global.bootTime = Date.now();
   sock.ev.on('creds.update', saveCreds);
 
   // Código de 8 dígitos (solo si la sesión aún no está registrada)
@@ -123,7 +125,7 @@ export async function startBot() {
         const m = await smsg(sock, raw);
         const tag = m.isGroup ? 'GRUPO' : 'PRIV';
         const txt = (m.body || '').replace(/\n/g, ' ').slice(0, 120);
-        console.log(chalk.gray(`[MSG] [${tag}] ${m.chat} | ${m.pushName || m.sender}: ${txt}`));
+        console.log(chalk.gray(`[ ✿ ] [${tag}] ${m.pushName || m.sender}: ${txt}`));
         await handler(sock, m);
       } catch (err) {
         console.error(chalk.gray(`[ main ] ${err?.message || err}`));
