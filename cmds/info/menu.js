@@ -90,7 +90,7 @@ export default {
         if (!buf) throw new Error('sin banner');
         const { imageMessage } = await prepareWAMessageMedia(
           { image: buf },
-          { upload: sock.waUploadToServer }
+          { upload: sock.waUploadToServer, mediaTypeOverride: 'thumbnail-link' }
         );
         linkPreview = {
           'canonical-url': global.link,

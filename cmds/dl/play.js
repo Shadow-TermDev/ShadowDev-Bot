@@ -1,7 +1,7 @@
-// .play — audio de YouTube vía SaveTube (sin Stellar caído).
+// .play — audio de YouTube con título y portada (estilo Megumin, vía SaveTube).
 import ytsearch from 'yt-search';
 import { getBuffer } from '../../lib/serialize.js';
-import { downloadAudio } from '../../lib/ytdl.js';
+import { downloadAudio, tagAudio } from '../../lib/ytdl.js';
 
 export default {
   command: ['play', 'mp3', 'ytmp3', 'playaudio'],
@@ -14,24 +14,34 @@ export default {
       const search = await ytsearch(args.join(' '));
       const video = search.videos?.[0];
       if (!video) return msg.reply('《✧》No se encontró el video.');
+      const canal = video.author?.name || 'Desconocido';
 
       const caption =
         `【 ✿ 】 *${video.title}*\n\n` +
-        `> ✐ Canal: ${video.author?.name || 'Desconocido'}\n` +
+        `> ✐ Canal: ${canal}\n` +
         `> ⴵ Duración: ${video.timestamp || ''}\n` +
         `> ✰ Vistas: ${(video.views || 0).toLocaleString()}\n\n` +
         `> _Enviando audio, espera..._`;
+      let thumb = null;
       try {
-        const thumb = await getBuffer(video.image);
+        thumb = await getBuffer(video.image);
         await sock.sendMessage(msg.chat, { image: thumb, caption }, { quoted: { key: msg.key, message: {} } });
       } catch {
         await msg.reply(caption);
       }
 
       const { dl } = await downloadAudio(video.url);
+      let audio = await getBuffer(dl);
+      audio = await tagAudio(audio, { title: video.title, artist: canal, cover: thumb });
+
       await sock.sendMessage(
         msg.chat,
-        { audio: { url: dl }, mimetype: 'audio/mpeg', fileName: `${video.title}.mp3` },
+        {
+          document: audio,
+          mimetype: 'audio/mpeg',
+          fileName: `${video.title}.mp3`,
+          jpegThumbnail: thumb ?? undefined
+        },
         { quoted: { key: msg.key, message: {} } }
       );
     } catch (e) {

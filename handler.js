@@ -19,7 +19,10 @@ export default async function handler(sock, m) {
     const cmdText = args.join(' ');
 
     const cmd = global.cmds?.get(command);
-    if (!cmd) return;
+    if (!cmd) {
+      await m.reply(`✿ El comando *${prefix}${command}* no existe. Usa *${prefix}menu* para ver la lista.`);
+      return;
+    }
 
     // Log estilo Hutao
     const d = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/Lima' }));
@@ -40,6 +43,7 @@ export default async function handler(sock, m) {
       .map((n) => n + '@s.whatsapp.net')
       .includes(m.sender);
 
+    const t0 = Date.now();
     await cmd.run({
       msg: m,
       m,
@@ -51,8 +55,9 @@ export default async function handler(sock, m) {
       usedPrefix: prefix,
       isOwner
     });
+    console.log(chalk.gray(`[ ✿ ] Respuesta enviada → ${prefix}${command} (${Date.now() - t0}ms)`));
   } catch (e) {
-    console.error(chalk.gray(`[ handler ] ${e?.message || e}`));
+    console.error(chalk.red(`[ ✿ ] Falló ${typeof command !== 'undefined' ? prefix + command : 'comando'}: ${e?.message || e}`));
     try {
       await m.reply(global.msgglobal);
     } catch {}

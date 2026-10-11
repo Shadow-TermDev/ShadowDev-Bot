@@ -1,7 +1,7 @@
-// .sp — música por nombre: busca en YouTube y envía el audio (vía SaveTube).
-// (La API de Spotify murió con Stellar; esto sí funciona.)
+// .sp — música por nombre con título y portada (vía YouTube + SaveTube).
 import ytsearch from 'yt-search';
-import { downloadAudio } from '../../lib/ytdl.js';
+import { getBuffer } from '../../lib/serialize.js';
+import { downloadAudio, tagAudio } from '../../lib/ytdl.js';
 
 export default {
   command: ['sp', 'spotify', 'musica'],
@@ -15,11 +15,23 @@ export default {
       const search = await ytsearch(query);
       const video = search.videos?.[0];
       if (!video) return msg.reply('❖ Sin resultados.');
-      await msg.reply(`➪ Descargando › *${video.title}*\n> _Enviando audio, espera..._`);
+      const canal = video.author?.name || 'Desconocido';
+      await msg.reply(`➪ Descargando › *${video.title}*\n> ✿ Artista: ${canal}\n> _Enviando audio, espera..._`);
       const { dl } = await downloadAudio(video.url);
+      let audio = await getBuffer(dl);
+      let thumb = null;
+      try {
+        thumb = await getBuffer(video.image);
+      } catch {}
+      audio = await tagAudio(audio, { title: video.title, artist: canal, cover: thumb });
       await sock.sendMessage(
         msg.chat,
-        { audio: { url: dl }, mimetype: 'audio/mpeg', fileName: `${video.title}.mp3` },
+        {
+          document: audio,
+          mimetype: 'audio/mpeg',
+          fileName: `${video.title}.mp3`,
+          jpegThumbnail: thumb ?? undefined
+        },
         { quoted: { key: msg.key, message: {} } }
       );
     } catch (e) {
