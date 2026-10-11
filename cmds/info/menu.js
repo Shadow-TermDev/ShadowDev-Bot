@@ -1,5 +1,8 @@
-// Menú estilo Rem — solo texto + link. La vista previa (banner) la genera
-// WhatsApp desde el og:image del sitio, sin descargar nada en el bot.
+// Menú estilo Rem — tarjeta grande vía externalAdReply (sin descargar nada).
+// IMPORTANTE: thumbnailUrl debe estar VIVA (200). La mini va tras tu push;
+// mientras tanto se usa el PNG (verificado 200).
+const BANNER_URL = 'https://Shadow-TermDev.github.io/assets/shadowdev-banner.png';
+
 function fmt(ms) {
   const s = Math.floor(ms / 1000);
   const m = Math.floor(s / 60);
@@ -53,14 +56,21 @@ export default {
       }
       menu += `\n> *${global.botname2} • ${global.dev}*\n> ${global.link}`;
 
-      // Envío plano: el externalAdReply con thumbnailUrl 404 hacía que
-      // WhatsApp descartara el mensaje (llegaba ACK pero no el mensaje).
-      // La vista previa del link la genera el cliente desde el og:image.
       await sock.sendMessage(
         msg.chat,
         {
           text: menu.trim(),
-          contextInfo: { mentionedJid: [msg.sender] }
+          contextInfo: {
+            mentionedJid: [msg.sender],
+            externalAdReply: {
+              title: global.botname,
+              body: `${global.botname2} • ${global.dev}`,
+              thumbnailUrl: BANNER_URL,
+              sourceUrl: global.link,
+              mediaType: 1,
+              renderLargerThumbnail: true
+            }
+          }
         },
         { quoted: { key: msg.key, message: {} } }
       );
