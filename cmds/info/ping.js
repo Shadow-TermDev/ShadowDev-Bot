@@ -1,4 +1,4 @@
-// .ping — estado del bot (sin APIs externas).
+// .ping — estado del bot (sin APIs externas). Edita el mensaje (no duplica).
 const boot = Date.now();
 
 function fmt(ms) {
@@ -13,16 +13,24 @@ export default {
   command: ['ping', 'speed', 'estado'],
   category: 'info',
   desc: 'Ver el estado y tiempo activo del bot',
-  run: async ({ msg }) => {
+  run: async ({ msg, sock }) => {
     const t0 = Date.now();
-    await msg.reply('> ✦ _Midiendo velocidad..._');
+    const { key } = await sock.sendMessage(
+      msg.chat,
+      { text: '> ✦ _Midiendo velocidad..._' },
+      { quoted: { key: msg.key, message: {} } }
+    );
     const lat = Date.now() - t0;
     const n = new Set([...global.cmds.values()].map((c) => c.run)).size;
-    await msg.reply(
+    const out =
       `• :･ﾟ⊹˚• \`『 Estado 』\` •˚⊹:･ﾟ•\n\n` +
       `ᰔᩚ *Latencia »* ${lat}ms\n` +
       `ᰔᩚ *Activo »* ${fmt(Date.now() - boot)}\n` +
-      `ᰔᩚ *Comandos »* ${n}`
-    );
+      `ᰔᩚ *Comandos »* ${n}`;
+    try {
+      await sock.sendMessage(msg.chat, { text: out, edit: key });
+    } catch {
+      await sock.sendMessage(msg.chat, { text: out }, { quoted: { key: msg.key, message: {} } });
+    }
   }
 };

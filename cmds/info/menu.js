@@ -1,8 +1,6 @@
-// Menú estilo Rem — tarjeta grande vía externalAdReply (sin descargar nada).
-// IMPORTANTE: thumbnailUrl debe estar VIVA (200). La mini va tras tu push;
-// mientras tanto se usa el PNG (verificado 200).
-const BANNER_URL = 'https://Shadow-TermDev.github.io/assets/shadowdev-banner.png';
-
+// Menú estilo Rem — solo texto + link. La vista previa sale del og:image
+// del sitio (verificado 200). Sin externalAdReply: con URLs muertas o
+// pesadas WhatsApp descarta el mensaje en silencio.
 function fmt(ms) {
   const s = Math.floor(ms / 1000);
   const m = Math.floor(s / 60);
@@ -60,17 +58,7 @@ export default {
         msg.chat,
         {
           text: menu.trim(),
-          contextInfo: {
-            mentionedJid: [msg.sender],
-            externalAdReply: {
-              title: global.botname,
-              body: `${global.botname2} • ${global.dev}`,
-              thumbnailUrl: BANNER_URL,
-              sourceUrl: global.link,
-              mediaType: 1,
-              renderLargerThumbnail: true
-            }
-          }
+          contextInfo: { mentionedJid: [msg.sender] }
         },
         { quoted: { key: msg.key, message: {} } }
       );
