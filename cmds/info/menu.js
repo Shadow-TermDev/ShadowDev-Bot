@@ -1,5 +1,7 @@
-// Menú estilo Rem — solo texto + link. La vista previa (banner) la genera
-// WhatsApp desde el og:image del sitio, sin descargar nada en el bot.
+// Menú estilo Rem — tarjeta grande vía externalAdReply (sin descargar nada).
+// WhatsApp obtiene la miniatura directo de thumbnailUrl.
+const BANNER_URL = 'https://Shadow-TermDev.github.io/assets/shadowdev-banner-mini.jpg';
+
 function fmt(ms) {
   const s = Math.floor(ms / 1000);
   const m = Math.floor(s / 60);
@@ -13,16 +15,16 @@ export default {
   desc: 'Ver la lista de comandos del bot',
   run: async ({ msg, sock, args, prefix }) => {
     try {
-      const all = [...global.cmds.values()];
       const seen = new Set();
-      const cats = {};
-      for (const c of all) {
+      const cats = new Map();
+      for (const c of global.cmds.values()) {
         if (seen.has(c.run)) continue;
         seen.add(c.run);
         const cat = c.category || 'otros';
-        (cats[cat] ||= []).push(c);
+        if (!cats.has(cat)) cats.set(cat, []);
+        cats.get(cat).push(c);
       }
-      const totalCmds = Object.values(cats).reduce((n, l) => n + l.length, 0);
+      const totalCmds = [...cats.values()].reduce((n, l) => n + l.length, 0);
       const users = global.seenUsers?.size || 0;
       const uptime = fmt(Date.now() - (global.bootTime || Date.now()));
       const numero = msg.sender.split('@')[0];
@@ -40,7 +42,7 @@ export default {
       menu += `╰─────────────────\n`;
 
       const filtro = args[0]?.toLowerCase();
-      for (const [cat, cmds] of Object.entries(cats)) {
+      for (const [cat, cmds] of cats) {
         if (filtro && cat.toLowerCase() !== filtro) continue;
         const nombre = cat.charAt(0).toUpperCase() + cat.slice(1);
         menu += `\n• :･ﾟ⊹˚• \`『 ${nombre} 』\` •˚⊹:･ﾟ•\n\n`;
@@ -57,7 +59,17 @@ export default {
         msg.chat,
         {
           text: menu.trim(),
-          contextInfo: { mentionedJid: [msg.sender] }
+          contextInfo: {
+            mentionedJid: [msg.sender],
+            externalAdReply: {
+              title: global.botname,
+              body: `${global.botname2} • ${global.dev}`,
+              thumbnailUrl: BANNER_URL,
+              sourceUrl: global.link,
+              mediaType: 1,
+              renderLargerThumbnail: true
+            }
+          }
         },
         { quoted: { key: msg.key, message: {} } }
       );
