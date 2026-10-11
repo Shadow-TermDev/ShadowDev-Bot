@@ -39,11 +39,17 @@ export default {
 
       const query = args.join(' ');
       await msg.reply(`> _Buscando *${query}* en TikTok, espera..._`);
-      const res = await fetch(`https://www.tikwm.com/api/feed/search?keywords=${encodeURIComponent(query)}&count=10`, {
-        headers: { 'User-Agent': UA, Referer: 'https://www.tikwm.com/' }
-      }).then((r) => r.json());
-      const videos = res?.data?.videos || [];
-      if (res?.code !== 0 || !videos.length) {
+      let videos = [];
+      try {
+        const res = await fetch(`https://www.tikwm.com/api/feed/search?keywords=${encodeURIComponent(query)}&count=10`, {
+          headers: { 'User-Agent': UA, Referer: 'https://www.tikwm.com/' }
+        });
+        const json = await res.json();
+        if (json?.code === 0 && Array.isArray(json?.data?.videos)) videos = json.data.videos;
+      } catch (e) {
+        console.error('[tiktok-search]', e?.message || e);
+      }
+      if (!videos.length) {
         return msg.reply('✿ Sin resultados (la búsqueda está limitada, envía el link directo del video).');
       }
       let n = 0;
