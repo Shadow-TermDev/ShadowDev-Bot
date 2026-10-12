@@ -1,7 +1,7 @@
 // Router de comandos con prefijos . / ! # (estilo Hutao).
 import chalk from 'chalk';
 import { SYSTEM_BOT, parsearNombre, preguntarIA } from './lib/ia.js';
-import { baseJid, botJid, isAdminOf } from './lib/grupo.js';
+import { baseJid, botJid, isAdminOf, realPhone } from './lib/grupo.js';
 import { addWarn, clearWarns, getChat } from './lib/chats.js';
 import { addCoins, displayName, getUser, setApodo, touchUser } from './lib/users.js';
 
@@ -151,7 +151,15 @@ export default async function handler(sock, m) {
 𝄢 · • —– ٠ ✤ ٠ —– • · · • —– ٠ ✤ ٠ —– • ·✧༄`.trim());
 
     const ownerBases = (global.owner || []).map((n) => baseJid(n));
-    const isOwner = ownerBases.includes(baseJid(m.sender));
+    let senderBase = baseJid(m.sender);
+    let isOwner = ownerBases.includes(senderBase);
+    if (!isOwner && String(m.sender || '').endsWith('@lid')) {
+      // En grupos LID el JID no es el teléfono: resolver número real
+      try {
+        senderBase = await realPhone(sock, m.chat, m.sender);
+      } catch {}
+      isOwner = ownerBases.includes(senderBase);
+    }
 
     const t0 = Date.now();
     await cmd.run({

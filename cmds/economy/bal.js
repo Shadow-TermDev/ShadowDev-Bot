@@ -9,9 +9,10 @@ export default {
     try {
       const who = (msg.mentionedJid || [])[0] || (msg.quotedSender || null) || msg.sender;
       const u = getUser(who);
+      const nombre = displayName(who, who === msg.sender ? msg.pushName : u.apodo || u.name);
       const total = (u.coins || 0) + (u.bank || 0);
       await msg.reply(
-        `✿ *》》Economía @${String(who).split('@')[0]}《《* ✿\n\n` +
+        `✿ *》》Economía ${nombre}《《* ✿\n\n` +
         `✿ *Dinero »* ${(u.coins || 0).toLocaleString()} ${global.moneda}\n` +
         `✿ *Banco »* ${(u.bank || 0).toLocaleString()} ${global.moneda}\n` +
         `✿ *Total »* ${total.toLocaleString()} ${global.moneda}\n\n` +

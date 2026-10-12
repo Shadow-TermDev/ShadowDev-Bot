@@ -2,7 +2,7 @@
 import { getUser, saveUsers } from '../../lib/users.js';
 
 export default {
-  command: ['dep', 'deposit', 'depositar', 'guardar'],
+  command: ['dep', 'd', 'deposit', 'depositar', 'guardar'],
   category: 'economy',
   desc: 'Deposita monedas al banco',
   uso: '<cantidad | all>',
