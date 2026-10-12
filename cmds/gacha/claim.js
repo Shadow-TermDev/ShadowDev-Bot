@@ -1,5 +1,5 @@
 // .claim — reclama el último personaje tirado en el chat.
-import { addCoins, getUser, saveUsers } from '../../lib/users.js';
+import { addCoins, displayName, getUser, saveUsers } from '../../lib/users.js';
 import { claimRoll } from '../../lib/gacha.js';
 
 export default {
@@ -18,9 +18,10 @@ export default {
       await msg.reply(
         `• :･ﾟ⊹˚• \`『 Reclamado 』\` •˚⊹:･ﾟ•\n\n` +
         `✿ *Personaje »* ${r.name}\n` +
-        `✿ *Dueño »* @${String(msg.sender).split('@')[0]}\n` +
+        `✿ *Dueño »* @${String(msg.sender).split('@')[0]} (${displayName(msg.sender, null)})\n` +
         (bonus > 0 ? `✿ *Bonus »* +${bonus.toLocaleString()} ${global.moneda}\n` : '') +
-        `\n> *${global.botname2} • ${global.dev}*`
+        `\n> *${global.botname2} • ${global.dev}*`,
+        { mentions: [msg.sender] }
       );
     } catch (e) {
       console.error('[claim]', e?.message || e);

@@ -14,7 +14,7 @@ export default {
       if (!nombre) return msg.reply('❍ Escribe un nombre. Ej: *.setmoneda* soles');
       setConfig('moneda', nombre);
       global.moneda = nombre;
-      await msg.reply(`✿ *Moneda »* ahora es *${nombre}*.\n> ✐ Lo anuncia ${displayName(msg.sender, msg.pushName)}\n\n> *${global.botname2} • ${global.dev}*\n> ${global.link}`);
+      await msg.reply(`✿ *Moneda »* ahora es *${nombre}*.\n> ✐ Lo anuncia ${displayName(msg.sender, msg.pushName)}\n\n> *${global.botname2} • ${global.dev}*`);
     } catch {
       await msg.reply(global.msgglobal);
     }
