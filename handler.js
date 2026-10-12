@@ -45,9 +45,12 @@ export default async function handler(sock, m) {
       global.kwCooldown.set(m.chat, Date.now());
       console.log(chalk.gray(`[kw] ${mentioned ? 'mención' : replyToBot ? 'respuesta' : 'keyword'} de ${m.pushName || m.sender}: ${text.slice(0, 80)}`));
       try {
+        const ficha = getUser(m.sender);
+        const esNuevo = !ficha.apodo && (ficha.msgs || 0) <= 5;
         const raw = await preguntarIA(
           `En el chat dicen: "${text.slice(0, 300)}"`,
-          `${SYSTEM_BOT}\nEstás hablando con ${userName}.`
+          `${SYSTEM_BOT}\nEstás hablando con ${userName}.` +
+          (esNuevo ? `\nEs alguien NUEVO y no sabes su nombre: preséntate en una línea y pregúntale cómo se llama.` : '')
         );
         const { text: out, nombre } = parsearNombre(raw);
         if (nombre && m.sender && getUser(m.sender).apodo !== nombre) {
