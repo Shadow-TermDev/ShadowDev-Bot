@@ -45,28 +45,35 @@ console.log(
 `)
 );
 
-const hasSession = fs.existsSync(`${SESSION_DIR}/creds.json`);
-
-if (!hasSession && !methodQR && !methodCode) {
+async function pedirVinculacion() {
+  if (fs.existsSync(`${SESSION_DIR}/creds.json`)) return;
   const line = '⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》';
-  opcion = readlineSync.question(
-    `╭${line}\n┊ ${chalk.magenta.bold('METODO DE VINCULACION')}\n┊ ${chalk.bold.redBright('=> Opcion 1:')} ${chalk.greenBright('Codigo QR.')}\n┊ ${chalk.bold.redBright('=> Opcion 2:')} ${chalk.greenBright('Codigo de 8 digitos.')}\n╰${line}\n${chalk.bold.magentaBright('---> ')}`
-  );
-  while (!/^[1-2]$/.test(opcion)) {
-    console.log(chalk.bold.redBright('Solo se permite 1 o 2.'));
-    opcion = readlineSync.question('--> ');
+  if (!methodQR && !methodCode) {
+    opcion = readlineSync.question(
+      `╭${line}\n┊ ${chalk.magenta.bold('METODO DE VINCULACION')}\n┊ ${chalk.bold.redBright('=> Opcion 1:')} ${chalk.greenBright('Codigo QR.')}\n┊ ${chalk.bold.redBright('=> Opcion 2:')} ${chalk.greenBright('Codigo de 8 digitos.')}\n╰${line}\n${chalk.bold.magentaBright('---> ')}`
+    );
+    while (!/^[1-2]$/.test(opcion)) {
+      console.log(chalk.bold.redBright('Solo se permite 1 o 2.'));
+      opcion = readlineSync.question('--> ');
+    }
   }
-  if (opcion === '2') {
-    console.log(chalk.bold.yellowBright('\nIngrese el número de WhatsApp (ej: +51910763332)\n---> '));
-    phoneNumber = normalizePhone(readlineSync.question(''));
-  }
-} else if (methodCode && !phoneNumber) {
-  console.log(chalk.bold.yellowBright('\nIngrese el número de WhatsApp (ej: +51910763332)\n---> '));
-  phoneNumber = normalizePhone(readlineSync.question(''));
-}
+  if (methodQR) opcion = '1';
+  if (methodCode) opcion = '2';
 
-if (methodQR) opcion = '1';
-if (methodCode) opcion = '2';
+  if (opcion === '2') {
+    while (true) {
+      console.log(chalk.bold.yellowBright('\nIngrese el número de WhatsApp con código país (ej: 51910763332)\n---> '));
+      phoneNumber = normalizePhone(readlineSync.question(''));
+      if (phoneNumber.length < 10) {
+        console.log(chalk.bold.redBright(`"${phoneNumber || 'vacío'}" no parece un número válido, intenta de nuevo.`));
+        continue;
+      }
+      const ok = readlineSync.question(`Vincular el número +${phoneNumber}? (s/n): `);
+      if (/^s/i.test(ok.trim())) break;
+      console.log(chalk.gray('OK, ingresa otro número.'));
+    }
+  }
+}
 
 let reconexion = 0;
 const retriesLimit = 15;
@@ -120,20 +127,27 @@ export async function startBot() {
 
   // Código de 8 dígitos (solo si la sesión aún no está registrada)
   if (opcion === '2' && !state.creds.registered) {
-    setTimeout(async () => {
+    let code = null;
+    for (let i = 1; i <= 3 && !state.creds.registered; i++) {
+      await new Promise((r) => setTimeout(r, 3000));
       try {
-        if (!state.creds.registered) {
-          const pairing = await sock.requestPairingCode(phoneNumber);
-          const code = pairing?.match(/.{1,4}/g)?.join('-') || pairing;
-          console.log(
-            chalk.bold.white(chalk.bgMagenta('Código de emparejamiento:')),
-            chalk.bold.white(code)
-          );
-        }
+        console.log(chalk.gray(`[ ✿ ] Solicitando código (${i}/3) para +${phoneNumber}...`));
+        const pairing = await sock.requestPairingCode(phoneNumber);
+        code = pairing?.match(/.{1,4}/g)?.join('-') || pairing;
+        console.log(
+          chalk.bold.white(chalk.bgMagenta('Código de emparejamiento:')),
+          chalk.bold.white(code)
+        );
+        console.log(chalk.yellow('WhatsApp > ⋮ > Dispositivos vinculados > Vincular un dispositivo > Vincular con número de teléfono'));
+        break;
       } catch (err) {
-        console.log(chalk.red('Error al generar código:'), err?.message || err);
+        console.log(chalk.red(`Intento ${i}/3: ${err?.message || err}`));
+        if (i === 3) {
+          log.error('No se pudo generar el código. Verifica el número y tu conexión, luego reintenta.');
+          process.exit(1);
+        }
       }
-    }, 3000);
+    }
   }
 
   sock.ev.on('messages.upsert', async ({ messages, type }) => {
@@ -194,5 +208,6 @@ export async function startBot() {
 
 (async () => {
   await cmdsLoader();
+  await pedirVinculacion();
   await startBot();
 })();
