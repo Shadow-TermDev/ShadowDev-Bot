@@ -23,7 +23,7 @@ Construido reciclando lo mejor de dos proyectos:
 
 ```bash
 pkg install nodejs git
-git clone <TU-REPO> ShadowDev-Bot
+git clone https://github.com/Shadow-TermDev/ShadowDev-Bot.git
 cd ShadowDev-Bot
 npm install
 ```
