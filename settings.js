@@ -5,6 +5,7 @@
 import fs from 'fs';
 import { watchFile, unwatchFile } from 'fs';
 import { fileURLToPath } from 'url';
+import { getConfig } from './lib/config.js';
 
 // ── Owners (cambia/agrega tu número con código país, sin +) ──
 global.owner = ['51910763332', '51917282040', '51935991809'];
@@ -25,6 +26,9 @@ global.link = 'https://Shadow-TermDev.github.io';
 // (Stellar/EvoGB/delirius murieron: 502 / DNS / DEPLOYMENT_NOT_FOUND)
 
 global.msgglobal = '❍ Ocurrió un problema, contacte al creador.';
+
+// ── Moneda de la economía (cambiable con .setmoneda) ──
+global.moneda = getConfig().moneda || 'moras';
 global.mess = {
   socket: '❍ Este comando solo puede usarlo un *Socket*.\n> ✦ Pide ayuda a un administrador.',
   admin: '❍ Este comando solo lo usan los *Admins del grupo*.',

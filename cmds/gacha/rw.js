@@ -20,7 +20,7 @@ export default {
         `• :･ﾟ⊹˚• \`『 Gacha 』\` •˚⊹:･ﾟ•\n\n` +
         `✿ *Personaje »* ${p.name}\n` +
         `✿ *Fuente »* ${p.source || '?'}\n` +
-        `✿ *Valor »* ${(p.value || 0).toLocaleString()} moras\n\n` +
+        `✿ *Valor »* ${(p.value || 0).toLocaleString()} ${global.moneda}\n\n` +
         `> ✐ Reclama con *.claim* (5 min)${previo && !previo.claimedBy ? `\n> ✐ Se fue sin reclamar: *${previo.name}*` : ''}\n\n` +
         `> *${global.botname2} • ${global.dev}*
 > ${global.link}`;

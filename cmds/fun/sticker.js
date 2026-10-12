@@ -24,7 +24,14 @@ export default {
       // Sticker citado: ya es webp, solo se re-etiqueta (rápido y sin perder calidad)
       const webp = isQuotedSticker ? buffer : await toSticker(buffer, !!target.seconds);
       const nombre = displayName(msg.sender, msg.pushName);
-      const final = await addExif(webp, 'ShadowDev', `Por ${nombre}`).catch(() => webp);
+      let grupo = '';
+      if (msg.isGroup) {
+        try {
+          grupo = (await sock.groupMetadata(msg.chat))?.subject || '';
+        } catch {}
+      }
+      const autor = grupo ? `${nombre} · ${grupo}` : nombre;
+      const final = await addExif(webp, { pack: 'ShadowDev', author: autor, link: global.link }).catch(() => webp);
       await sock.sendMessage(msg.chat, { sticker: final }, { quoted: { key: msg.key, message: {} } });
       await msg.react('✔️');
     } catch (e) {

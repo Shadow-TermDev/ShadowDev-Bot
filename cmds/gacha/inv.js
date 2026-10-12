@@ -11,11 +11,11 @@ export default {
       const chars = u.characters || [];
       if (!chars.length) return msg.reply('❍ Aún no tienes personajes. Tira con *.rw*.');
       const total = chars.reduce((n, c) => n + (c.value || 0), 0);
-      const lista = chars.slice(0, 20).map((c, i) => `✿ *${i + 1}.* ${c.name} (${(c.value || 0).toLocaleString()} moras)`).join('\n');
+      const lista = chars.slice(0, 20).map((c, i) => `✿ *${i + 1}.* ${c.name} (${(c.value || 0).toLocaleString()} ${global.moneda})`).join('\n');
       await msg.reply(
         `• :･ﾟ⊹˚• \`『 ${displayName(msg.sender, msg.pushName)} 』\` •˚⊹:･ﾟ•\n\n${lista}\n` +
         (chars.length > 20 ? `\n> ✐ ...y ${chars.length - 20} más\n` : '') +
-        `\n✿ *Total »* ${chars.length} personajes / ${total.toLocaleString()} moras\n\n> *${global.botname2} • ${global.dev}*
+        `\n✿ *Total »* ${chars.length} personajes / ${total.toLocaleString()} ${global.moneda}\n\n> *${global.botname2} • ${global.dev}*
 > ${global.link}`
       );
     } catch {

@@ -21,7 +21,7 @@ export default {
         (u.desc ? `✿ *Sobre ti »* ${u.desc}\n` : '') +
         `✿ *Número »* +${numero}\n` +
         `✿ *Mensajes »* ${u.msgs || 0}\n` +
-        `✿ *Monedas »* ${(u.coins || 0).toLocaleString()} moras\n` +
+        `✿ *Monedas »* ${(u.coins || 0).toLocaleString()} ${global.moneda}\n` +
         `✿ *Aquí desde »* ${desde}\n\n` +
         `> ✐ Regístrate con *.register*\n\n> *${global.botname2} • ${global.dev}*
 > ${global.link}`;

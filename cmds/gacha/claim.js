@@ -19,7 +19,7 @@ export default {
         `• :･ﾟ⊹˚• \`『 Reclamado 』\` •˚⊹:･ﾟ•\n\n` +
         `✿ *Personaje »* ${r.name}\n` +
         `✿ *Dueño »* @${String(msg.sender).split('@')[0]}\n` +
-        (bonus > 0 ? `✿ *Bonus »* +${bonus.toLocaleString()} moras\n` : '') +
+        (bonus > 0 ? `✿ *Bonus »* +${bonus.toLocaleString()} ${global.moneda}\n` : '') +
         `\n> *${global.botname2} • ${global.dev}*
 > ${global.link}`
       );
