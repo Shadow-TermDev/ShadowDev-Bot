@@ -4,8 +4,6 @@ import fs from 'fs';
 const BANNER_URL = 'https://Shadow-TermDev.github.io/assets/shadowdev-banner-mini.jpg';
 
 function fmt(ms) {
-// Si cambias la imagen, reemplaza ese archivo.
-function fmt(ms) {
   const s = Math.floor(ms / 1000);
   const m = Math.floor(s / 60);
   const h = Math.floor(m / 60);
