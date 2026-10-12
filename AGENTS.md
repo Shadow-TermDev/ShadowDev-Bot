@@ -10,7 +10,7 @@ Archivo en `cmds/<categoria>/<nombre>.js`:
 ```js
 export default {
   command: ['cmd', 'alias2'],   // minúsculas, sin prefijo
-  category: 'fun',              // info | downloader | ai | search | utils | fun | grupo | owner
+  category: 'fun',              // info | downloader | ai | search | utils | fun | grupo | owner | gacha | economy
   desc: 'Qué hace, en 3-6 palabras',   // OBLIGATORIO, estilo abajo
   uso: '<param>',               // SOLO si necesita parámetro, formato <...>
   run: async ({ msg, sock, args }) => {
@@ -49,6 +49,10 @@ export default {
 - `msg.reply(texto)` para texto simple.
 - Comandos de grupo: usar `lib/grupo.js` (`checkGroup`, `resolveTarget`).
 - IA: usar `lib/ia.js` (`preguntarIA`), nunca fetch directo a Pollinations.
+- Usuarios/monedas: `lib/users.js` (`getUser`, `addCoins`, `setApodo`, `saveUsers`).
+  El handler ya suma +10 🪙 por comando y registra `msgs`. Datos en `data/` (ignorado).
+- Gacha: `lib/gacha.js` + catálogo `lib/characters.json` (1350). Cooldowns y
+  reclamos ahí; imágenes vía `imagenDe()` (safebooru→gelbooru seguro).
 
 ## 4. APIs permitidas (verificadas, sin keys)
 
