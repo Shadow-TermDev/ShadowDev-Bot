@@ -1,6 +1,6 @@
 {
   "name": "shadowdev-bot",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "description": "ShadowDev-Bot — Bot de WhatsApp para el grupo Shadow-TermDev. Basado en Hutao (consola) + Megumin (APIs libres).",
   "main": "index.js",
   "type": "module",

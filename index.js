@@ -108,11 +108,21 @@ export async function startBot() {
   console.info = () => {};
   console.debug = () => {};
 
+  // Caché de medios en memoria: repetir la misma imagen (menú) no la resube
+  const mediaMap = new Map();
+  const mediaCache = {
+    get: (k) => mediaMap.get(k),
+    set: (k, v) => mediaMap.set(k, v),
+    del: (k) => mediaMap.delete(k),
+    flushAll: () => mediaMap.clear()
+  };
+
   const sock = makeWASocket({
     version,
     logger: pino({ level: 'silent' }),
     browser: Browsers.macOS('Chrome'),
     printQRInTerminal: false,
+    mediaCache,
     auth: {
       creds: state.creds,
       keys: makeCacheableSignalKeyStore(state.keys, pino({ level: 'silent' }))
