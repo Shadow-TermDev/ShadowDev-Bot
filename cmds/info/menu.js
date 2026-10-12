@@ -88,7 +88,7 @@ export default {
         for (const c of cmds) {
           const alias = c.alias.map((a) => `${prefix}${a}`).join(' › ');
           menu += `ᰔᩚ *${alias}${c.uso ? ` + ${c.uso}` : ''}*\n`;
-          menu += `> ✺ ${c.desc || 'Sin descripción.'}\n`;
+          menu += `> ✦ ${c.desc || 'Sin descripción.'}\n`;
         }
       }
       menu += `\n˚₊· 𓂃 *${global.botname2} • ${global.dev}* 𓂃 ·₊˚\n> ${global.link}`;

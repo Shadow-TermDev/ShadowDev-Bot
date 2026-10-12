@@ -1,6 +1,6 @@
 // Router de comandos con prefijos . / ! # (estilo Hutao).
 import chalk from 'chalk';
-import { preguntarIA } from './lib/ia.js';
+import { SYSTEM_BOT, preguntarIA } from './lib/ia.js';
 
 const PREFIXES = ['.', '/', '!', '#'];
 const KEYWORDS = /\b(shadowdev|shadow|dev|bot|samy)\b/i;
@@ -20,15 +20,28 @@ export default async function handler(sock, m) {
     const prefix = PREFIXES.find((p) => text.startsWith(p));
     if (!prefix) {
       // Sin prefijo: responde a mención directa o palabras clave (con cooldown)
-      const botNum = (sock.user?.id || '').split(':')[0];
-      const mentioned = (m.mentionedJid || []).some((j) => j.split('@')[0] === botNum);
-      if (!mentioned && !KEYWORDS.test(text)) return;
+      const botIds = [sock.user?.id, sock.user?.lid]
+        .filter(Boolean)
+        .map((j) => String(j).split('@')[0].split(':')[0]);
+      const mentioned =
+        (m.mentionedJid || []).some((j) => botIds.includes(String(j).split('@')[0])) ||
+        botIds.some((id) => id && text.includes('@' + id));
+      const keyword = KEYWORDS.test(text);
+      if (!mentioned && !keyword) return;
       global.kwCooldown ||= new Map();
       const last = global.kwCooldown.get(m.chat) || 0;
-      if (Date.now() - last < 30000) return;
+      if (Date.now() - last < 20000) {
+        console.log(chalk.gray(`[kw] cooldown (${mentioned ? 'mención' : 'keyword'}) ${m.pushName || m.sender}`));
+        return;
+      }
       global.kwCooldown.set(m.chat, Date.now());
+      console.log(chalk.gray(`[kw] ${mentioned ? 'mención' : 'keyword'} de ${m.pushName || m.sender}: ${text.slice(0, 80)}`));
       try {
-        const out = await preguntarIA(text.slice(0, 300));
+        const nombre = m.pushName || 'alguien';
+        const out = await preguntarIA(
+          `En el chat dicen: "${text.slice(0, 300)}"`,
+          `${SYSTEM_BOT}\nEstás hablando con ${nombre}.`
+        );
         if (out) {
           await m.reply(out);
           return;

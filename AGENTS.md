@@ -26,7 +26,7 @@ export default {
 
 ## 2. Regla alias + parámetro + desc (el menú los une solo)
 
-- El menú renderiza: `ᰔᩚ *{alias} + {uso}*` y debajo `> ✺ {desc}`.
+- El menú renderiza: `ᰔᩚ *{alias} + {uso}*` y debajo `> ✦ {desc}`.
 - Ejemplo resultante:
   ```
   ᰔᩚ *.play › .mp3 + <nombre o url>*
