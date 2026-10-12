@@ -168,13 +168,13 @@ export default async function handler(sock, m) {
     // Toggles por grupo (los comandos toggle siempre pasan)
     if (m.isGroup && !['bot', 'botcito'].includes(command)) {
       const cfg = getChat(m.chat);
-      if (cfg.botOff && !isOwner) return;
+      if (cfg.botOff) return msg.reply('❍ El bot está *apagado* en este grupo.');
       if (cfg.onlyAdmin && !isOwner) {
         try {
           const meta = await sock.groupMetadata(m.chat);
           const ok = isAdminOf(meta, m.sender);
           console.log(`[gate] onlyAdmin sender=${m.sender} esAdmin=${ok} parts=${meta?.participants?.length || 0}`);
-          if (!ok) return msg.reply(global.mess.admin);
+          if (!ok) return msg.reply('❍ Solo los admins pueden usar el bot por ahora.');
         } catch (e) {
           console.error('[gate] onlyAdmin sin metadata:', e?.message || e);
           return;
