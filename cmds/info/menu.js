@@ -4,14 +4,17 @@ import fs from 'fs';
 // Miniatura en disco (./cache) + memoria: se genera 1 vez y el menú vuela.
 // Si cambias el banner, borra ./cache/menu-thumb.jpg
 const CACHE_FILE = './cache/menu-thumb.jpg';
+const CACHE_TTL = 12 * 60 * 60 * 1000;
 let thumbCache = null;
+let thumbAt = 0;
 
 async function bannerThumb() {
-  if (thumbCache) return thumbCache;
+  if (thumbCache && Date.now() - thumbAt < CACHE_TTL) return thumbCache;
   try {
     const b = fs.readFileSync(CACHE_FILE);
     if (b.length > 5000) {
       thumbCache = b;
+      thumbAt = Date.now();
       return b;
     }
   } catch {}
@@ -21,6 +24,7 @@ async function bannerThumb() {
   const buf = Buffer.from(await (await fetch(og, { signal: AbortSignal.timeout(25000) })).arrayBuffer());
   if (buf.length < 5000) throw new Error('imagen vacía');
   thumbCache = await (await Jimp.read(buf)).resize({ w: 600 }).getBuffer('image/jpeg');
+  thumbAt = Date.now();
   try {
     fs.mkdirSync('./cache', { recursive: true });
     fs.writeFileSync(CACHE_FILE, thumbCache);

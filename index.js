@@ -132,6 +132,12 @@ export async function startBot() {
       const cfg = getChat(anu.id);
       if (!cfg.welcome && !cfg.bye) return;
       const meta = await sock.groupMetadata(anu.id).catch(() => null);
+      const { displayName } = await import('./lib/users.js');
+      const { realPhone } = await import('./lib/grupo.js');
+      let invite = '';
+      try {
+        invite = 'https://chat.whatsapp.com/' + (await sock.groupInviteCode(anu.id));
+      } catch {}
       const yo = (sock.user?.id || '').split(':')[0];
       for (const p of anu.participants || []) {
         const jid = typeof p === 'string' ? p : p.id || p.jid || '';
@@ -141,24 +147,24 @@ export async function startBot() {
         const gdesc = meta?.desc || 'sin descripción';
         const members = meta?.participants?.length || '?';
         const hora = new Date().toLocaleTimeString('es-PE', { timeZone: 'America/Lima', hour: '2-digit', minute: '2-digit' });
+        const nombre = displayName(jid, null);
+        const numero = await realPhone(sock, anu.id, jid).catch(() => jid.split('@')[0]);
+        const perfil = `✿ ${nombre} (+${numero})`;
+        const fill = (t) => t
+          .replace(/\{user\}/g, tag)
+          .replace(/\{group\}/g, gname)
+          .replace(/\{desc\}/g, gdesc)
+          .replace(/\{members\}/g, String(members))
+          .replace(/\{time\}/g, hora)
+          .replace(/\{link\}/g, invite || '')
+          .replace(/\{perfil\}/g, perfil)
+          .replace(/\{prefix\}/g, '.');
         if (anu.action === 'add' && cfg.welcome) {
-          const t = (cfg.welcomeMsg || '❀ ¡Bienvenido a |{group}|!\n\t» {user}\n\n> ✐ Puedes usar *{prefix}menu* para ver la lista de comandos.\n> 🜸 {link}')
-            .replace(/\{user\}/g, tag)
-            .replace(/\{group\}/g, gname)
-            .replace(/\{desc\}/g, gdesc)
-            .replace(/\{members\}/g, String(members))
-            .replace(/\{time\}/g, hora)
-            .replace(/\{prefix\}/g, '.');
+          const t = fill(cfg.welcomeMsg || '❀ ¡Bienvenido a |{group}|!\n\t» {user}\n\n{perfil}\n\n> ✐ Puedes usar *{prefix}menu* para ver la lista de comandos.\n> 🜸 {link}');
           await sock.sendMessage(anu.id, { text: t, mentions: [jid] });
         }
         if ((anu.action === 'remove' || anu.action === 'leave') && cfg.bye) {
-          const t = (cfg.byeMsg || '✿ *Adiós* {user} 👋\n\n> ✐ Gracias por estar aquí.')
-            .replace(/\{user\}/g, tag)
-            .replace(/\{group\}/g, gname)
-            .replace(/\{desc\}/g, gdesc)
-            .replace(/\{members\}/g, String(members))
-            .replace(/\{time\}/g, hora)
-            .replace(/\{prefix\}/g, '.');
+          const t = fill(cfg.byeMsg || '✿ *Adiós* {user} 👋\n\n> ✐ Gracias por estar aquí.');
           await sock.sendMessage(anu.id, { text: t, mentions: [jid] });
         }
       }

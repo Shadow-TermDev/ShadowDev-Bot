@@ -12,7 +12,7 @@ export default {
       const g = await checkGroup(sock, msg);
       if (!g) return;
       const texto = args.join(' ').trim();
-      if (!texto) return msg.reply('❍ Escribe el mensaje. Variables: {user} {group} {desc} {members} {time} {prefix}\n> ✐ Ej: *.setbye* ✿ *Adiós* {user} 👋\n\n> ✐ Gracias por estar aquí.');
+      if (!texto) return msg.reply('❍ Escribe el mensaje.\n> ✐ Variables: {user} {group} {desc} {members} {time} {link} {perfil} {prefix}');
       setChat(msg.chat, 'byeMsg', texto.slice(0, 300));
       setChat(msg.chat, 'bye', true);
       await msg.reply(`✿ *Despedida guardada y activada ✅*\n\n> *${global.botname2} • ${global.dev}*`);

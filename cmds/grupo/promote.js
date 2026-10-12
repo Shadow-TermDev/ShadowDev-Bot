@@ -1,5 +1,5 @@
 // .promote / .demote — da o quita admin. Solo admins.
-import { baseJid, checkGroup, pidOf, resolveTarget } from '../../lib/grupo.js';
+import { baseJid, checkGroup, isAdminOf, pidOf, resolveTarget } from '../../lib/grupo.js';
 
 export default {
   command: ['promote', 'promover', 'daradmin'],
@@ -12,6 +12,7 @@ export default {
       if (!g) return;
       const target = resolveTarget(msg, args);
       if (!target) return msg.reply('❍ Responde al mensaje, menciona o escribe el número.');
+      if (isAdminOf(g.meta, target)) return msg.reply(`❍ @${baseJid(target)} ya es admin.`);
       await sock.groupParticipantsUpdate(msg.chat, [pidOf(g.meta, target)], 'promote');
       await msg.reply(`✿ *Admin »* @${baseJid(target)}\n\n> ✐ Ahora es admin del grupo.\n\n> *${global.botname2} • ${global.dev}*`);
     } catch (e) {
