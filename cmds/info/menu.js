@@ -64,32 +64,31 @@ export default {
       }
       menu += `\n˚₊· 𓂃 *${global.botname2} • ${global.dev}* 𓂃 ·₊˚`;
 
-      // Un solo menú por chat: edita el anterior en vez de acumular imágenes
-      global.menuKeys ||= new Map();
-      const prev = global.menuKeys.get(msg.chat);
+      // Burbuja NUEVA por cada .menu. La imagen sale del caché de medios
+      // (1 subida por arranque); si la URL falla, archivo local; si no, texto.
       try {
-        const banner = fs.readFileSync('./media/banner.jpg');
-        if (prev) {
-          try {
-            await sock.sendMessage(msg.chat, { image: banner, caption: menu.trim(), mentions: [msg.sender], edit: prev });
-            return;
-          } catch (e) {
-            console.error('[menu] no se pudo editar, reenvío:', e?.message || e);
-          }
-        }
-        const sent = await sock.sendMessage(
-          msg.chat,
-          { image: banner, caption: menu.trim(), mentions: [msg.sender] },
-          { quoted: { key: msg.key, message: {} } }
-        );
-        if (sent?.key) global.menuKeys.set(msg.chat, sent.key);
-      } catch (e) {
-        console.error('[menu] sin banner local, texto plano:', e?.message || e);
         await sock.sendMessage(
           msg.chat,
-          { text: menu.trim(), contextInfo: { mentionedJid: [msg.sender] } },
+          { image: { url: BANNER_URL }, caption: menu.trim(), mentions: [msg.sender] },
           { quoted: { key: msg.key, message: {} } }
         );
+      } catch (e) {
+        console.error('[menu] url falló, local:', e?.message || e);
+        try {
+          const banner = fs.readFileSync('./media/banner.jpg');
+          await sock.sendMessage(
+            msg.chat,
+            { image: banner, caption: menu.trim(), mentions: [msg.sender] },
+            { quoted: { key: msg.key, message: {} } }
+          );
+        } catch (e2) {
+          console.error('[menu] texto plano:', e2?.message || e2);
+          await sock.sendMessage(
+            msg.chat,
+            { text: menu.trim(), contextInfo: { mentionedJid: [msg.sender] } },
+            { quoted: { key: msg.key, message: {} } }
+          );
+        }
       }
 
     } catch (e) {
