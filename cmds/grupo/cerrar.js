@@ -10,8 +10,7 @@ export default {
       const g = await checkGroup(sock, msg);
       if (!g) return;
       await sock.groupSettingUpdate(msg.chat, 'announcement');
-      await msg.reply(`✿ *Grupo cerrado.* Solo los admins pueden escribir.\n\n> *${global.botname2} • ${global.dev}*
-> ${global.link}`);
+      await msg.reply(`✿ *Grupo cerrado.* Solo los admins pueden escribir.\n\n> *${global.botname2} • ${global.dev}*`);
     } catch (e) {
       console.error('[cerrar]', e?.message || e);
       await msg.reply(global.msgglobal);

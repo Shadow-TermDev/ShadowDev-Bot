@@ -15,8 +15,7 @@ export default {
       await msg.reply(
         `• :･ﾟ⊹˚• \`『 ${displayName(msg.sender, msg.pushName)} 』\` •˚⊹:･ﾟ•\n\n${lista}\n` +
         (chars.length > 20 ? `\n> ✐ ...y ${chars.length - 20} más\n` : '') +
-        `\n✿ *Total »* ${chars.length} personajes / ${total.toLocaleString()} ${global.moneda}\n\n> *${global.botname2} • ${global.dev}*
-> ${global.link}`
+        `\n✿ *Total »* ${chars.length} personajes / ${total.toLocaleString()} ${global.moneda}\n\n> *${global.botname2} • ${global.dev}*`
       );
     } catch {
       await msg.reply(global.msgglobal);

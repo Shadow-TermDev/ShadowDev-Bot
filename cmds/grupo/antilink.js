@@ -15,8 +15,7 @@ export default {
       if (!['on', 'off', '1', '0'].includes(v)) return msg.reply('❍ Usa *.antilink on* u *.antilink off*.');
       const on = v === 'on' || v === '1';
       setChat(msg.chat, 'antilink', on);
-      await msg.reply(`✿ *Anti-link »* ${on ? 'activado (al 3er aviso expulsa)' : 'apagado'}\n\n> *${global.botname2} • ${global.dev}*
-> ${global.link}`);
+      await msg.reply(`✿ *Anti-link »* ${on ? 'activado (al 3er aviso expulsa)' : 'apagado'}\n\n> *${global.botname2} • ${global.dev}*`);
     } catch {
       await msg.reply(global.msgglobal);
     }

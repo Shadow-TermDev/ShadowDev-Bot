@@ -23,8 +23,7 @@ export default {
         `✿ *Mensajes »* ${u.msgs || 0}\n` +
         `✿ *Monedas »* ${(u.coins || 0).toLocaleString()} ${global.moneda}\n` +
         `✿ *Aquí desde »* ${desde}\n\n` +
-        `> ✐ Regístrate con *.register*\n\n> *${global.botname2} • ${global.dev}*
-> ${global.link}`;
+        `> ✐ Regístrate con *.register*\n\n> *${global.botname2} • ${global.dev}*`;
       try {
         const pic = await sock.profilePictureUrl(msg.sender, 'image');
         await sock.sendMessage(msg.chat, { image: { url: pic }, caption: texto }, { quoted: { key: msg.key, message: {} } });

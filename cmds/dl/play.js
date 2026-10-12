@@ -23,8 +23,7 @@ export default {
         `✿ *Duración »* ${video.timestamp || ''}\n` +
         `✿ *Vistas »* ${(video.views || 0).toLocaleString()}\n\n` +
         `> ✐ _Enviando audio, espera..._\n` +
-        `> *${global.botname2} • ${global.dev}*
-> ${global.link}`;
+        `> *${global.botname2} • ${global.dev}*`;
       // La descarga arranca ANTES del aviso: se solapan y se ahorra ~2s
       await msg.react('🕒');
       const dlP = downloadAudio(video.url);

@@ -10,8 +10,7 @@ export default {
       const g = await checkGroup(sock, msg);
       if (!g) return;
       await sock.groupSettingUpdate(msg.chat, 'not_announcement');
-      await msg.reply(`✿ *Grupo abierto.* Todos pueden escribir.\n\n> *${global.botname2} • ${global.dev}*
-> ${global.link}`);
+      await msg.reply(`✿ *Grupo abierto.* Todos pueden escribir.\n\n> *${global.botname2} • ${global.dev}*`);
     } catch (e) {
       console.error('[abrir]', e?.message || e);
       await msg.reply(global.msgglobal);

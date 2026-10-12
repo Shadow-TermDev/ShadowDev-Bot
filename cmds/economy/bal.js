@@ -1,15 +1,22 @@
-// .bal — tus monedas.
-import { getUser } from '../../lib/users.js';
+// .bal — dinero, banco y total (menciona o cita para ver otro).
+import { displayName, getUser } from '../../lib/users.js';
 
 export default {
-  command: ['bal', 'balance', 'coins', 'monedas'],
+  command: ['bal', 'balance', 'coins', 'monedas', 'bank', 'banco'],
   category: 'economy',
-  desc: 'Ver tus monedas',
+  desc: 'Ver dinero, banco y total',
   run: async ({ msg }) => {
     try {
-      const u = getUser(msg.sender);
-      await msg.reply(`• :･ﾟ⊹˚• \`『 Balance 』\` •˚⊹:･ﾟ•\n\n✿ *Monedas »* ${(u.coins || 0).toLocaleString()} ${global.moneda}\n\n> *${global.botname2} • ${global.dev}*
-> ${global.link}`);
+      const who = (msg.mentionedJid || [])[0] || (msg.quotedSender || null) || msg.sender;
+      const u = getUser(who);
+      const total = (u.coins || 0) + (u.bank || 0);
+      await msg.reply(
+        `✿ *》》Economía @${String(who).split('@')[0]}《《* ✿\n\n` +
+        `✿ *Dinero »* ${(u.coins || 0).toLocaleString()} ${global.moneda}\n` +
+        `✿ *Banco »* ${(u.bank || 0).toLocaleString()} ${global.moneda}\n` +
+        `✿ *Total »* ${total.toLocaleString()} ${global.moneda}\n\n` +
+        `> _Protege tu dinero en el banco con *.dep*_`
+      );
     } catch {
       await msg.reply(global.msgglobal);
     }

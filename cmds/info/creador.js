@@ -8,8 +8,7 @@ export default {
     await sock.sendMessage(
       msg.chat,
       {
-        text: `• :･ﾟ⊹˚• \`『 Creador 』\` •˚⊹:･ﾟ•\n\n${nums}\n\n> *${global.botname2} • ${global.dev}*
-> ${global.link}`,
+        text: `• :･ﾟ⊹˚• \`『 Creador 』\` •˚⊹:･ﾟ•\n\n${nums}\n\n> *${global.botname2} • ${global.dev}*`,
         mentions: global.owner.map((n) => n + '@s.whatsapp.net')
       },
       { quoted: { key: msg.key, message: {} } }

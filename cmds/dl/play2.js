@@ -22,8 +22,7 @@ export default {
         `• :･ﾟ⊹˚• \`『 YouTube-Video 』\` •˚⊹:･ﾟ•\n\n` +
         `✿ *Título »* ${video.title}\n` +
         `✿ *Canal »* ${video.author?.name || 'Desconocido'}\n\n` +
-        `> *${global.botname2} • ${global.dev}*
-> ${global.link}`;
+        `> *${global.botname2} • ${global.dev}*`;
 
       // Videos pesados van como documento (tu red los tumba como video)
       let big = false;

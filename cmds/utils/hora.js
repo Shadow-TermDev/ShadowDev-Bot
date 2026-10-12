@@ -16,8 +16,7 @@ export default {
         const h = new Date().toLocaleTimeString('es-PE', { timeZone: tz, hour: '2-digit', minute: '2-digit' });
         return `✿ *${nombre} »* ${h}`;
       }).join('\n');
-      await msg.reply(`• :･ﾟ⊹˚• \`『 Hora 』\` •˚⊹:･ﾟ•\n\n${lineas}\n\n> *${global.botname2} • ${global.dev}*
-> ${global.link}`);
+      await msg.reply(`• :･ﾟ⊹˚• \`『 Hora 』\` •˚⊹:･ﾟ•\n\n${lineas}\n\n> *${global.botname2} • ${global.dev}*`);
     } catch {
       await msg.reply(global.msgglobal);
     }

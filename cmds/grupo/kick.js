@@ -19,8 +19,7 @@ export default {
       if (meta2 && findParticipant(meta2, target)) {
         return msg.reply(`❍ No se pudo expulsar a @${baseJid(target)} (¿es admin o el creador?).`);
       }
-      await msg.reply(`✿ *Expulsado »* @${baseJid(target)}\n\n> *${global.botname2} • ${global.dev}*
-> ${global.link}`);
+      await msg.reply(`✿ *Expulsado »* @${baseJid(target)}\n\n> *${global.botname2} • ${global.dev}*`);
     } catch (e) {
       console.error('[kick]', e?.message || e);
       await msg.reply(global.msgglobal);

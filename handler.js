@@ -150,9 +150,8 @@ export default async function handler(sock, m) {
 ❚ ▸ ${chalk.redBright('𝐓𝐈𝐏𝐎 ❱❱')} ${chalk.greenBright.bold('[Bot Log]')}
 𝄢 · • —– ٠ ✤ ٠ —– • · · • —– ٠ ✤ ٠ —– • ·✧༄`.trim());
 
-    const isOwner = global.owner
-      .map((n) => n + '@s.whatsapp.net')
-      .includes(m.sender);
+    const ownerBases = (global.owner || []).map((n) => baseJid(n));
+    const isOwner = ownerBases.includes(baseJid(m.sender));
 
     const t0 = Date.now();
     await cmd.run({

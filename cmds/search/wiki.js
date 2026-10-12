@@ -20,8 +20,7 @@ export default {
       for (const r of results.slice(0, 3)) {
         out += `✿ *${r.title}*\n> ✐ ${r.snippet.replace(/<[^>]+>/g, '')}\n\n`;
       }
-      await msg.reply(out.trim() + `\n> *${global.botname2} • ${global.dev}*
-> ${global.link}`);
+      await msg.reply(out.trim() + `\n> *${global.botname2} • ${global.dev}*`);
     } catch (e) {
       console.error('[wiki]', e?.message || e);
       await msg.reply(global.msgglobal);

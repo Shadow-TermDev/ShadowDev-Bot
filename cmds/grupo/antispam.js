@@ -15,8 +15,7 @@ export default {
       if (!['on', 'off', '1', '0'].includes(v)) return msg.reply('❍ Usa *.antispam on* u *.antispam off*.');
       const on = v === 'on' || v === '1';
       setChat(msg.chat, 'antispam', on);
-      await msg.reply(`✿ *Anti-spam »* ${on ? 'activado' : 'apagado'}\n\n> *${global.botname2} • ${global.dev}*
-> ${global.link}`);
+      await msg.reply(`✿ *Anti-spam »* ${on ? 'activado' : 'apagado'}\n\n> *${global.botname2} • ${global.dev}*`);
     } catch {
       await msg.reply(global.msgglobal);
     }

@@ -5,7 +5,6 @@ export default {
   desc: 'Lanza una moneda',
   run: async ({ msg }) => {
     const r = Math.random() < 0.5 ? 'Cara' : 'Cruz';
-    await msg.reply(`• :･ﾟ⊹˚• \`『 Moneda 』\` •˚⊹:･ﾟ•\n\n✿ *Salió »* ${r}\n\n> *${global.botname2} • ${global.dev}*
-> ${global.link}`);
+    await msg.reply(`• :･ﾟ⊹˚• \`『 Moneda 』\` •˚⊹:･ﾟ•\n\n✿ *Salió »* ${r}\n\n> *${global.botname2} • ${global.dev}*`);
   }
 };

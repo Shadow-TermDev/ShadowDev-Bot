@@ -11,8 +11,7 @@ export default {
       if (res?.error || !res?.joke) return msg.reply('❍ No salió el chiste, intenta de nuevo.');
       await sock.sendMessage(
         msg.chat,
-        { text: `• :･ﾟ⊹˚• \`『 Chiste 』\` •˚⊹:･ﾟ•\n\n> ✐ ${res.joke}\n\n> *${global.botname2} • ${global.dev}*
-> ${global.link}` },
+        { text: `• :･ﾟ⊹˚• \`『 Chiste 』\` •˚⊹:･ﾟ•\n\n> ✐ ${res.joke}\n\n> *${global.botname2} • ${global.dev}*` },
         { quoted: { key: msg.key, message: {} } }
       );
     } catch (e) {

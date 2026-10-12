@@ -16,8 +16,7 @@ export default {
       const video = search.videos?.[0];
       if (!video) return msg.reply('❍ Sin resultados.');
       const canal = video.author?.name || 'Desconocido';
-      await msg.reply(`• :･ﾟ⊹˚• \`『 Music 』\` •˚⊹:･ﾟ•\n\n✿ *Título »* ${video.title}\n✿ *Artista »* ${canal}\n\n> ✐ _Enviando audio, espera..._\n> *${global.botname2} • ${global.dev}*
-> ${global.link}`);
+      await msg.reply(`• :･ﾟ⊹˚• \`『 Music 』\` •˚⊹:･ﾟ•\n\n✿ *Título »* ${video.title}\n✿ *Artista »* ${canal}\n\n> ✐ _Enviando audio, espera..._\n> *${global.botname2} • ${global.dev}*`);
       await msg.react('🕒');
       const dlP = downloadAudio(video.url);
       let thumb = null;

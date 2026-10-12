@@ -20,8 +20,7 @@ export default {
       u.lastDaily = Date.now();
       const total = addCoins(msg.sender, PREMIO);
       saveUsers();
-      await msg.reply(`• :･ﾟ⊹˚• \`『 Daily 』\` •˚⊹:･ﾟ•\n\n✿ *Premio »* +${PREMIO.toLocaleString()} ${global.moneda}\n✿ *Balance »* ${total.toLocaleString()} ${global.moneda}\n\n> *${global.botname2} • ${global.dev}*
-> ${global.link}`);
+      await msg.reply(`• :･ﾟ⊹˚• \`『 Daily 』\` •˚⊹:･ﾟ•\n\n✿ *Premio »* +${PREMIO.toLocaleString()} ${global.moneda}\n✿ *Balance »* ${total.toLocaleString()} ${global.moneda}\n\n> *${global.botname2} • ${global.dev}*`);
     } catch {
       await msg.reply(global.msgglobal);
     }
