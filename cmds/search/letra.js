@@ -4,7 +4,7 @@ import fetch from 'node-fetch';
 export default {
   command: ['letra', 'lyrics', 'lyric'],
   category: 'search',
-  desc: 'Busca la letra de una canción',
+  desc: 'Letra de cualquier canción',
   uso: '<nombre>',
   run: async ({ msg, sock, args }) => {
     try {

@@ -1,9 +1,9 @@
 // .tourl — envía una imagen/video CON el comando en el pie de foto y devuelve su URL (Catbox).
 // Reciclado de Megumin (uploadImage.ts) — sin APIs caídas.
 export default {
-  command: ['tourl', 'url'],
+  command: ['tourl'],
   category: 'utils',
-  desc: 'Convierte la imagen o video adjunto en URL',
+  desc: 'Sube imagen/video y da su URL',
   run: async ({ msg, sock }) => {
     try {
       const mm = msg.message || {};

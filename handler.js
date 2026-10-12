@@ -2,15 +2,40 @@
 import chalk from 'chalk';
 
 const PREFIXES = ['.', '/', '!', '#'];
+const KEYWORDS = /\b(shadowdev|shadow|dev|bot|samy)\b/i;
+
+const MENCION = [
+  '¿Me llamaban? 👀 Soy *ShadowDev*, usa *.menu* y ve lo que sé hacer.',
+  'Dime, estoy aquí ✦ Prueba con *.menu*.',
+  '¿Sí? 👀 Escribe *.menu* para ver mis comandos.'
+];
+const KEYWORD = [
+  '¿Dijeron *ShadowDev*? ٩(˘◡˘)۶ Usa *.menu*.',
+  'Aquí ando ✦ ¿En qué ayudo? Prueba *.menu*.',
+  'Eskucha 👀 *.menu* tiene todo.'
+];
 
 export default async function handler(sock, m) {
   try {
+    if (m.fromMe) return; // anti-loop: ignora mensajes propios
     global.seenUsers ||= new Set();
     if (m.sender) global.seenUsers.add(m.sender);
     const text = (m.body || '').trim();
     if (!text) return;
     const prefix = PREFIXES.find((p) => text.startsWith(p));
-    if (!prefix) return;
+    if (!prefix) {
+      // Sin prefijo: responde a mención directa o palabras clave (con cooldown)
+      const botNum = (sock.user?.id || '').split(':')[0];
+      const mentioned = (m.mentionedJid || []).some((j) => j.split('@')[0] === botNum);
+      if (!mentioned && !KEYWORDS.test(text)) return;
+      global.kwCooldown ||= new Map();
+      const last = global.kwCooldown.get(m.chat) || 0;
+      if (Date.now() - last < 30000) return;
+      global.kwCooldown.set(m.chat, Date.now());
+      const pool = mentioned ? MENCION : KEYWORD;
+      await m.reply(pool[Math.floor(Math.random() * pool.length)]);
+      return;
+    }
 
     const [raw, ...rest] = text.slice(prefix.length).trim().split(/\s+/);
     if (!raw) return;

@@ -5,7 +5,7 @@ import { downloadVideo, safeName } from '../../lib/ytdl.js';
 export default {
   command: ['play2', 'mp4', 'ytmp4', 'playvideo'],
   category: 'downloader',
-  desc: 'Descarga video de YouTube',
+  desc: 'Baja video en MP4',
   uso: '<nombre o url>',
   run: async ({ msg, sock, args }) => {
     try {

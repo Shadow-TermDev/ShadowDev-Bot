@@ -2,7 +2,7 @@
 import ytsearch from 'yt-search';
 
 export default {
-  command: ['yt', 'youtube', 'buscar'],
+  command: ['yt', 'youtube'],
   category: 'search',
   desc: 'Busca videos en YouTube',
   uso: '<texto>',

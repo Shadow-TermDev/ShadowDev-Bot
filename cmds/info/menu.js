@@ -49,7 +49,7 @@ function fmt(ms) {
 export default {
   command: ['menu', 'help', 'allmenu'],
   category: 'info',
-  desc: 'Ver la lista de comandos del bot',
+  desc: 'Muestra este menú',
   run: async ({ msg, sock, args, prefix }) => {
     try {
       const seen = new Set();

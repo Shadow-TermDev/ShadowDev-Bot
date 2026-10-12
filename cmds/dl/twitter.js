@@ -2,9 +2,9 @@
 import fetch from 'node-fetch';
 
 export default {
-  command: ['twitter', 'x', 'xdl'],
+  command: ['twitter', 'x'],
   category: 'downloader',
-  desc: 'Descarga videos/fotos de X (Twitter)',
+  desc: 'Baja videos y fotos de X',
   uso: '<url>',
   run: async ({ msg, sock, args }) => {
     try {

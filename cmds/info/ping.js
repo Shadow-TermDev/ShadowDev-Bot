@@ -12,7 +12,7 @@ function fmt(ms) {
 export default {
   command: ['ping', 'speed', 'estado'],
   category: 'info',
-  desc: 'Ver el estado y tiempo activo del bot',
+  desc: 'Latencia y tiempo activo',
   run: async ({ msg, sock }) => {
     const t0 = Date.now();
     const { key } = await sock.sendMessage(

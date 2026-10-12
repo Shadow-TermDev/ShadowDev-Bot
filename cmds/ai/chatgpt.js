@@ -4,7 +4,7 @@ import fetch from 'node-fetch';
 export default {
   command: ['ia', 'chatgpt', 'gpt'],
   category: 'ai',
-  desc: 'Pregunta a la IA',
+  desc: 'Habla con la IA',
   uso: '<pregunta>',
   run: async ({ msg, sock, args }) => {
     try {

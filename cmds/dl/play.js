@@ -4,9 +4,9 @@ import { getBuffer } from '../../lib/serialize.js';
 import { downloadAudio, safeName, tagAudio } from '../../lib/ytdl.js';
 
 export default {
-  command: ['play', 'mp3', 'ytmp3', 'playaudio'],
+  command: ['play', 'mp3', 'ytmp3'],
   category: 'downloader',
-  desc: 'Descarga audio de YouTube',
+  desc: 'Baja audio en MP3 con portada',
   uso: '<nombre o url>',
   run: async ({ msg, sock, args }) => {
     try {

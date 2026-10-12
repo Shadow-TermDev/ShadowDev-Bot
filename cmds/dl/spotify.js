@@ -6,7 +6,7 @@ import { downloadAudio, safeName, tagAudio } from '../../lib/ytdl.js';
 export default {
   command: ['sp', 'spotify', 'musica'],
   category: 'downloader',
-  desc: 'Busca y descarga música',
+  desc: 'Baja tu música en MP3',
   uso: '<nombre de la canción>',
   run: async ({ msg, sock, args }) => {
     try {

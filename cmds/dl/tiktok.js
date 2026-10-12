@@ -24,7 +24,7 @@ async function byUrl(url) {
 export default {
   command: ['tiktok', 'tt'],
   category: 'downloader',
-  desc: 'Descarga o busca videos de TikTok',
+  desc: 'Baja videos o busca en TikTok',
   uso: '<url o texto>',
   run: async ({ msg, sock, args }) => {
     try {
