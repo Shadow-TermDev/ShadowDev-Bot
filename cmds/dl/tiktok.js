@@ -32,11 +32,13 @@ export default {
       const url = args.find((a) => a.includes('tiktok.com'));
 
       if (url) {
+        await msg.react('🕒');
         const req = byUrl(url);
         await msg.reply('> ✐ _Descargando TikTok, espera..._');
         const v = await req;
         if (!v) return msg.reply('❍ No se pudo descargar (verifica que el video sea público).');
         await sock.sendMessage(msg.chat, { video: { url: v.dl }, caption: v.caption }, { quoted: { key: msg.key, message: {} } });
+        await msg.react('✔️');
         return;
       }
 
@@ -69,6 +71,9 @@ export default {
       if (!n) return msg.reply('❍ No se pudo descargar ningún resultado.');
     } catch (e) {
       console.error('[tiktok]', e?.message || e);
+      try {
+        await msg.react('✖️');
+      } catch {}
       await msg.reply(global.msgglobal);
     }
   }

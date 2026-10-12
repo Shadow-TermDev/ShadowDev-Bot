@@ -13,6 +13,7 @@ export default {
         return msg.reply('❍ Ejemplo: *.twitter* https://x.com/usuario/status/123...');
       }
       const id = url.match(/status\/(\d+)/)[1];
+      await msg.react('🕒');
       const req = fetch(`https://api.fxtwitter.com/i/status/${id}`).then((r) => r.json());
       await msg.reply('> ✐ _Descargando contenido de X, espera..._');
       const res = await req;
@@ -29,8 +30,12 @@ export default {
       for (const p of photos) {
         await sock.sendMessage(msg.chat, { image: { url: p.url }, caption }, { quoted: { key: msg.key, message: {} } });
       }
+      await msg.react('✔️');
     } catch (e) {
       console.error('[twitter]', e?.message || e);
+      try {
+        await msg.react('✖️');
+      } catch {}
       await msg.reply(global.msgglobal);
     }
   }

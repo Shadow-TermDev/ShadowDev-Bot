@@ -13,6 +13,7 @@ export default {
       const search = await ytsearch(args.join(' '));
       const video = search.videos?.[0];
       if (!video) return msg.reply('❍ No se encontró el video.');
+      await msg.react('🕒');
       const dlP = downloadVideo(video.url);
       await msg.reply(`> ✐ _Enviando video *${video.title}*, espera..._`);
       const { dl } = await dlP;
@@ -44,6 +45,7 @@ export default {
       }
     } catch (e) {
       console.error('[play2]', e?.message || e);
+      try { await msg.react('✖️'); } catch {}
       await msg.reply('❍ No se pudo descargar el video, intenta con otro tema.');
     }
   }

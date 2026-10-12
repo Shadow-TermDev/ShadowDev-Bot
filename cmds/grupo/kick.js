@@ -1,5 +1,5 @@
 // .kick — expulsa (responder, mencionar o número). Solo admins.
-import { baseJid, checkGroup, pidOf, resolveTarget } from '../../lib/grupo.js';
+import { baseJid, checkGroup, findParticipant, pidOf, resolveTarget } from '../../lib/grupo.js';
 
 export default {
   command: ['kick', 'expulsar', 'echar'],
@@ -14,6 +14,11 @@ export default {
       if (!target) return msg.reply('❍ Responde al mensaje, menciona o escribe el número. Ej: *.kick* @usuario');
       if (baseJid(target) === baseJid(g.bot)) return msg.reply('❍ No puedo expulsarme a mí mismo.');
       await sock.groupParticipantsUpdate(msg.chat, [pidOf(g.meta, target)], 'remove');
+      await new Promise((r) => setTimeout(r, 1500));
+      const meta2 = await sock.groupMetadata(msg.chat).catch(() => null);
+      if (meta2 && findParticipant(meta2, target)) {
+        return msg.reply(`❍ No se pudo expulsar a @${baseJid(target)} (¿es admin o el creador?).`);
+      }
       await msg.reply(`✿ *Expulsado »* @${baseJid(target)}\n\n> *${global.botname2} • ${global.dev}*`);
     } catch (e) {
       console.error('[kick]', e?.message || e);

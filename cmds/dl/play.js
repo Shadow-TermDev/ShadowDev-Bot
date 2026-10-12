@@ -25,6 +25,7 @@ export default {
         `> ✐ _Enviando audio, espera..._\n` +
         `> *${global.botname2} • ${global.dev}*`;
       // La descarga arranca ANTES del aviso: se solapan y se ahorra ~2s
+      await msg.react('🕒');
       const dlP = downloadAudio(video.url);
       let thumb = null;
       try {
@@ -48,8 +49,10 @@ export default {
         },
         { quoted: { key: msg.key, message: {} } }
       );
+      await msg.react('✔️');
     } catch (e) {
       console.error('[play]', e?.message || e);
+      try { await msg.react('✖️'); } catch {}
       await msg.reply('❍ No se pudo descargar el audio, intenta con otro tema.');
     }
   }
