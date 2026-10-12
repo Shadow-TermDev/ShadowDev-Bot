@@ -29,7 +29,11 @@ export default async function handler(sock, m) {
       const mentioned =
         (m.mentionedJid || []).some((j) => botIds.includes(String(j).split('@')[0])) ||
         botIds.some((id) => id && text.includes('@' + id));
-      const replyToBot = !!m.quotedSender && botIds.includes(String(m.quotedSender).split('@')[0].split(':')[0]);
+      const replyToBotJid = !!m.quotedSender && botIds.includes(String(m.quotedSender).split('@')[0].split(':')[0]);
+      const quotedText = (m.quoted?.conversation || m.quoted?.extendedTextMessage?.text || '').slice(0, 120);
+      const sent = global.botSent?.get(m.chat) || [];
+      const replyToBotText = !!quotedText && sent.some((s) => s && (s.startsWith(quotedText.slice(0, 40)) || quotedText.startsWith(s.slice(0, 40))));
+      const replyToBot = replyToBotJid || replyToBotText;
       const keyword = KEYWORDS.test(text);
       if (!mentioned && !keyword && !replyToBot) return;
       global.kwCooldown ||= new Map();
@@ -41,11 +45,11 @@ export default async function handler(sock, m) {
       global.kwCooldown.set(m.chat, Date.now());
       console.log(chalk.gray(`[kw] ${mentioned ? 'mención' : replyToBot ? 'respuesta' : 'keyword'} de ${m.pushName || m.sender}: ${text.slice(0, 80)}`));
       try {
-        const out = await preguntarIA(
+        const out = (await preguntarIA(
           `En el chat dicen: "${text.slice(0, 300)}"`,
           `${SYSTEM_BOT}\nEstás hablando con ${userName}.`
-        );
-        if (out) {
+        ))?.trim();
+        if (out && !/^\s*\{[^}]*\}\s*$/.test(out)) {
           await m.reply(out);
           return;
         }

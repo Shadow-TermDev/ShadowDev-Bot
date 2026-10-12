@@ -15,8 +15,8 @@ export default {
         { text: '> ✦ _La IA está procesando tu respuesta..._' },
         { quoted: { key: msg.key, message: {} } }
       );
-      const out = await preguntarIA(text, undefined, 90000);
-      if (!out) {
+      const out = (await preguntarIA(text, undefined, 90000))?.trim();
+      if (!out || /^\s*\{[^}]*\}\s*$/.test(out)) {
         await sock.sendMessage(msg.chat, { text: '❍ La IA no respondió, intenta de nuevo.', edit: key });
         return;
       }

@@ -125,6 +125,24 @@ export async function startBot() {
 
   global.sock = sock;
   global.bootTime = Date.now();
+  // Registra lo que el bot envía (para detectar réplicas aunque cambie el JID/LID)
+  global.botSent ||= new Map();
+  const rawSend = sock.sendMessage.bind(sock);
+  sock.sendMessage = async (jid, content, opts) => {
+    try {
+      const t =
+        content?.conversation ||
+        content?.extendedTextMessage?.text ||
+        content?.imageMessage?.caption ||
+        content?.videoMessage?.caption;
+      if (t) {
+        const arr = global.botSent.get(jid) || [];
+        arr.push(t.slice(0, 120));
+        global.botSent.set(jid, arr.slice(-8));
+      }
+    } catch {}
+    return rawSend(jid, content, opts);
+  };
   sock.ev.on('creds.update', saveCreds);
 
   // Código de 8 dígitos (solo si la sesión aún no está registrada)
