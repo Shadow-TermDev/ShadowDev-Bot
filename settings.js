@@ -26,10 +26,10 @@ global.link = 'https://Shadow-TermDev.github.io';
 
 global.msgglobal = '❍ Ocurrió un problema, contacte al creador.';
 global.mess = {
-  socket: '(∩´͈ ᴖ `͈∩ ྀི) Este comando solo puede ser ejecutado por un Socket.',
-  admin: '٩ʕ◕౪◕ʔو Este comando solo puede ser ejecutado por los Administradores del Grupo.',
-  botAdmin: '(𓂂꜆◕⩊◕꜀𓂂) Este comando solo puede ser ejecutado si el Socket es Administrador del Grupo.',
-  owner: '✿ Este comando solo puede ser usado por el Owner.'
+  socket: '❍ Este comando solo puede usarlo un *Socket*.\n> ✦ Pide ayuda a un administrador.',
+  admin: '❍ Este comando solo lo usan los *Admins del grupo*.',
+  botAdmin: '❍ El bot necesita ser *Admin del grupo* para esto.',
+  owner: '❍ Este comando solo lo usa el *Owner*.'
 };
 
 global.my = {

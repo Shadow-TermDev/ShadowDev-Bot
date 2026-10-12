@@ -1,4 +1,4 @@
-import { generateWAMessageFromContent, getUrlInfo } from '@whiskeysockets/baileys';
+import { prepareWAMessageMedia } from '@whiskeysockets/baileys';
 
 function fmt(ms) {
   const s = Math.floor(ms / 1000);
@@ -54,33 +54,42 @@ export default {
       }
       menu += `\n˚₊· 𓂃 *${global.botname2} • ${global.dev}* 𓂃 ·₊˚\n> ${global.link}`;
 
-      // Generamos la vista previa nativa con getUrlInfo de Baileys
-      const urlInfo = await getUrlInfo(global.link, {
-        thumbnailWidth: 1024,
-        fetchOpts: { timeout: 3000 }
-      }).catch(() => null);
+      // Preview CORRECTO: los campos van al nivel del mensaje (linkPreview),
+      // NO dentro de contextInfo (ahí WhatsApp los ignora). Con logs [preview].
+      let linkPreview;
+      try {
+        console.log('[preview] descargando portada del sitio...');
+        const page = await (await fetch(global.link, { signal: AbortSignal.timeout(15000) })).text();
+        console.log('[preview] pagina bytes:', page.length);
+        const og = page.match(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i)?.[1];
+        console.log('[preview] og:image:', og);
+        if (!og) throw new Error('sin og:image');
+        const buf = Buffer.from(await (await fetch(og, { signal: AbortSignal.timeout(25000) })).arrayBuffer());
+        console.log('[preview] imagen bytes:', buf.length);
+        if (buf.length < 5000) throw new Error('imagen vacía');
+        const { imageMessage } = await prepareWAMessageMedia(
+          { image: buf },
+          { upload: sock.waUploadToServer, mediaTypeOverride: 'thumbnail-link' }
+        );
+        console.log('[preview] thumb bytes:', imageMessage?.jpegThumbnail?.length || 0);
+        linkPreview = {
+          'canonical-url': global.link,
+          'matched-text': global.link,
+          title: global.botname,
+          description: `${global.botname2} • ${global.dev}`,
+          jpegThumbnail: imageMessage?.jpegThumbnail ? Buffer.from(imageMessage.jpegThumbnail) : undefined,
+          highQualityThumbnail: imageMessage || undefined
+        };
+      } catch (e) {
+        console.error('[preview] fallo:', e?.message || e);
+        linkPreview = undefined;
+      }
 
-      const msgGenerated = generateWAMessageFromContent(
+      await sock.sendMessage(
         msg.chat,
-        {
-          extendedTextMessage: {
-            text: menu.trim(),
-            contextInfo: {
-              mentionedJid: [msg.sender],
-              ...(urlInfo ? {
-                canonicalUrl: global.link,
-                matchedText: global.link,
-                title: urlInfo.title || global.botname2,
-                description: urlInfo.description || global.dev,
-                jpegThumbnail: urlInfo.jpegThumbnail
-              } : {})
-            }
-          }
-        },
+        { text: menu.trim(), linkPreview, contextInfo: { mentionedJid: [msg.sender] } },
         { quoted: { key: msg.key, message: {} } }
       );
-
-      await sock.relayMessage(msg.chat, msgGenerated.message, { messageId: msgGenerated.key.id });
 
     } catch (e) {
       console.error('Fail: [menu.js]', e?.stack || e);
