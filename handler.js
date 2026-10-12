@@ -101,8 +101,7 @@ export default async function handler(sock, m) {
       const replyToBot = replyToBotJid || replyToBotText;
       const keyword = KEYWORDS.test(text);
       if (!mentioned && !keyword && !replyToBot) return;
-      if (m.isGroup && getChat(m.chat).botOff && !isOwner) return;
-      global.kwCooldown ||= new Map();
+        global.kwCooldown ||= new Map();
       const last = global.kwCooldown.get(m.chat) || 0;
       if (Date.now() - last < 20000) {
         console.log(chalk.gray(`[kw] cooldown (${mentioned ? 'mención' : replyToBot ? 'respuesta' : 'keyword'}) ${m.pushName || m.sender}`));
@@ -168,23 +167,23 @@ export default async function handler(sock, m) {
     // Toggles por grupo (los comandos toggle siempre pasan)
     if (m.isGroup && !['bot', 'botcito'].includes(command)) {
       const cfg = getChat(m.chat);
-      if (cfg.botOff) return msg.reply('❍ El bot está *apagado* en este grupo.');
+      if (cfg.botOff) return m.reply('❍ El bot está *apagado* en este grupo.');
       if (cfg.onlyAdmin && !isOwner) {
         try {
           const meta = await sock.groupMetadata(m.chat);
           const ok = isAdminOf(meta, m.sender);
           console.log(`[gate] onlyAdmin sender=${m.sender} esAdmin=${ok} parts=${meta?.participants?.length || 0}`);
-          if (!ok) return msg.reply('❍ Solo los admins pueden usar el bot por ahora.');
+          if (!ok) return m.reply('❍ Solo los admins pueden usar el bot por ahora.');
         } catch (e) {
           console.error('[gate] onlyAdmin sin metadata:', e?.message || e);
           return;
         }
       }
       if (cfg.economyOff && cmd.category === 'economy' && !isOwner) {
-        return msg.reply('❍ Economía apagada aquí. Un admin la enciende con *.economy on*.');
+        return m.reply('❍ Economía apagada aquí. Un admin la enciende con *.economy on*.');
       }
       if (cfg.gachaOff && cmd.category === 'gacha' && !isOwner) {
-        return msg.reply('❍ Gacha apagado aquí. Un admin lo enciende con *.gacha on*.');
+        return m.reply('❍ Gacha apagado aquí. Un admin lo enciende con *.gacha on*.');
       }
     }
 

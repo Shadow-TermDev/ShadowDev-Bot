@@ -46,6 +46,8 @@ export default {
 - Respuestas de contenido (IA, traducción, letra): texto limpio, sin adornos.
 - `run` recibe `{ msg, sock, args, text, command, prefix, usedPrefix, isOwner }`.
 - Responder citando: `{ quoted: { key: msg.key, message: {} } }`.
+- OJO: en `handler.js` el mensaje se llama `m` (no `msg`); en comandos es `msg`.
+  Confundirlos revienta al catch con "Ocurrió un problema".
 - `msg.reply(texto)` para texto simple.
 - Comandos de grupo: usar `lib/grupo.js` (`checkGroup`, `resolveTarget`).
 - IA: usar `lib/ia.js` (`preguntarIA`), nunca fetch directo a Pollinations.
