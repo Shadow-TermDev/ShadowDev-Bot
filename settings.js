@@ -8,7 +8,7 @@ import { fileURLToPath } from 'url';
 import { getConfig } from './lib/config.js';
 
 // ── Owners (cambia/agrega tu número con código país, sin +) ──
-global.owner = ['51910763332', '51917282040'/*, '51935991809'*/];
+global.owner = ['51910763332', '51917282040', '51935991809'];
 
 // ── Identidad del bot ──
 global.botname = 'ShadowDev-Bot';

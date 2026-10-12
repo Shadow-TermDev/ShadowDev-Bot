@@ -14,6 +14,7 @@ export default {
       const search = await ytsearch(args.join(' '));
       const video = search.videos?.[0];
       if (!video) return msg.reply('❍ No se encontró el video.');
+      if ((video.seconds || 0) > 1800) return msg.reply('❍ Muy largo (máx 30 min). Busca otro tema o usa *.playaudio*.');
       const canal = video.author?.name || 'Desconocido';
 
       const caption =

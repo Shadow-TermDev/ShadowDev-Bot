@@ -9,7 +9,9 @@ async function byUrl(url) {
   }).then((r) => r.json());
   const d = res?.data;
   const dl = d?.play || d?.wmplay;
-  if (res?.code !== 0 || !dl) return null;
+  const fotos = Array.isArray(d?.images) ? d.images.filter(Boolean) : [];
+  if (res?.code !== 0 || (!dl && !fotos.length)) return null;
+  if (!dl) return { fotos, caption: null };
   return {
     dl,
     caption:
@@ -36,7 +38,14 @@ export default {
         const req = byUrl(url);
         await msg.reply('> ✐ _Descargando TikTok, espera..._');
         const v = await req;
-        if (!v) return msg.reply('❍ No se pudo descargar (verifica que el video sea público).');
+        if (!v) return msg.reply('❍ No se pudo descargar (verifica que sea público).');
+        if (v.fotos && !v.dl) {
+          for (const f of v.fotos.slice(0, 5)) {
+            await sock.sendMessage(msg.chat, { image: { url: f } }, { quoted: { key: msg.key, message: {} } });
+          }
+          await msg.react('✔️');
+          return;
+        }
         await sock.sendMessage(msg.chat, { video: { url: v.dl }, caption: v.caption }, { quoted: { key: msg.key, message: {} } });
         await msg.react('✔️');
         return;
