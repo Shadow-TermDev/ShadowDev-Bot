@@ -1,6 +1,6 @@
 // .play2 — video de YouTube vía SaveTube (sin Stellar caído).
 import ytsearch from 'yt-search';
-import { downloadVideo } from '../../lib/ytdl.js';
+import { downloadVideo, safeName } from '../../lib/ytdl.js';
 
 export default {
   command: ['play2', 'mp4', 'ytmp4', 'playvideo'],
@@ -15,11 +15,32 @@ export default {
       if (!video) return msg.reply('❍ No se encontró el video.');
       await msg.reply(`> ✦ _Enviando video *${video.title}*, espera..._`);
       const { dl } = await downloadVideo(video.url);
-      await sock.sendMessage(
-        msg.chat,
-        { video: { url: dl }, fileName: `${video.title}.mp4`, mimetype: 'video/mp4' },
-        { quoted: { key: msg.key, message: {} } }
-      );
+      const name = safeName(video.title, 'video');
+      const caption =
+        `• :･ﾟ⊹˚• \`『 YouTube-Video 』\` •˚⊹:･ﾟ•\n\n` +
+        `ᰔᩚ *Título »* ${video.title}\n` +
+        `ᰔᩚ *Canal »* ${video.author?.name || 'Desconocido'}\n\n` +
+        `> *${global.botname2} • ${global.dev}*`;
+
+      // Videos pesados van como documento (tu red los tumba como video)
+      let big = false;
+      try {
+        const head = await fetch(dl, { method: 'HEAD', signal: AbortSignal.timeout(15000) });
+        big = (parseInt(head.headers.get('content-length') || '0', 10) || 0) > 95 * 1024 * 1024;
+      } catch {}
+      if (big) {
+        await sock.sendMessage(
+          msg.chat,
+          { document: { url: dl }, fileName: `${name}.mp4`, mimetype: 'video/mp4', caption },
+          { quoted: { key: msg.key, message: {} } }
+        );
+      } else {
+        await sock.sendMessage(
+          msg.chat,
+          { video: { url: dl }, caption },
+          { quoted: { key: msg.key, message: {} } }
+        );
+      }
     } catch (e) {
       console.error('[play2]', e?.message || e);
       await msg.reply('❍ No se pudo descargar el video, intenta con otro tema.');

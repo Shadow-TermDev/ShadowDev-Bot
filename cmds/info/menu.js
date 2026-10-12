@@ -1,6 +1,5 @@
-// Menú estilo Rem — solo texto + link. La vista previa sale del og:image
-// del sitio (verificado 200). Sin externalAdReply: con URLs muertas o
-// pesadas WhatsApp descarta el mensaje en silencio.
+import { generateWAMessageFromContent, getUrlInfo } from '@whiskeysockets/baileys';
+
 function fmt(ms) {
   const s = Math.floor(ms / 1000);
   const m = Math.floor(s / 60);
@@ -28,8 +27,8 @@ export default {
       const uptime = fmt(Date.now() - (global.bootTime || Date.now()));
       const numero = msg.sender.split('@')[0];
 
-      let menu = `Hola! Soy  *${global.botname2}*  ٩(˘◡˘)۶\n`;
-      menu += `Aquí tienes la lista de comandos\n`;
+      let menu = `⋆｡ﾟ☁︎ Hola! Soy  *${global.botname2}*  ٩(˘◡˘)۶ ☁︎ﾟ｡⋆\n`;
+      menu += `˚₊· Aquí tienes la lista de comandos ·₊˚\n`;
       menu += `╭┈ ↷\n`;
       menu += `│ᰔᩚ Cliente » @${numero}\n`;
       menu += `│❀ Modo » Publico\n`;
@@ -39,6 +38,7 @@ export default {
       menu += `│✧ Comandos » ${totalCmds}\n`;
       menu += `│🜸 Baileys » Multi Device\n`;
       menu += `╰─────────────────\n`;
+      menu += `· · • —– ٠ ✤ ٠ —– • · ·\n`;
 
       const filtro = args[0]?.toLowerCase();
       for (const [cat, cmds] of cats) {
@@ -47,21 +47,41 @@ export default {
         menu += `\n• :･ﾟ⊹˚• \`『 ${nombre} 』\` •˚⊹:･ﾟ•\n\n`;
         menu += `❍ ${cmds[0]?.desc || 'Comandos disponibles.'}\n`;
         for (const c of cmds) {
-          const alias = c.alias.map((a) => `${prefix}${a}`).join(' • ');
+          const alias = c.alias ? c.alias.map((a) => `${prefix}${a}`).join(' • ') : `${prefix}${c.command[0]}`;
           menu += `ᰔᩚ *${alias}*\n`;
           menu += `> ✦ ${c.desc || 'Sin descripción.'}${c.uso ? ` Uso: ${c.uso}` : ''}\n`;
         }
       }
-      menu += `\n> *${global.botname2} • ${global.dev}*\n> ${global.link}`;
+      menu += `\n˚₊· 𓂃 *${global.botname2} • ${global.dev}* 𓂃 ·₊˚\n> ${global.link}`;
 
-      await sock.sendMessage(
+      // Generamos la vista previa nativa con getUrlInfo de Baileys
+      const urlInfo = await getUrlInfo(global.link, {
+        thumbnailWidth: 1024,
+        fetchOpts: { timeout: 3000 }
+      }).catch(() => null);
+
+      const msgGenerated = generateWAMessageFromContent(
         msg.chat,
         {
-          text: menu.trim(),
-          contextInfo: { mentionedJid: [msg.sender] }
+          extendedTextMessage: {
+            text: menu.trim(),
+            contextInfo: {
+              mentionedJid: [msg.sender],
+              ...(urlInfo ? {
+                canonicalUrl: global.link,
+                matchedText: global.link,
+                title: urlInfo.title || global.botname2,
+                description: urlInfo.description || global.dev,
+                jpegThumbnail: urlInfo.jpegThumbnail
+              } : {})
+            }
+          }
         },
         { quoted: { key: msg.key, message: {} } }
       );
+
+      await sock.relayMessage(msg.chat, msgGenerated.message, { messageId: msgGenerated.key.id });
+
     } catch (e) {
       console.error('Fail: [menu.js]', e?.stack || e);
       await msg.reply(global.msgglobal);

@@ -1,7 +1,7 @@
 // .sp — música por nombre con título y portada (vía YouTube + SaveTube).
 import ytsearch from 'yt-search';
 import { getBuffer } from '../../lib/serialize.js';
-import { downloadAudio, tagAudio } from '../../lib/ytdl.js';
+import { downloadAudio, safeName, tagAudio } from '../../lib/ytdl.js';
 
 export default {
   command: ['sp', 'spotify', 'musica'],
@@ -14,9 +14,9 @@ export default {
       if (!query) return msg.reply('❍ Escribe el nombre de la canción. Ej: *.sp* get lucky');
       const search = await ytsearch(query);
       const video = search.videos?.[0];
-      if (!video) return msg.reply('❖ Sin resultados.');
+      if (!video) return msg.reply('❍ Sin resultados.');
       const canal = video.author?.name || 'Desconocido';
-      await msg.reply(`• :･ﾟ⊹˚• \`『 Music 』\` •˚⊹:･ﾟ•\n\nᰔᩚ *Título »* ${video.title}\nᰔᩚ *Artista »* ${canal}\n\n> ✦ _Enviando audio, espera..._`);
+      await msg.reply(`• :･ﾟ⊹˚• \`『 Music 』\` •˚⊹:･ﾟ•\n\nᰔᩚ *Título »* ${video.title}\nᰔᩚ *Artista »* ${canal}\n\n> ✦ _Enviando audio, espera..._\n> *${global.botname2} • ${global.dev}*`);
       const { dl } = await downloadAudio(video.url);
       let audio = await getBuffer(dl);
       let thumb = null;
@@ -29,14 +29,14 @@ export default {
         {
           document: audio,
           mimetype: 'audio/mpeg',
-          fileName: `${video.title}.mp3`,
+          fileName: `${safeName(video.title)}.mp3`,
           jpegThumbnail: thumb ?? undefined
         },
         { quoted: { key: msg.key, message: {} } }
       );
     } catch (e) {
       console.error('[sp]', e?.message || e);
-      await msg.reply('❖ No se pudo descargar el audio.');
+      await msg.reply('❍ No se pudo descargar el audio.');
     }
   }
 };

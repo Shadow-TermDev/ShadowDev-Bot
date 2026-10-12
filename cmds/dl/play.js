@@ -1,7 +1,7 @@
 // .play — audio de YouTube con título y portada (estilo Megumin, vía SaveTube).
 import ytsearch from 'yt-search';
 import { getBuffer } from '../../lib/serialize.js';
-import { downloadAudio, tagAudio } from '../../lib/ytdl.js';
+import { downloadAudio, safeName, tagAudio } from '../../lib/ytdl.js';
 
 export default {
   command: ['play', 'mp3', 'ytmp3', 'playaudio'],
@@ -22,7 +22,8 @@ export default {
         `ᰔᩚ *Canal »* ${canal}\n` +
         `ᰔᩚ *Duración »* ${video.timestamp || ''}\n` +
         `ᰔᩚ *Vistas »* ${(video.views || 0).toLocaleString()}\n\n` +
-        `> ✦ _Enviando audio, espera..._`;
+        `> ✦ _Enviando audio, espera..._\n` +
+        `> *${global.botname2} • ${global.dev}*`;
       let thumb = null;
       try {
         thumb = await getBuffer(video.image);
@@ -40,7 +41,7 @@ export default {
         {
           document: audio,
           mimetype: 'audio/mpeg',
-          fileName: `${video.title}.mp3`,
+          fileName: `${safeName(video.title)}.mp3`,
           jpegThumbnail: thumb ?? undefined
         },
         { quoted: { key: msg.key, message: {} } }

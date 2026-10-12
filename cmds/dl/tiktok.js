@@ -16,7 +16,8 @@ async function byUrl(url) {
       `• :･ﾟ⊹˚• \`『 TikTok-Download 』\` •˚⊹:･ﾟ•\n\n` +
       `ᰔᩚ *Título »* ${d.title || 'Sin título'}\n` +
       `ᰔᩚ *Autor »* @${d.author?.unique_id || d.author?.nickname || '?'}\n` +
-      `ᰔᩚ *Likes »* ${(d.digg_count || 0).toLocaleString()}`
+      `ᰔᩚ *Likes »* ${(d.digg_count || 0).toLocaleString()}\n\n` +
+      `> *${global.botname2} • ${global.dev}*`
   };
 }
 

@@ -21,7 +21,7 @@ export default {
       const videos = media.videos || [];
       const photos = media.photos || [];
       if (!videos.length && !photos.length) return msg.reply('❍ Ese tweet no tiene multimedia descargable.');
-      const caption = `• :･ﾟ⊹˚• \`『 X-Download 』\` •˚⊹:･ﾟ•\n\n> ✦ ${tw.text ? tw.text.slice(0, 200) : 'Aquí tiene su archivo'}`;
+      const caption = `• :･ﾟ⊹˚• \`『 X-Download 』\` •˚⊹:･ﾟ•\n\n> ✦ ${tw.text ? tw.text.slice(0, 200) : 'Aquí tiene su archivo'}\n\n> *${global.botname2} • ${global.dev}*`;
       for (const v of videos) {
         await sock.sendMessage(msg.chat, { video: { url: v.url }, caption }, { quoted: { key: msg.key, message: {} } });
       }
