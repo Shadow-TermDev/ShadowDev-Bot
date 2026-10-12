@@ -1,6 +1,7 @@
 node_modules/
 Sessions/
 cache/
+data/
 *.log
 *.bak.*
 .DS_Store
