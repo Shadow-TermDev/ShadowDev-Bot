@@ -1,19 +1,43 @@
 import { Jimp } from 'jimp';
+import fs from 'fs';
 
-// Miniatura en memoria: se genera una vez por arranque (5s solo el 1er .menu)
+// Miniatura en disco (./cache) + memoria: se genera 1 vez y el menú vuela.
+// Si cambias el banner, borra ./cache/menu-thumb.jpg
+const CACHE_FILE = './cache/menu-thumb.jpg';
 let thumbCache = null;
 
 async function bannerThumb() {
   if (thumbCache) return thumbCache;
+  try {
+    const b = fs.readFileSync(CACHE_FILE);
+    if (b.length > 5000) {
+      thumbCache = b;
+      return b;
+    }
+  } catch {}
   const page = await (await fetch(global.link, { signal: AbortSignal.timeout(15000) })).text();
   const og = page.match(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i)?.[1];
   if (!og) throw new Error('sin og:image');
   const buf = Buffer.from(await (await fetch(og, { signal: AbortSignal.timeout(25000) })).arrayBuffer());
   if (buf.length < 5000) throw new Error('imagen vacía');
   thumbCache = await (await Jimp.read(buf)).resize({ w: 600 }).getBuffer('image/jpeg');
-  console.log('[preview] thumb generada, bytes:', thumbCache.length);
+  try {
+    fs.mkdirSync('./cache', { recursive: true });
+    fs.writeFileSync(CACHE_FILE, thumbCache);
+  } catch {}
   return thumbCache;
 }
+
+// Precalienta el caché en 2do plano tras conectar
+export async function warmBanner() {
+  try {
+    await bannerThumb();
+    console.log('[preview] caché listo');
+  } catch (e) {
+    console.error('[preview] warmup:', e?.message || e);
+  }
+}
+global.warmBanner = warmBanner;
 
 function fmt(ms) {
   const s = Math.floor(ms / 1000);
