@@ -2,7 +2,7 @@
 import { displayName, getUser } from '../../lib/users.js';
 
 export default {
-  command: ['inv', 'inventario', 'mis'],
+  command: ['inv', 'inventario', 'mis', 'harem', 'waifus', 'claims'],
   category: 'gacha',
   desc: 'Ver tus personajes',
   run: async ({ msg }) => {

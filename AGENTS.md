@@ -53,6 +53,10 @@ export default {
   El handler ya suma +10 🪙 por comando y registra `msgs`. Datos en `data/` (ignorado).
 - Gacha: `lib/gacha.js` + catálogo `lib/characters.json` (1350). Cooldowns y
   reclamos ahí; imágenes vía `imagenDe()` (safebooru→gelbooru seguro).
+- Chats: `lib/chats.js` (welcome/bye, antilink/antispam, warns, toggles
+  botOff/economyOff/gachaOff/onlyAdmin). El handler aplica los gates solo.
+- Emojis: SOLO set del menú (✿ ❍ ✐ ᰔᩚ 🜸 ❀ ✦ ✰ ✧ + Reactions 🕒✔️✖️).
+  Nada de 🪙🎉👋 (moneda = texto via `global.moneda`).
 
 ## 4. APIs permitidas (verificadas, sin keys)
 

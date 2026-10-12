@@ -40,9 +40,9 @@ export default async function handler(sock, m) {
           if (meta && !admin && botAdmin) {
             if (cfg.antilink && LINKRE.test(m.body)) {
               await sock.sendMessage(m.chat, { delete: { remoteJid: m.chat, fromMe: false, id: m.key.id, participant: m.key.participant } }).catch(() => {});
-              const n = addWarn(m.chat, m.sender);
-              if (n >= 3) {
-                clearWarns(m.chat, m.sender);
+              const n = addWarn(m.chat, baseJid(m.sender));
+              if (n >= (cfg.warnLimit || 3)) {
+                clearWarns(m.chat, baseJid(m.sender));
                 await sock.groupParticipantsUpdate(m.chat, [m.sender], 'remove').catch(() => {});
                 await sock.sendMessage(m.chat, { text: `❍ *@${baseJid(m.sender)}* eliminado por anti-link.`, mentions: [m.sender] });
               } else {
@@ -159,6 +159,26 @@ export default async function handler(sock, m) {
         senderBase = await realPhone(sock, m.chat, m.sender);
       } catch {}
       isOwner = ownerBases.includes(senderBase);
+    }
+
+    // Toggles por grupo (los comandos toggle siempre pasan)
+    if (m.isGroup && !['bot', 'botcito'].includes(command)) {
+      const cfg = getChat(m.chat);
+      if (cfg.botOff && !isOwner) return;
+      if (cfg.onlyAdmin && !isOwner) {
+        try {
+          const meta = await sock.groupMetadata(m.chat);
+          if (!isAdminOf(meta, m.sender)) return msg.reply(global.mess.admin);
+        } catch {
+          return;
+        }
+      }
+      if (cfg.economyOff && cmd.category === 'economy' && !isOwner) {
+        return msg.reply('❍ Economía apagada aquí. Un admin la enciende con *.economy on*.');
+      }
+      if (cfg.gachaOff && cmd.category === 'gacha' && !isOwner) {
+        return msg.reply('❍ Gacha apagado aquí. Un admin lo enciende con *.gacha on*.');
+      }
     }
 
     const t0 = Date.now();

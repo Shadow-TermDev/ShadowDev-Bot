@@ -1,5 +1,6 @@
 // .rw — tira un personaje aleatorio (cooldown 3min, reclamo 5min).
 import { getBuffer } from '../../lib/serialize.js';
+import { getUser, saveUsers } from '../../lib/users.js';
 import { duenoDe, getRoll, imagenDe, marcarTiro, msCorto, puedeTirar, setRoll, tirar } from '../../lib/gacha.js';
 
 export default {
@@ -13,6 +14,11 @@ export default {
       const p = tirar();
       if (!p) return msg.reply('❍ Sin personajes disponibles.');
       marcarTiro(msg.sender);
+      try {
+        const uu = getUser(msg.sender);
+        uu.rolls = (uu.rolls || 0) + 1;
+        saveUsers();
+      } catch {}
       const previo = getRoll(msg.chat);
       setRoll(msg.chat, p, msg.sender);
       const img = await imagenDe(p.keyword);
