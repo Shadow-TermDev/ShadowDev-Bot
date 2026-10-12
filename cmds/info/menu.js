@@ -1,7 +1,7 @@
 import fs from 'fs';
 
 // La imagen sale del caché de medios de Baileys (1 subida por arranque).
-const BANNER_URL = 'https://Shadow-TermDev.github.io/assets/shadowdev-banner-mini.jpg';
+const BANNER_URL = 'https://Shadow-TermDev.github.io/assets/shadowdev-banner-thumb.jpg';
 
 function fmt(ms) {
   const s = Math.floor(ms / 1000);
