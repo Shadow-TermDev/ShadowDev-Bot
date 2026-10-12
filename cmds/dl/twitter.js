@@ -13,8 +13,9 @@ export default {
         return msg.reply('❍ Ejemplo: *.twitter* https://x.com/usuario/status/123...');
       }
       const id = url.match(/status\/(\d+)/)[1];
-      await msg.reply('> _Descargando contenido de X, espera..._');
-      const res = await fetch(`https://api.fxtwitter.com/i/status/${id}`).then((r) => r.json());
+      const req = fetch(`https://api.fxtwitter.com/i/status/${id}`).then((r) => r.json());
+      await msg.reply('> ✦ _Descargando contenido de X, espera..._');
+      const res = await req;
       const tw = res?.tweet;
       if (res?.code !== 200 || !tw) return msg.reply('❍ No se pudo obtener el tweet.');
       const media = tw.media || {};

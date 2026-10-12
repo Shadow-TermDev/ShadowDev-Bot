@@ -13,8 +13,9 @@ export default {
       const search = await ytsearch(args.join(' '));
       const video = search.videos?.[0];
       if (!video) return msg.reply('❍ No se encontró el video.');
+      const dlP = downloadVideo(video.url);
       await msg.reply(`> ✦ _Enviando video *${video.title}*, espera..._`);
-      const { dl } = await downloadVideo(video.url);
+      const { dl } = await dlP;
       const name = safeName(video.title, 'video');
       const caption =
         `• :･ﾟ⊹˚• \`『 YouTube-Video 』\` •˚⊹:･ﾟ•\n\n` +

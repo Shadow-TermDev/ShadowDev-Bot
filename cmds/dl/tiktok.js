@@ -32,7 +32,9 @@ export default {
       const url = args.find((a) => a.includes('tiktok.com'));
 
       if (url) {
-        const v = await byUrl(url);
+        const req = byUrl(url);
+        await msg.reply('> ✦ _Descargando TikTok, espera..._');
+        const v = await req;
         if (!v) return msg.reply('❍ No se pudo descargar (verifica que el video sea público).');
         await sock.sendMessage(msg.chat, { video: { url: v.dl }, caption: v.caption }, { quoted: { key: msg.key, message: {} } });
         return;

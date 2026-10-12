@@ -24,6 +24,8 @@ export default {
         `ᰔᩚ *Vistas »* ${(video.views || 0).toLocaleString()}\n\n` +
         `> ✦ _Enviando audio, espera..._\n` +
         `> *${global.botname2} • ${global.dev}*`;
+      // La descarga arranca ANTES del aviso: se solapan y se ahorra ~2s
+      const dlP = downloadAudio(video.url);
       let thumb = null;
       try {
         thumb = await getBuffer(video.image);
@@ -32,7 +34,7 @@ export default {
         await msg.reply(caption);
       }
 
-      const { dl } = await downloadAudio(video.url);
+      const { dl } = await dlP;
       let audio = await getBuffer(dl);
       audio = await tagAudio(audio, { title: video.title, artist: canal, cover: thumb });
 

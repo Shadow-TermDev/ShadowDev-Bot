@@ -15,6 +15,7 @@ import qrcode from 'qrcode-terminal';
 import chalk from 'chalk';
 import fs from 'fs';
 import readlineSync from 'readline-sync';
+import pkg from './package.json' with { type: 'json' };
 
 const log = {
   info: (msg) => console.log(chalk.bgBlue.white.bold(` INFO `), chalk.white(msg)),
@@ -40,10 +41,11 @@ function normalizePhone(input) {
 console.log(chalk.magenta.bold('\n INICIANDO SISTEMA ...'));
 console.log(
   chalk.cyan(`
-      ${global.botname}
+      ${global.botname} v${pkg.version}
      Powered by ${global.dev} ~
 `)
 );
+console.log(chalk.gray(`[ ✿ ] node ${process.version} | ${process.platform} | prefijos . / ! #`));
 
 async function pedirVinculacion() {
   if (fs.existsSync(`${SESSION_DIR}/creds.json`)) return;

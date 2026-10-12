@@ -10,17 +10,17 @@ export default {
     try {
       const text = args.join(' ');
       if (!text) return msg.reply('❍ Escribe una petición. Ej: *.ia* ¿quién eres?');
+      const ctrl = new AbortController();
+      const t = setTimeout(() => ctrl.abort(), 90000);
+      const req = fetch(`https://text.pollinations.ai/${encodeURIComponent(text)}`, { signal: ctrl.signal });
       const { key } = await sock.sendMessage(
         msg.chat,
         { text: '> ✦ _La IA está procesando tu respuesta..._' },
         { quoted: { key: msg.key, message: {} } }
       );
-      const ctrl = new AbortController();
-      const t = setTimeout(() => ctrl.abort(), 90000);
       let out = '';
       try {
-        const res = await fetch(`https://text.pollinations.ai/${encodeURIComponent(text)}`, { signal: ctrl.signal });
-        out = (await res.text()).trim();
+        out = (await (await req).text()).trim();
       } finally {
         clearTimeout(t);
       }

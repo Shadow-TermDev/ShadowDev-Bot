@@ -17,12 +17,13 @@ export default {
       if (!video) return msg.reply('❍ Sin resultados.');
       const canal = video.author?.name || 'Desconocido';
       await msg.reply(`• :･ﾟ⊹˚• \`『 Music 』\` •˚⊹:･ﾟ•\n\nᰔᩚ *Título »* ${video.title}\nᰔᩚ *Artista »* ${canal}\n\n> ✦ _Enviando audio, espera..._\n> *${global.botname2} • ${global.dev}*`);
-      const { dl } = await downloadAudio(video.url);
-      let audio = await getBuffer(dl);
+      const dlP = downloadAudio(video.url);
       let thumb = null;
       try {
         thumb = await getBuffer(video.image);
       } catch {}
+      const { dl } = await dlP;
+      let audio = await getBuffer(dl);
       audio = await tagAudio(audio, { title: video.title, artist: canal, cover: thumb });
       await sock.sendMessage(
         msg.chat,
