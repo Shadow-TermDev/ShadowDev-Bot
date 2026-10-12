@@ -30,6 +30,7 @@ export default {
       const numero = msg.sender.split('@')[0];
 
       let menu = `⋆｡ﾟ☁︎ Hola! Soy  *${global.botname2}*  ٩(˘◡˘)۶ ☁︎ﾟ｡⋆\n`;
+      menu += `> ${global.link}\n`;
       menu += `˚₊· Aquí tienes la lista de comandos ·₊˚\n`;
       menu += `╭┈ ↷\n`;
       menu += `│✿ Cliente » @${numero}\n`;
@@ -42,8 +43,14 @@ export default {
       menu += `╰─────────────────\n`;
       menu += `· · • —– ٠ ✤ ٠ —– • · ·\n`;
 
+      const ORDEN = ['economy', 'fun', 'gacha', 'downloader', 'grupo', 'info', 'ai', 'search', 'utils', 'owner'];
       const filtro = args[0]?.toLowerCase();
-      for (const [cat, cmds] of cats) {
+      const catsOrdenadas = [...cats.entries()].sort(([a], [b]) => {
+        const ia = ORDEN.indexOf(a.toLowerCase());
+        const ib = ORDEN.indexOf(b.toLowerCase());
+        return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib);
+      });
+      for (const [cat, cmds] of catsOrdenadas) {
         if (filtro && cat.toLowerCase() !== filtro) continue;
         const nombre = cat.charAt(0).toUpperCase() + cat.slice(1);
         menu += `\n• :･ﾟ⊹˚• \`『 ${nombre} 』\` •˚⊹:･ﾟ•\n\n`;
@@ -54,15 +61,27 @@ export default {
           menu += `> ✐ ${c.desc || 'Sin descripción.'}\n`;
         }
       }
-      menu += `\n˚₊· 𓂃 *${global.botname2} • ${global.dev}* 𓂃 ·₊˚\n> ${global.link}`;
+      menu += `\n˚₊· 𓂃 *${global.botname2} • ${global.dev}* 𓂃 ·₊˚`;
 
+      // Un solo menú por chat: edita el anterior en vez de acumular imágenes
+      global.menuKeys ||= new Map();
+      const prev = global.menuKeys.get(msg.chat);
       try {
         const banner = fs.readFileSync('./media/banner.jpg');
-        await sock.sendMessage(
+        if (prev) {
+          try {
+            await sock.sendMessage(msg.chat, { image: banner, caption: menu.trim(), mentions: [msg.sender], edit: prev });
+            return;
+          } catch (e) {
+            console.error('[menu] no se pudo editar, reenvío:', e?.message || e);
+          }
+        }
+        const sent = await sock.sendMessage(
           msg.chat,
           { image: banner, caption: menu.trim(), mentions: [msg.sender] },
           { quoted: { key: msg.key, message: {} } }
         );
+        if (sent?.key) global.menuKeys.set(msg.chat, sent.key);
       } catch (e) {
         console.error('[menu] sin banner local, texto plano:', e?.message || e);
         await sock.sendMessage(
