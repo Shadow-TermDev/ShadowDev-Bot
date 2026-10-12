@@ -12,6 +12,10 @@ export default {
       const g = await checkGroup(sock, msg);
       if (!g) return;
       const v = (args[0] || '').toLowerCase();
+      if (!v) {
+        const esta = getChat(msg.chat).botOff ? 'apagado' : 'encendido';
+        return msg.reply(`✿ *Bot »* actualmente *${esta}*.\n> ✦ Usa *.bot on* u *.bot off*.`);
+      }
       if (!['on', 'off'].includes(v)) return msg.reply('❍ Ej: *.bot on* u *.bot off*.');
       if (getChat(msg.chat).botOff === (v === 'off')) return msg.reply('❍ El bot ya está así.');
       setChat(msg.chat, 'botOff', v === 'off');

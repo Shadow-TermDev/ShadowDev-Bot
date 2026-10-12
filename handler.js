@@ -119,9 +119,12 @@ export default async function handler(sock, m) {
           (esNuevo ? `\nEs alguien NUEVO y no sabes su nombre: preséntate en una línea y pregúntale cómo se llama.` : '')
         );
         const { text: out, nombre } = parsearNombre(raw);
-        if (nombre && m.sender && getUser(m.sender).apodo !== nombre) {
-          setApodo(m.sender, nombre);
-          console.log(`[kw] nombre guardado: ${nombre} (${m.sender.split('@')[0]})`);
+        if (nombre && m.sender) {
+          const actual = displayName(m.sender, m.pushName).toLowerCase();
+          if (nombre.toLowerCase() !== actual && getUser(m.sender).apodo !== nombre) {
+            setApodo(m.sender, nombre);
+            console.log(`[kw] nombre guardado: ${nombre} (${m.sender.split('@')[0]})`);
+          }
         }
         if (out && !/^\s*\{[^}]*\}\s*$/.test(out)) {
           await m.reply(out);
@@ -169,8 +172,11 @@ export default async function handler(sock, m) {
       if (cfg.onlyAdmin && !isOwner) {
         try {
           const meta = await sock.groupMetadata(m.chat);
-          if (!isAdminOf(meta, m.sender)) return msg.reply(global.mess.admin);
-        } catch {
+          const ok = isAdminOf(meta, m.sender);
+          console.log(`[gate] onlyAdmin sender=${m.sender} esAdmin=${ok} parts=${meta?.participants?.length || 0}`);
+          if (!ok) return msg.reply(global.mess.admin);
+        } catch (e) {
+          console.error('[gate] onlyAdmin sin metadata:', e?.message || e);
           return;
         }
       }
