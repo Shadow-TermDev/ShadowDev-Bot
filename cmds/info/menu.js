@@ -1,5 +1,20 @@
 import { Jimp } from 'jimp';
 
+// Miniatura en memoria: se genera una vez por arranque (5s solo el 1er .menu)
+let thumbCache = null;
+
+async function bannerThumb() {
+  if (thumbCache) return thumbCache;
+  const page = await (await fetch(global.link, { signal: AbortSignal.timeout(15000) })).text();
+  const og = page.match(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i)?.[1];
+  if (!og) throw new Error('sin og:image');
+  const buf = Buffer.from(await (await fetch(og, { signal: AbortSignal.timeout(25000) })).arrayBuffer());
+  if (buf.length < 5000) throw new Error('imagen vacía');
+  thumbCache = await (await Jimp.read(buf)).resize({ w: 600 }).getBuffer('image/jpeg');
+  console.log('[preview] thumb generada, bytes:', thumbCache.length);
+  return thumbCache;
+}
+
 function fmt(ms) {
   const s = Math.floor(ms / 1000);
   const m = Math.floor(s / 60);
@@ -54,38 +69,24 @@ export default {
       }
       menu += `\n˚₊· 𓂃 *${global.botname2} • ${global.dev}* 𓂃 ·₊˚\n> ${global.link}`;
 
-      // Preview con thumb generada por nosotros (el pipeline de Baileys 7
-      // no genera miniaturas: omite 'thumbnail-link' y su jimp es incompatible).
-      let linkPreview;
+      // Tarjeta grande: thumbnail en bytes + renderLargerThumbnail.
+      // Si falla, cae al linkPreview clásico; si falla, a texto plano.
+      const content = { text: menu.trim(), contextInfo: { mentionedJid: [msg.sender] } };
       try {
-        console.log('[preview] descargando portada del sitio...');
-        const page = await (await fetch(global.link, { signal: AbortSignal.timeout(15000) })).text();
-        console.log('[preview] pagina bytes:', page.length);
-        const og = page.match(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i)?.[1];
-        console.log('[preview] og:image:', og);
-        if (!og) throw new Error('sin og:image');
-        const buf = Buffer.from(await (await fetch(og, { signal: AbortSignal.timeout(25000) })).arrayBuffer());
-        console.log('[preview] imagen bytes:', buf.length);
-        if (buf.length < 5000) throw new Error('imagen vacía');
-        const thumb = await (await Jimp.read(buf)).resize({ w: 400 }).getBuffer('image/jpeg');
-        console.log('[preview] thumb bytes:', thumb.length);
-        linkPreview = {
-          'canonical-url': global.link,
-          'matched-text': global.link,
+        const thumbBuffer = await bannerThumb();
+        content.contextInfo.externalAdReply = {
           title: global.botname,
-          description: `${global.botname2} • ${global.dev}`,
-          jpegThumbnail: thumb
+          body: `${global.botname2} • ${global.dev}`,
+          mediaType: 1,
+          renderLargerThumbnail: true,
+          sourceUrl: global.link,
+          thumbnail: thumbBuffer
         };
       } catch (e) {
-        console.error('[preview] fallo:', e?.message || e);
-        linkPreview = undefined;
+        console.error('[preview] texto plano:', e?.message || e);
       }
 
-      await sock.sendMessage(
-        msg.chat,
-        { text: menu.trim(), linkPreview, contextInfo: { mentionedJid: [msg.sender] } },
-        { quoted: { key: msg.key, message: {} } }
-      );
+      await sock.sendMessage(msg.chat, content, { quoted: { key: msg.key, message: {} } });
 
     } catch (e) {
       console.error('Fail: [menu.js]', e?.stack || e);
