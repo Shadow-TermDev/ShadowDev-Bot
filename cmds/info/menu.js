@@ -1,4 +1,4 @@
-import { prepareWAMessageMedia } from '@whiskeysockets/baileys';
+import { Jimp } from 'jimp';
 
 function fmt(ms) {
   const s = Math.floor(ms / 1000);
@@ -54,8 +54,8 @@ export default {
       }
       menu += `\n˚₊· 𓂃 *${global.botname2} • ${global.dev}* 𓂃 ·₊˚\n> ${global.link}`;
 
-      // Preview CORRECTO: los campos van al nivel del mensaje (linkPreview),
-      // NO dentro de contextInfo (ahí WhatsApp los ignora). Con logs [preview].
+      // Preview con thumb generada por nosotros (el pipeline de Baileys 7
+      // no genera miniaturas: omite 'thumbnail-link' y su jimp es incompatible).
       let linkPreview;
       try {
         console.log('[preview] descargando portada del sitio...');
@@ -67,18 +67,14 @@ export default {
         const buf = Buffer.from(await (await fetch(og, { signal: AbortSignal.timeout(25000) })).arrayBuffer());
         console.log('[preview] imagen bytes:', buf.length);
         if (buf.length < 5000) throw new Error('imagen vacía');
-        const { imageMessage } = await prepareWAMessageMedia(
-          { image: buf },
-          { upload: sock.waUploadToServer, mediaTypeOverride: 'thumbnail-link' }
-        );
-        console.log('[preview] thumb bytes:', imageMessage?.jpegThumbnail?.length || 0);
+        const thumb = await (await Jimp.read(buf)).resize({ w: 400 }).getBuffer('image/jpeg');
+        console.log('[preview] thumb bytes:', thumb.length);
         linkPreview = {
           'canonical-url': global.link,
           'matched-text': global.link,
           title: global.botname,
           description: `${global.botname2} • ${global.dev}`,
-          jpegThumbnail: imageMessage?.jpegThumbnail ? Buffer.from(imageMessage.jpegThumbnail) : undefined,
-          highQualityThumbnail: imageMessage || undefined
+          jpegThumbnail: thumb
         };
       } catch (e) {
         console.error('[preview] fallo:', e?.message || e);
