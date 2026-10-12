@@ -1,5 +1,5 @@
-// .ia — vía Pollinations (gratis, sin key). Edita el mensaje (no duplica).
-import fetch from 'node-fetch';
+// .ia — pregunta a la IA (Pollinations, gratis, sin key). Edita el mensaje.
+import { preguntarIA } from '../../lib/ia.js';
 
 export default {
   command: ['ia', 'chatgpt', 'gpt'],
@@ -10,20 +10,12 @@ export default {
     try {
       const text = args.join(' ');
       if (!text) return msg.reply('❍ Escribe una petición. Ej: *.ia* ¿quién eres?');
-      const ctrl = new AbortController();
-      const t = setTimeout(() => ctrl.abort(), 90000);
-      const req = fetch(`https://text.pollinations.ai/${encodeURIComponent(text)}`, { signal: ctrl.signal });
       const { key } = await sock.sendMessage(
         msg.chat,
         { text: '> ✦ _La IA está procesando tu respuesta..._' },
         { quoted: { key: msg.key, message: {} } }
       );
-      let out = '';
-      try {
-        out = (await (await req).text()).trim();
-      } finally {
-        clearTimeout(t);
-      }
+      const out = await preguntarIA(text, undefined, 90000);
       if (!out) {
         await sock.sendMessage(msg.chat, { text: '❍ La IA no respondió, intenta de nuevo.', edit: key });
         return;

@@ -1,18 +1,13 @@
 // Router de comandos con prefijos . / ! # (estilo Hutao).
 import chalk from 'chalk';
+import { preguntarIA } from './lib/ia.js';
 
 const PREFIXES = ['.', '/', '!', '#'];
 const KEYWORDS = /\b(shadowdev|shadow|dev|bot|samy)\b/i;
 
-const MENCION = [
+const FALLBACK = [
   '¿Me llamaban? 👀 Soy *ShadowDev*, usa *.menu* y ve lo que sé hacer.',
-  'Dime, estoy aquí ✦ Prueba con *.menu*.',
-  '¿Sí? 👀 Escribe *.menu* para ver mis comandos.'
-];
-const KEYWORD = [
-  '¿Dijeron *ShadowDev*? ٩(˘◡˘)۶ Usa *.menu*.',
-  'Aquí ando ✦ ¿En qué ayudo? Prueba *.menu*.',
-  'Eskucha 👀 *.menu* tiene todo.'
+  'Aquí ando ✦ Prueba con *.menu*.'
 ];
 
 export default async function handler(sock, m) {
@@ -32,8 +27,16 @@ export default async function handler(sock, m) {
       const last = global.kwCooldown.get(m.chat) || 0;
       if (Date.now() - last < 30000) return;
       global.kwCooldown.set(m.chat, Date.now());
-      const pool = mentioned ? MENCION : KEYWORD;
-      await m.reply(pool[Math.floor(Math.random() * pool.length)]);
+      try {
+        const out = await preguntarIA(text.slice(0, 300));
+        if (out) {
+          await m.reply(out);
+          return;
+        }
+      } catch (e) {
+        console.error('[kw-ia]', e?.message || e);
+      }
+      await m.reply(FALLBACK[Math.floor(Math.random() * FALLBACK.length)]);
       return;
     }
 

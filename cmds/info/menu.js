@@ -86,9 +86,9 @@ export default {
         menu += `\n• :･ﾟ⊹˚• \`『 ${nombre} 』\` •˚⊹:･ﾟ•\n\n`;
         menu += `❍ ${cmds[0]?.desc || 'Comandos disponibles.'}\n`;
         for (const c of cmds) {
-          const alias = c.alias ? c.alias.map((a) => `${prefix}${a}`).join(' • ') : `${prefix}${c.command[0]}`;
-          menu += `ᰔᩚ *${alias}*\n`;
-          menu += `> ✦ ${c.desc || 'Sin descripción.'}${c.uso ? ` Uso: ${c.uso}` : ''}\n`;
+          const alias = c.alias.map((a) => `${prefix}${a}`).join(' › ');
+          menu += `ᰔᩚ *${alias}${c.uso ? ` + ${c.uso}` : ''}*\n`;
+          menu += `> ✺ ${c.desc || 'Sin descripción.'}\n`;
         }
       }
       menu += `\n˚₊· 𓂃 *${global.botname2} • ${global.dev}* 𓂃 ·₊˚\n> ${global.link}`;
