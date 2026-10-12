@@ -1,6 +1,7 @@
 // Router de comandos con prefijos . / ! # (estilo Hutao).
 import chalk from 'chalk';
 import { SYSTEM_BOT, parsearNombre, preguntarIA } from './lib/ia.js';
+import { baseJid } from './lib/grupo.js';
 import { addCoins, displayName, getUser, setApodo, touchUser } from './lib/users.js';
 
 const PREFIXES = ['.', '/', '!', '#'];
@@ -14,6 +15,10 @@ const FALLBACK = [
 export default async function handler(sock, m) {
   try {
     if (m.fromMe) return; // anti-loop: ignora mensajes propios
+    try {
+      const yo = [sock.user?.id, sock.user?.lid].filter(Boolean).map(baseJid);
+      if (yo.includes(baseJid(m.sender))) return; // otra sesión de mi propio número
+    } catch {}
     global.seenUsers ||= new Set();
     if (m.sender) global.seenUsers.add(m.sender);
     if (m.sender) touchUser(m.sender, m.pushName);
