@@ -1,48 +1,7 @@
-import { Jimp } from 'jimp';
 import fs from 'fs';
 
-// Miniatura en disco (./cache) + memoria: se genera 1 vez y el menú vuela.
-// Si cambias el banner, borra ./cache/menu-thumb.jpg
-const CACHE_FILE = './cache/menu-thumb.jpg';
-const CACHE_TTL = 12 * 60 * 60 * 1000;
-let thumbCache = null;
-let thumbAt = 0;
-
-async function bannerThumb() {
-  if (thumbCache && Date.now() - thumbAt < CACHE_TTL) return thumbCache;
-  try {
-    const b = fs.readFileSync(CACHE_FILE);
-    if (b.length > 5000) {
-      thumbCache = b;
-      thumbAt = Date.now();
-      return b;
-    }
-  } catch {}
-  const page = await (await fetch(global.link, { signal: AbortSignal.timeout(15000) })).text();
-  const og = page.match(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i)?.[1];
-  if (!og) throw new Error('sin og:image');
-  const buf = Buffer.from(await (await fetch(og, { signal: AbortSignal.timeout(25000) })).arrayBuffer());
-  if (buf.length < 5000) throw new Error('imagen vacía');
-  thumbCache = await (await Jimp.read(buf)).resize({ w: 600 }).getBuffer('image/jpeg');
-  thumbAt = Date.now();
-  try {
-    fs.mkdirSync('./cache', { recursive: true });
-    fs.writeFileSync(CACHE_FILE, thumbCache);
-  } catch {}
-  return thumbCache;
-}
-
-// Precalienta el caché en 2do plano tras conectar
-export async function warmBanner() {
-  try {
-    await bannerThumb();
-    console.log('[preview] caché listo');
-  } catch (e) {
-    console.error('[preview] warmup:', e?.message || e);
-  }
-}
-global.warmBanner = warmBanner;
-
+// Banner LOCAL (media/banner.jpg): siempre se ve, cero red, cero fallos.
+// Si cambias la imagen, reemplaza ese archivo.
 function fmt(ms) {
   const s = Math.floor(ms / 1000);
   const m = Math.floor(s / 60);
@@ -97,23 +56,21 @@ export default {
       }
       menu += `\n˚₊· 𓂃 *${global.botname2} • ${global.dev}* 𓂃 ·₊˚\n> ${global.link}`;
 
-      // Preview clásico a nivel mensaje: es lo único que WhatsApp entrega
-      // en este entorno (externalAdReply = descarte silencioso, probado 2 veces).
-      const content = { text: menu.trim(), contextInfo: { mentionedJid: [msg.sender] } };
       try {
-        const thumbBuffer = await bannerThumb();
-        content.linkPreview = {
-          'canonical-url': global.link,
-          'matched-text': global.link,
-          title: global.botname,
-          description: `${global.botname2} • ${global.dev}`,
-          jpegThumbnail: thumbBuffer
-        };
+        const banner = fs.readFileSync('./media/banner.jpg');
+        await sock.sendMessage(
+          msg.chat,
+          { image: banner, caption: menu.trim(), mentions: [msg.sender] },
+          { quoted: { key: msg.key, message: {} } }
+        );
       } catch (e) {
-        console.error('[preview] texto plano:', e?.message || e);
+        console.error('[menu] sin banner local, texto plano:', e?.message || e);
+        await sock.sendMessage(
+          msg.chat,
+          { text: menu.trim(), contextInfo: { mentionedJid: [msg.sender] } },
+          { quoted: { key: msg.key, message: {} } }
+        );
       }
-
-      await sock.sendMessage(msg.chat, content, { quoted: { key: msg.key, message: {} } });
 
     } catch (e) {
       console.error('Fail: [menu.js]', e?.stack || e);

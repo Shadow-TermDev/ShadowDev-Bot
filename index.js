@@ -249,7 +249,6 @@ export async function startBot() {
       isRestarting = false;
       log.success(`Conectado a: ${sock.user?.name || 'Desconocido'}`);
       log.info(`Grupo oficial: ${global.link}`);
-      if (typeof global.warmBanner === 'function') global.warmBanner();
     }
     if (connection === 'close') {
       const reason = lastDisconnect?.error?.output?.statusCode || 0;

@@ -1,6 +1,6 @@
 // Router de comandos con prefijos . / ! # (estilo Hutao).
 import chalk from 'chalk';
-import { SYSTEM_BOT, parsearNombre, preguntarIA } from './lib/ia.js';
+import { SYSTEM_BOT, parsearNombre, preguntarIA, responderBot } from './lib/ia.js';
 import { baseJid, botJid, isAdminOf, realPhone } from './lib/grupo.js';
 import { addWarn, clearWarns, getChat } from './lib/chats.js';
 import { addCoins, displayName, getUser, setApodo, touchUser } from './lib/users.js';
@@ -112,11 +112,7 @@ export default async function handler(sock, m) {
       try {
         const ficha = getUser(m.sender);
         const esNuevo = !ficha.apodo && (ficha.msgs || 0) <= 5;
-        const raw = await preguntarIA(
-          `En el chat dicen: "${text.slice(0, 300)}"`,
-          `${SYSTEM_BOT}\nEstás hablando con ${userName}.` +
-          (esNuevo ? `\nEs alguien NUEVO y no sabes su nombre: preséntate en una línea y pregúntale cómo se llama.` : '')
-        );
+        const raw = await responderBot(text, userName + (esNuevo ? ' (nuevo, no sabes su nombre: preséntate y pregúntale cómo se llama)' : ''));
         const { text: out, nombre } = parsearNombre(raw);
         if (nombre && m.sender) {
           const actual = displayName(m.sender, m.pushName).toLowerCase();
