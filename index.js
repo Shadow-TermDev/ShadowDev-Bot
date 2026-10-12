@@ -75,8 +75,27 @@ let isRestarting = false;
 export async function startBot() {
   if (isRestarting) return;
   isRestarting = true;
+  console.log(chalk.gray('[ ✿ ] Cargando sesión...'));
   const { state, saveCreds } = await useMultiFileAuthState(SESSION_DIR);
-  const { version } = await fetchLatestBaileysVersion();
+  console.log(chalk.gray('[ ✿ ] Sesión OK, obteniendo versión de WhatsApp...'));
+  let version;
+  for (let i = 1; i <= 3; i++) {
+    try {
+      ({ version } = await Promise.race([
+        fetchLatestBaileysVersion(),
+        new Promise((_, rej) => setTimeout(() => rej(new Error('timeout 20s')), 20000))
+      ]));
+      break;
+    } catch (e) {
+      console.log(chalk.yellow(`[ ✿ ] Intento ${i}/3 fallido (${e?.message || e})...`));
+      if (i === 3) {
+        log.error('Sin conexión para iniciar. Revisa tus datos/wifi y reintenta.');
+        isRestarting = false;
+        process.exit(1);
+      }
+    }
+  }
+  console.log(chalk.gray(`[ ✿ ] Versión OK, conectando...`));
   console.info = () => {};
   console.debug = () => {};
 
