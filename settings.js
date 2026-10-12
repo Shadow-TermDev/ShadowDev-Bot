@@ -23,7 +23,8 @@ global.link = 'https://Shadow-TermDev.github.io';
 // Se usa para búsqueda de TikTok; el resto sigue con métodos libres.
 global.api = {
   url: 'https://api.stellarwa.xyz',
-  key: 'api_de_prueba'
+  key: 'api_de_prueba',
+  key2: 'proyectsV2'
 };
 
 global.msgglobal = '❍ Ocurrió un problema, contacte al creador.';

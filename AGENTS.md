@@ -64,8 +64,9 @@ export default {
 
 SaveTube (`lib/ytdl.js`) · tikwm · fxtwitter · Pollinations (`lib/ia.js`) ·
 Google Translate + MyMemory · Catbox · lrclib · TinyURL · JokeAPI ·
-Wikipedia · yt-search · GitHub codeload · Stellar con key `api_de_prueba`
-(`dl/ytmp3`, `search/tiktok`, `anime/waifu`, `search/pinterest`, `ai/gemini`).
+Wikipedia · yt-search · GitHub codeload · Stellar con keys rotativas
+(`global.api.key` + `key2` vía `lib/stellar.js` → `sfetch`/`sbuffer`:
+`dl/ytmp3`, `search/tiktok`, `anime/waifu`, `search/pinterest`, `ai/gemini`).
 
 **Muertas (NO usar):** EvoGB, delirius (`api.delirius.store` y `delirius-apiofc`),
 puruboy, nexevo, siputzx, y2meta/cnv.cx, `uguu.se` (solo respaldo),

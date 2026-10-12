@@ -1,6 +1,7 @@
 // .tiktok — por link descarga el video; por texto busca y envía álbum.
 import fetch from 'node-fetch';
 import { generateWAMessage, generateWAMessageFromContent } from '@whiskeysockets/baileys';
+import { sfetch } from '../../lib/stellar.js';
 
 const UA = 'Mozilla/5.0 (Linux; Android 15; Pixel 7) AppleWebKit/537.36 Chrome/120.0.0.0 Mobile Safari/537.36';
 
@@ -75,9 +76,9 @@ export default {
       await msg.reply('> ✐ _Buscando TikTok, espera..._');
       let videos = [];
       try {
-        const res = await fetch(`${global.api.url}/search/tiktok?query=${encodeURIComponent(query)}&key=${global.api.key}`).then((r) => r.json());
+        const res = await sfetch(`/search/tiktok?query=${encodeURIComponent(query)}`);
         const arr = res?.result || res?.data || [];
-        if (res?.status !== false && Array.isArray(arr)) videos = arr;
+        if (Array.isArray(arr)) videos = arr;
       } catch (e) {
         console.error('[tiktok-search]', e?.message || e);
       }

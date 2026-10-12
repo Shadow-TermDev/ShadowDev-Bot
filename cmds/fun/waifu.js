@@ -1,5 +1,5 @@
-// .waifu — imagen anime aleatoria (Stellar, gratis con key de prueba).
-import fetch from 'node-fetch';
+// .waifu — imagen anime aleatoria (Stellar con rotación de keys).
+import { sbuffer } from '../../lib/stellar.js';
 
 export default {
   command: ['waifu', 'neko', 'animeimg'],
@@ -7,10 +7,7 @@ export default {
   desc: 'Imagen anime aleatoria',
   run: async ({ msg, sock }) => {
     try {
-      const res = await fetch(`${global.api.url}/anime/waifu?key=${global.api.key}`);
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const buf = Buffer.from(await res.arrayBuffer());
-      if (buf.length < 5000) throw new Error('vacía');
+      const buf = await sbuffer('/anime/waifu');
       await sock.sendMessage(
         msg.chat,
         { image: buf, caption: `✿ *Waifu*\n\n> *${global.botname2} • ${global.dev}*` },
