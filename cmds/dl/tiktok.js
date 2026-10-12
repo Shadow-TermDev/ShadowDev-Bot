@@ -1,5 +1,6 @@
-// .tiktok — por link descarga el video; por texto busca y envía los primeros 10.
+// .tiktok — por link descarga el video; por texto busca y envía álbum.
 import fetch from 'node-fetch';
+import { generateWAMessage, generateWAMessageFromContent } from '@whiskeysockets/baileys';
 
 const UA = 'Mozilla/5.0 (Linux; Android 15; Pixel 7) AppleWebKit/537.36 Chrome/120.0.0.0 Mobile Safari/537.36';
 
@@ -21,6 +22,25 @@ async function byUrl(url) {
       `✿ *Likes »* ${(d.digg_count || 0).toLocaleString()}\n\n` +
       `> *${global.botname2} • ${global.dev}*`
   };
+}
+
+async function sendAlbum(sock, chat, items) {
+  const album = await generateWAMessageFromContent(
+    chat,
+    { albumMessage: { expectedVideoCount: items.length, expectedImageCount: 0 } },
+    {}
+  );
+  await sock.relayMessage(chat, album.message, { messageId: album.key.id });
+  for (const v of items) {
+    const m = await generateWAMessage(
+      chat,
+      { video: { url: v.dl }, caption: v.caption },
+      { upload: sock.waUploadToServer }
+    );
+    m.message.messageContextInfo = { messageAssociation: { associationType: 1, parentMessageKey: album.key } };
+    await sock.relayMessage(chat, m.message, { messageId: m.key.id });
+    await new Promise((r) => setTimeout(r, 800));
+  }
 }
 
 export default {
@@ -65,19 +85,22 @@ export default {
         return msg.reply('❍ Sin resultados, intenta con otras palabras o envía el link directo.');
       }
       let n = 0;
+      const items = [];
       for (const v of videos.slice(0, 10)) {
         const dl = v?.dl || v?.play || v?.wmplay;
         if (!dl) continue;
         n++;
         const titulo = v.title || 'Sin título';
         const enlace = v.id ? `https://www.tiktok.com/@i/video/${v.id}` : query;
-        await sock.sendMessage(
-          msg.chat,
-          { video: { url: dl }, caption: `✿ *${n}.* ${titulo}\n> ✐ ${enlace}` },
-          { quoted: n === 1 ? { key: msg.key, message: {} } : undefined }
-        );
+        items.push({ dl, caption: `✿ *${n}.* ${titulo}\n> ✐ ${enlace}` });
       }
-      if (!n) return msg.reply('❍ Sin resultados descargables.');
+      if (!items.length) return msg.reply('❍ Sin resultados descargables.');
+      if (items.length === 1) {
+        await sock.sendMessage(msg.chat, { video: { url: items[0].dl }, caption: items[0].caption }, { quoted: { key: msg.key, message: {} } });
+      } else {
+        await sendAlbum(sock, msg.chat, items);
+      }
+      await msg.react('✔️');
     } catch (e) {
       console.error('[tiktok]', e?.message || e);
       try {
