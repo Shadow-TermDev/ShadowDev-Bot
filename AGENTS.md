@@ -66,10 +66,12 @@ SaveTube (`lib/ytdl.js`) · tikwm · fxtwitter · Pollinations (`lib/ia.js`) ·
 Google Translate + MyMemory · Catbox · lrclib · TinyURL · JokeAPI ·
 Wikipedia · yt-search · GitHub codeload.
 
-**Muertas (NO usar):** Stellar (`api.stellarwa.xyz`, 502), EvoGB, delirius
-(`api.delirius.store` y `delirius-apiofc`), puruboy, nexevo, siputzx,
-y2meta/cnv.cx, `uguu.se` (solo respaldo), `cdn.dix.lat` (500),
-`tweeload`, Anabot async (sin status).
+**Muertas (NO usar):** EvoGB, delirius (`api.delirius.store` y `delirius-apiofc`),
+puruboy, nexevo, siputzx, y2meta/cnv.cx, `uguu.se` (solo respaldo),
+`cdn.dix.lat` (500), `tweeload`, Anabot async (sin status).
+Stellar (`api.stellarwa.xyz`) REVIVIÓ con key de prueba `api_de_prueba`
+(`global.api` en settings.js): verificado `dl/ytmp3` y `search/tiktok`.
+`tiktok.js` usa Stellar-search + tikwm por link.
 
 Regla: toda API nueva se prueba con `curl` antes de integrarla.
 

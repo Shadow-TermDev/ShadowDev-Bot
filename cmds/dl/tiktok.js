@@ -52,32 +52,32 @@ export default {
       }
 
       const query = args.join(' ');
-      await msg.reply(`> _Buscando *${query}* en TikTok, espera..._`);
+      await msg.reply('> ✐ _Buscando TikTok, espera..._');
       let videos = [];
       try {
-        const res = await fetch(`https://www.tikwm.com/api/feed/search?keywords=${encodeURIComponent(query)}&count=10`, {
-          headers: { 'User-Agent': UA, Referer: 'https://www.tikwm.com/' }
-        });
-        const json = await res.json();
-        if (json?.code === 0 && Array.isArray(json?.data?.videos)) videos = json.data.videos;
+        const res = await fetch(`${global.api.url}/search/tiktok?query=${encodeURIComponent(query)}&key=${global.api.key}`).then((r) => r.json());
+        const arr = res?.result || res?.data || [];
+        if (res?.status !== false && Array.isArray(arr)) videos = arr;
       } catch (e) {
         console.error('[tiktok-search]', e?.message || e);
       }
       if (!videos.length) {
-        return msg.reply('❍ Sin resultados (la búsqueda está limitada, envía el link directo del video).');
+        return msg.reply('❍ Sin resultados, intenta con otras palabras o envía el link directo.');
       }
       let n = 0;
       for (const v of videos.slice(0, 10)) {
-        const dl = v?.play || v?.wmplay;
+        const dl = v?.dl || v?.play || v?.wmplay;
         if (!dl) continue;
         n++;
+        const titulo = v.title || 'Sin título';
+        const enlace = v.id ? `https://www.tiktok.com/@i/video/${v.id}` : query;
         await sock.sendMessage(
           msg.chat,
-          { video: { url: dl }, caption: `✿ *${n}.* @${v.author?.unique_id || v.author?.nickname || '?'}\n> ✐ ${v.title || 'Sin título'}` },
+          { video: { url: dl }, caption: `✿ *${n}.* ${titulo}\n> ✐ ${enlace}` },
           { quoted: n === 1 ? { key: msg.key, message: {} } : undefined }
         );
       }
-      if (!n) return msg.reply('❍ No se pudo descargar ningún resultado.');
+      if (!n) return msg.reply('❍ Sin resultados descargables.');
     } catch (e) {
       console.error('[tiktok]', e?.message || e);
       try {

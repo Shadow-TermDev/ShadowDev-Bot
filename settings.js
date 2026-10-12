@@ -19,11 +19,12 @@ global.link = 'https://Shadow-TermDev.github.io';
 // ── Vista previa del menú: sale del og:image del sitio (sin descargar nada) ──
 // Ver <meta property="og:image"> en Shadow-TermDev.github.io/index.html
 
-// ── Stack de descargas (todo verificado funcionando, SIN keys) ──
-// YouTube audio/video: SaveTube (savetube.me API)
-// TikTok: tikwm.com API — X/Twitter: fxtwitter API
-// IA: pollinations.ai — Traductor: Google + MyMemory — Subidas: catbox.moe
-// (Stellar/EvoGB/delirius murieron: 502 / DNS / DEPLOYMENT_NOT_FOUND)
+// ── API Stellar (key de prueba conseguida, VERIFICADA viva 12/10) ──
+// Se usa para búsqueda de TikTok; el resto sigue con métodos libres.
+global.api = {
+  url: 'https://api.stellarwa.xyz',
+  key: 'api_de_prueba'
+};
 
 global.msgglobal = '❍ Ocurrió un problema, contacte al creador.';
 
