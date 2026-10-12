@@ -17,9 +17,9 @@ export default {
       saveUsers();
       await msg.reply(
         `• :･ﾟ⊹˚• \`『 Reclamado 』\` •˚⊹:･ﾟ•\n\n` +
-        `ᰔᩚ *Personaje »* ${r.name}\n` +
-        `ᰔᩚ *Dueño »* @${String(msg.sender).split('@')[0]}\n` +
-        (bonus > 0 ? `ᰔᩚ *Bonus »* +${bonus.toLocaleString()} 🪙\n` : '') +
+        `✿ *Personaje »* ${r.name}\n` +
+        `✿ *Dueño »* @${String(msg.sender).split('@')[0]}\n` +
+        (bonus > 0 ? `✿ *Bonus »* +${bonus.toLocaleString()} 🪙\n` : '') +
         `\n> *${global.botname2} • ${global.dev}*`
       );
     } catch (e) {

@@ -4,7 +4,7 @@ export default {
   category: 'info',
   desc: 'Muestra al creador del bot',
   run: async ({ msg, sock }) => {
-    const nums = global.owner.map((n) => `ᰔᩚ @${n}`).join('\n');
+    const nums = global.owner.map((n) => `✿ @${n}`).join('\n');
     await sock.sendMessage(
       msg.chat,
       {

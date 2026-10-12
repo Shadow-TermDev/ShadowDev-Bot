@@ -14,7 +14,7 @@ export default {
       }
       const id = url.match(/status\/(\d+)/)[1];
       const req = fetch(`https://api.fxtwitter.com/i/status/${id}`).then((r) => r.json());
-      await msg.reply('> ✦ _Descargando contenido de X, espera..._');
+      await msg.reply('> ✐ _Descargando contenido de X, espera..._');
       const res = await req;
       const tw = res?.tweet;
       if (res?.code !== 200 || !tw) return msg.reply('❍ No se pudo obtener el tweet.');
@@ -22,7 +22,7 @@ export default {
       const videos = media.videos || [];
       const photos = media.photos || [];
       if (!videos.length && !photos.length) return msg.reply('❍ Ese tweet no tiene multimedia descargable.');
-      const caption = `• :･ﾟ⊹˚• \`『 X-Download 』\` •˚⊹:･ﾟ•\n\n> ✦ ${tw.text ? tw.text.slice(0, 200) : 'Aquí tiene su archivo'}\n\n> *${global.botname2} • ${global.dev}*`;
+      const caption = `• :･ﾟ⊹˚• \`『 X-Download 』\` •˚⊹:･ﾟ•\n\n> ✐ ${tw.text ? tw.text.slice(0, 200) : 'Aquí tiene su archivo'}\n\n> *${global.botname2} • ${global.dev}*`;
       for (const v of videos) {
         await sock.sendMessage(msg.chat, { video: { url: v.url }, caption }, { quoted: { key: msg.key, message: {} } });
       }

@@ -14,7 +14,7 @@ export default {
       if (!target) return msg.reply('❍ Responde al mensaje, menciona o escribe el número. Ej: *.kick* @usuario');
       if (baseJid(target) === baseJid(g.bot)) return msg.reply('❍ No puedo expulsarme a mí mismo.');
       await sock.groupParticipantsUpdate(msg.chat, [pidOf(g.meta, target)], 'remove');
-      await msg.reply(`ᰔᩚ *Expulsado »* @${baseJid(target)}\n\n> *${global.botname2} • ${global.dev}*`);
+      await msg.reply(`✿ *Expulsado »* @${baseJid(target)}\n\n> *${global.botname2} • ${global.dev}*`);
     } catch (e) {
       console.error('[kick]', e?.message || e);
       await msg.reply(global.msgglobal);

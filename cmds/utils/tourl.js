@@ -27,10 +27,10 @@ export default {
       const kb = (buffer.length / 1024).toFixed(1);
       await msg.reply(
         `• :･ﾟ⊹˚• \`『 Link-Enlace 』\` •˚⊹:･ﾟ•\n\n` +
-        `ᰔᩚ *Enlace »* ${url}\n` +
-        `ᰔᩚ *Tamaño »* ${kb} KB\n` +
-        `ᰔᩚ *Tipo »* ${mime}\n\n` +
-        `> ✦ *${global.dev}*`
+        `✿ *Enlace »* ${url}\n` +
+        `✿ *Tamaño »* ${kb} KB\n` +
+        `✿ *Tipo »* ${mime}\n\n` +
+        `> ✐ *${global.dev}*`
       );
     } catch (e) {
       console.error('[tourl]', e?.message || e);

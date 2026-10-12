@@ -16,9 +16,9 @@ export default {
       });
       const results = data?.query?.search || [];
       if (!results.length) return msg.reply('❍ Sin resultados en Wikipedia.');
-      let out = `• :･ﾟ⊹˚• \`『 Wikipedia 』\` •˚⊹:･ﾟ•\n\nᰔᩚ *Búsqueda »* ${text}\n\n`;
+      let out = `• :･ﾟ⊹˚• \`『 Wikipedia 』\` •˚⊹:･ﾟ•\n\n✿ *Búsqueda »* ${text}\n\n`;
       for (const r of results.slice(0, 3)) {
-        out += `ᰔᩚ *${r.title}*\n> ✦ ${r.snippet.replace(/<[^>]+>/g, '')}\n\n`;
+        out += `✿ *${r.title}*\n> ✐ ${r.snippet.replace(/<[^>]+>/g, '')}\n\n`;
       }
       await msg.reply(out.trim() + `\n> *${global.botname2} • ${global.dev}*`);
     } catch (e) {

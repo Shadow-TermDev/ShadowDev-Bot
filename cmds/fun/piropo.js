@@ -18,6 +18,6 @@ export default {
   desc: 'Recibe un piropo sano',
   run: async ({ msg }) => {
     const p = PIROPOS[Math.floor(Math.random() * PIROPOS.length)];
-    await msg.reply(`• :･ﾟ⊹˚• \`『 Piropo 』\` •˚⊹:･ﾟ•\n\n> ✦ ${p}\n\n> *${global.botname2} • ${global.dev}*`);
+    await msg.reply(`• :･ﾟ⊹˚• \`『 Piropo 』\` •˚⊹:･ﾟ•\n\n> ✐ ${p}\n\n> *${global.botname2} • ${global.dev}*`);
   }
 };

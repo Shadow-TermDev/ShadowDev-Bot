@@ -11,7 +11,7 @@ export default {
     try {
       const raw = args.join(' ');
       if (!raw.includes('|')) {
-        return msg.reply('❍ Usa el formato:\n> ✦ *.register* TuNombre | 20 | Hombre/Mujer | tu descripción');
+        return msg.reply('❍ Usa el formato:\n> ✐ *.register* TuNombre | 20 | Hombre/Mujer | tu descripción');
       }
       const [nombre = '', edad = '', genero = '', desc = ''] = raw.split('|').map((s) => s.trim());
       if (!nombre) return msg.reply('❍ Falta el nombre.');
@@ -23,11 +23,11 @@ export default {
       saveUsers();
       await msg.reply(
         `• :･ﾟ⊹˚• \`『 Registro 』\` •˚⊹:･ﾟ•\n\n` +
-        `ᰔᩚ *Nombre »* ${u.apodo}\n` +
-        (u.edad ? `ᰔᩚ *Edad »* ${u.edad}\n` : '') +
-        (u.genero ? `ᰔᩚ *Género »* ${u.genero}\n` : '') +
-        (u.desc ? `ᰔᩚ *Sobre ti »* ${u.desc}\n` : '') +
-        `\n> ✦ Mira tu ficha con *.perfil*`
+        `✿ *Nombre »* ${u.apodo}\n` +
+        (u.edad ? `✿ *Edad »* ${u.edad}\n` : '') +
+        (u.genero ? `✿ *Género »* ${u.genero}\n` : '') +
+        (u.desc ? `✿ *Sobre ti »* ${u.desc}\n` : '') +
+        `\n> ✐ Mira tu ficha con *.perfil*`
       );
     } catch {
       await msg.reply(global.msgglobal);

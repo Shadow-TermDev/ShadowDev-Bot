@@ -13,7 +13,7 @@ export default {
       const r = await ytsearch(q);
       const vids = (r.videos || []).slice(0, 5);
       if (!vids.length) return msg.reply('❍ Sin resultados.');
-      const txt = vids.map((v, i) => `ᰔᩚ *${i + 1}.* ${v.title}\n> ✦ ${v.timestamp || ''} • ${(v.views || 0).toLocaleString()} vistas\n> ${v.url}`).join('\n\n');
+      const txt = vids.map((v, i) => `✿ *${i + 1}.* ${v.title}\n> ✐ ${v.timestamp || ''} • ${(v.views || 0).toLocaleString()} vistas\n> ${v.url}`).join('\n\n');
       await msg.reply(`• :･ﾟ⊹˚• \`『 YouTube 』\` •˚⊹:･ﾟ•\n\n${txt}\n\n> *${global.botname2} • ${global.dev}*`);
     } catch (e) {
       console.error('[yt]', e?.message || e);

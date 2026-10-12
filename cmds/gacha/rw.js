@@ -18,10 +18,10 @@ export default {
       const img = await imagenDe(p.keyword);
       const caption =
         `• :･ﾟ⊹˚• \`『 Gacha 』\` •˚⊹:･ﾟ•\n\n` +
-        `ᰔᩚ *Personaje »* ${p.name}\n` +
-        `ᰔᩚ *Fuente »* ${p.source || '?'}\n` +
-        `ᰔᩚ *Valor »* ${(p.value || 0).toLocaleString()} 🪙\n\n` +
-        `> ✦ Reclama con *.claim* (5 min)${previo && !previo.claimedBy ? `\n> ✦ Se fue sin reclamar: *${previo.name}*` : ''}\n\n` +
+        `✿ *Personaje »* ${p.name}\n` +
+        `✿ *Fuente »* ${p.source || '?'}\n` +
+        `✿ *Valor »* ${(p.value || 0).toLocaleString()} 🪙\n\n` +
+        `> ✐ Reclama con *.claim* (5 min)${previo && !previo.claimedBy ? `\n> ✐ Se fue sin reclamar: *${previo.name}*` : ''}\n\n` +
         `> *${global.botname2} • ${global.dev}*`;
       try {
         if (!img) throw new Error('sin imagen');

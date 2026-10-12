@@ -6,6 +6,6 @@ export default {
   run: async ({ msg }) => {
     const n = 1 + Math.floor(Math.random() * 6);
     const caras = ['⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
-    await msg.reply(`• :･ﾟ⊹˚• \`『 Dado 』\` •˚⊹:･ﾟ•\n\nᰔᩚ *Salió »* ${caras[n - 1]} (${n})\n\n> *${global.botname2} • ${global.dev}*`);
+    await msg.reply(`• :･ﾟ⊹˚• \`『 Dado 』\` •˚⊹:･ﾟ•\n\n✿ *Salió »* ${caras[n - 1]} (${n})\n\n> *${global.botname2} • ${global.dev}*`);
   }
 };

@@ -138,12 +138,27 @@ export async function startBot() {
         if (!jid || jid.split('@')[0].split(':')[0] === yo) continue;
         const tag = '@' + jid.split('@')[0];
         const gname = meta?.subject || 'el grupo';
+        const gdesc = meta?.desc || 'sin descripción';
+        const members = meta?.participants?.length || '?';
+        const hora = new Date().toLocaleTimeString('es-PE', { timeZone: 'America/Lima', hour: '2-digit', minute: '2-digit' });
         if (anu.action === 'add' && cfg.welcome) {
-          const t = (cfg.welcomeMsg || 'Bienvenido @user a @group 🎉').replace(/@user/g, tag).replace(/@group/g, gname);
+          const t = (cfg.welcomeMsg || '❀ ¡Bienvenido a |{group}|!\n\t» {user}\n\n> ✐ Puedes usar *{prefix}menu* para ver la lista de comandos.\n> 🜸 {link}')
+            .replace(/\{user\}/g, tag)
+            .replace(/\{group\}/g, gname)
+            .replace(/\{desc\}/g, gdesc)
+            .replace(/\{members\}/g, String(members))
+            .replace(/\{time\}/g, hora)
+            .replace(/\{prefix\}/g, '.');
           await sock.sendMessage(anu.id, { text: t, mentions: [jid] });
         }
         if ((anu.action === 'remove' || anu.action === 'leave') && cfg.bye) {
-          const t = (cfg.byeMsg || 'Adiós @user 👋').replace(/@user/g, tag).replace(/@group/g, gname);
+          const t = (cfg.byeMsg || '✿ *Adiós* {user} 👋\n\n> ✐ Gracias por estar aquí.')
+            .replace(/\{user\}/g, tag)
+            .replace(/\{group\}/g, gname)
+            .replace(/\{desc\}/g, gdesc)
+            .replace(/\{members\}/g, String(members))
+            .replace(/\{time\}/g, hora)
+            .replace(/\{prefix\}/g, '.');
           await sock.sendMessage(anu.id, { text: t, mentions: [jid] });
         }
       }

@@ -18,11 +18,11 @@ export default {
 
       const caption =
         `• :･ﾟ⊹˚• \`『 YouTube-Music 』\` •˚⊹:･ﾟ•\n\n` +
-        `ᰔᩚ *Título »* ${video.title}\n` +
-        `ᰔᩚ *Canal »* ${canal}\n` +
-        `ᰔᩚ *Duración »* ${video.timestamp || ''}\n` +
-        `ᰔᩚ *Vistas »* ${(video.views || 0).toLocaleString()}\n\n` +
-        `> ✦ _Enviando audio, espera..._\n` +
+        `✿ *Título »* ${video.title}\n` +
+        `✿ *Canal »* ${canal}\n` +
+        `✿ *Duración »* ${video.timestamp || ''}\n` +
+        `✿ *Vistas »* ${(video.views || 0).toLocaleString()}\n\n` +
+        `> ✐ _Enviando audio, espera..._\n` +
         `> *${global.botname2} • ${global.dev}*`;
       // La descarga arranca ANTES del aviso: se solapan y se ahorra ~2s
       const dlP = downloadAudio(video.url);

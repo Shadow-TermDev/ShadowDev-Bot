@@ -11,7 +11,7 @@ export default {
       const m = (args[0] || '').match(/github\.com\/([^/]+\/[^/]+)/i) || args.join('').match(/^([\w-]+\/[\w.-]+)$/);
       const repo = (m?.[1] || '').replace(/\/$/, '');
       if (!repo) return msg.reply('❍ Ejemplo: *.gitclone* Shadow-TermDev/ShadowDev-Bot');
-      await msg.reply(`> ✦ _Descargando *${repo}*, espera..._`);
+      await msg.reply(`> ✐ _Descargando *${repo}*, espera..._`);
       for (const branch of ['main', 'master']) {
         const url = `https://github.com/${repo}/archive/refs/heads/${branch}.zip`;
         const res = await fetch(url);

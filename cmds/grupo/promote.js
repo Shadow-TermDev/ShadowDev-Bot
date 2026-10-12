@@ -13,7 +13,7 @@ export default {
       const target = resolveTarget(msg, args);
       if (!target) return msg.reply('❍ Responde al mensaje, menciona o escribe el número.');
       await sock.groupParticipantsUpdate(msg.chat, [pidOf(g.meta, target)], 'promote');
-      await msg.reply(`ᰔᩚ *Admin »* @${baseJid(target)}\n\n> *${global.botname2} • ${global.dev}*`);
+      await msg.reply(`✿ *Admin »* @${baseJid(target)}\n\n> ✐ Ahora es admin del grupo.\n\n> *${global.botname2} • ${global.dev}*`);
     } catch (e) {
       console.error('[promote]', e?.message || e);
       await msg.reply(global.msgglobal);

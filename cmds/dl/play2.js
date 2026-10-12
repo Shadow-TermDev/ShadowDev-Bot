@@ -14,13 +14,13 @@ export default {
       const video = search.videos?.[0];
       if (!video) return msg.reply('❍ No se encontró el video.');
       const dlP = downloadVideo(video.url);
-      await msg.reply(`> ✦ _Enviando video *${video.title}*, espera..._`);
+      await msg.reply(`> ✐ _Enviando video *${video.title}*, espera..._`);
       const { dl } = await dlP;
       const name = safeName(video.title, 'video');
       const caption =
         `• :･ﾟ⊹˚• \`『 YouTube-Video 』\` •˚⊹:･ﾟ•\n\n` +
-        `ᰔᩚ *Título »* ${video.title}\n` +
-        `ᰔᩚ *Canal »* ${video.author?.name || 'Desconocido'}\n\n` +
+        `✿ *Título »* ${video.title}\n` +
+        `✿ *Canal »* ${video.author?.name || 'Desconocido'}\n\n` +
         `> *${global.botname2} • ${global.dev}*`;
 
       // Videos pesados van como documento (tu red los tumba como video)

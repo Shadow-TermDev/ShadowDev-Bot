@@ -17,16 +17,16 @@ export default {
     const t0 = Date.now();
     const { key } = await sock.sendMessage(
       msg.chat,
-      { text: '> ✦ _Midiendo velocidad..._' },
+      { text: '> ✐ _Midiendo velocidad..._' },
       { quoted: { key: msg.key, message: {} } }
     );
     const lat = Date.now() - t0;
     const n = new Set([...global.cmds.values()].map((c) => c.run)).size;
     const out =
       `• :･ﾟ⊹˚• \`『 Estado 』\` •˚⊹:･ﾟ•\n\n` +
-      `ᰔᩚ *Latencia »* ${lat}ms\n` +
-      `ᰔᩚ *Activo »* ${fmt(Date.now() - boot)}\n` +
-      `ᰔᩚ *Comandos »* ${n}\n\n` +
+      `✿ *Latencia »* ${lat}ms\n` +
+      `✿ *Activo »* ${fmt(Date.now() - boot)}\n` +
+      `✿ *Comandos »* ${n}\n\n` +
       `> *${global.botname2} • ${global.dev}*`;
     try {
       await sock.sendMessage(msg.chat, { text: out, edit: key });

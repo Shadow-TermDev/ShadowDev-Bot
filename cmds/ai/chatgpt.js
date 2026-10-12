@@ -13,7 +13,7 @@ export default {
       if (!text) return msg.reply('❍ Escribe una petición. Ej: *.ia* ¿quién eres?');
       const { key } = await sock.sendMessage(
         msg.chat,
-        { text: '> ✦ _La IA está procesando tu respuesta..._' },
+        { text: '> ✐ _La IA está procesando tu respuesta..._' },
         { quoted: { key: msg.key, message: {} } }
       );
       const raw = await preguntarIA(text, undefined, 90000);

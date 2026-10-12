@@ -69,7 +69,7 @@ export default {
       let menu = `⋆｡ﾟ☁︎ Hola! Soy  *${global.botname2}*  ٩(˘◡˘)۶ ☁︎ﾟ｡⋆\n`;
       menu += `˚₊· Aquí tienes la lista de comandos ·₊˚\n`;
       menu += `╭┈ ↷\n`;
-      menu += `│ᰔᩚ Cliente » @${numero}\n`;
+      menu += `│✿ Cliente » @${numero}\n`;
       menu += `│❀ Modo » Publico\n`;
       menu += `│✦ Bot » Principal 🅥\n`;
       menu += `│ⴵ Activada » ${uptime}\n`;
@@ -87,8 +87,8 @@ export default {
         menu += `❍ ${cmds[0]?.desc || 'Comandos disponibles.'}\n`;
         for (const c of cmds) {
           const alias = c.alias.map((a) => `${prefix}${a}`).join(' › ');
-          menu += `ᰔᩚ *${alias}${c.uso ? ` + ${c.uso}` : ''}*\n`;
-          menu += `> ✦ ${c.desc || 'Sin descripción.'}\n`;
+          menu += `✿ *${alias}${c.uso ? ` + ${c.uso}` : ''}*\n`;
+          menu += `> ✐ ${c.desc || 'Sin descripción.'}\n`;
         }
       }
       menu += `\n˚₊· 𓂃 *${global.botname2} • ${global.dev}* 𓂃 ·₊˚\n> ${global.link}`;

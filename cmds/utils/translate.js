@@ -27,7 +27,7 @@ export default {
       if (!out) return msg.reply('❍ No se pudo traducir el texto.');
       await sock.sendMessage(
         msg.chat,
-        { text: `• :･ﾟ⊹˚• \`『 Traductor 』\` •˚⊹:･ﾟ•\n\nᰔᩚ *${language}* » ${out}` },
+        { text: `• :･ﾟ⊹˚• \`『 Traductor 』\` •˚⊹:･ﾟ•\n\n✿ *${language}* » ${out}` },
         { quoted: { key: msg.key, message: {} } }
       );
     } catch {

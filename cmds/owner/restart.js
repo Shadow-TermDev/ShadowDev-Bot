@@ -5,7 +5,7 @@ export default {
   desc: 'Reinicia el bot',
   run: async ({ msg, isOwner }) => {
     if (!isOwner) return msg.reply(global.mess.owner);
-    await msg.reply('> ✦ _Reiniciando..._');
+    await msg.reply('> ✐ _Reiniciando..._');
     process.exit(1);
   }
 };

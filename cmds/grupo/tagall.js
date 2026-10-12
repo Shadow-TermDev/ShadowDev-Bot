@@ -12,11 +12,11 @@ export default {
       if (!g) return;
       const text = args.join(' ') || 'Llamado general';
       const mentions = g.meta.participants.map((p) => p.id).filter(Boolean);
-      const lista = mentions.map((j) => `ᰔᩚ @${j.split('@')[0]}`).join('\n');
+      const lista = mentions.map((j) => `✿ @${j.split('@')[0]}`).join('\n');
       await sock.sendMessage(
         msg.chat,
         {
-          text: `• :･ﾟ⊹˚• \`『 Llamado 』\` •˚⊹:･ﾟ•\n\n> ✦ ${text}\n\n${lista}\n\n> *${global.botname2} • ${global.dev}*`,
+          text: `• :･ﾟ⊹˚• \`『 Llamado 』\` •˚⊹:･ﾟ•\n\n> ✐ ${text}\n\n${lista}\n\n> *${global.botname2} • ${global.dev}*`,
           mentions
         },
         { quoted: { key: msg.key, message: {} } }

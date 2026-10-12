@@ -14,9 +14,9 @@ async function byUrl(url) {
     dl,
     caption:
       `• :･ﾟ⊹˚• \`『 TikTok-Download 』\` •˚⊹:･ﾟ•\n\n` +
-      `ᰔᩚ *Título »* ${d.title || 'Sin título'}\n` +
-      `ᰔᩚ *Autor »* @${d.author?.unique_id || d.author?.nickname || '?'}\n` +
-      `ᰔᩚ *Likes »* ${(d.digg_count || 0).toLocaleString()}\n\n` +
+      `✿ *Título »* ${d.title || 'Sin título'}\n` +
+      `✿ *Autor »* @${d.author?.unique_id || d.author?.nickname || '?'}\n` +
+      `✿ *Likes »* ${(d.digg_count || 0).toLocaleString()}\n\n` +
       `> *${global.botname2} • ${global.dev}*`
   };
 }
@@ -33,7 +33,7 @@ export default {
 
       if (url) {
         const req = byUrl(url);
-        await msg.reply('> ✦ _Descargando TikTok, espera..._');
+        await msg.reply('> ✐ _Descargando TikTok, espera..._');
         const v = await req;
         if (!v) return msg.reply('❍ No se pudo descargar (verifica que el video sea público).');
         await sock.sendMessage(msg.chat, { video: { url: v.dl }, caption: v.caption }, { quoted: { key: msg.key, message: {} } });
@@ -62,7 +62,7 @@ export default {
         n++;
         await sock.sendMessage(
           msg.chat,
-          { video: { url: dl }, caption: `ᰔᩚ *${n}.* @${v.author?.unique_id || v.author?.nickname || '?'}\n> ✦ ${v.title || 'Sin título'}` },
+          { video: { url: dl }, caption: `✿ *${n}.* @${v.author?.unique_id || v.author?.nickname || '?'}\n> ✐ ${v.title || 'Sin título'}` },
           { quoted: n === 1 ? { key: msg.key, message: {} } : undefined }
         );
       }

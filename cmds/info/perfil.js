@@ -15,15 +15,15 @@ export default {
       const desde = new Date(u.firstSeen || Date.now()).toLocaleDateString('es-PE', { timeZone: 'America/Lima' });
       const texto =
         `• :･ﾟ⊹˚• \`『 Perfil 』\` •˚⊹:･ﾟ•\n\n` +
-        `ᰔᩚ *Nombre »* ${nombre}${extra}\n` +
-        (u.edad ? `ᰔᩚ *Edad »* ${u.edad}\n` : '') +
-        (u.genero ? `ᰔᩚ *Género »* ${u.genero}\n` : '') +
-        (u.desc ? `ᰔᩚ *Sobre ti »* ${u.desc}\n` : '') +
-        `ᰔᩚ *Número »* +${numero}\n` +
-        `ᰔᩚ *Mensajes »* ${u.msgs || 0}\n` +
-        `ᰔᩚ *Monedas »* ${(u.coins || 0).toLocaleString()} 🪙\n` +
-        `ᰔᩚ *Aquí desde »* ${desde}\n\n` +
-        `> ✦ Regístrate con *.register*\n\n> *${global.botname2} • ${global.dev}*`;
+        `✿ *Nombre »* ${nombre}${extra}\n` +
+        (u.edad ? `✿ *Edad »* ${u.edad}\n` : '') +
+        (u.genero ? `✿ *Género »* ${u.genero}\n` : '') +
+        (u.desc ? `✿ *Sobre ti »* ${u.desc}\n` : '') +
+        `✿ *Número »* +${numero}\n` +
+        `✿ *Mensajes »* ${u.msgs || 0}\n` +
+        `✿ *Monedas »* ${(u.coins || 0).toLocaleString()} 🪙\n` +
+        `✿ *Aquí desde »* ${desde}\n\n` +
+        `> ✐ Regístrate con *.register*\n\n> *${global.botname2} • ${global.dev}*`;
       try {
         const pic = await sock.profilePictureUrl(msg.sender, 'image');
         await sock.sendMessage(msg.chat, { image: { url: pic }, caption: texto }, { quoted: { key: msg.key, message: {} } });

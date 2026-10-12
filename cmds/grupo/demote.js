@@ -13,7 +13,7 @@ export default {
       const target = resolveTarget(msg, args);
       if (!target) return msg.reply('❍ Responde al mensaje, menciona o escribe el número.');
       await sock.groupParticipantsUpdate(msg.chat, [pidOf(g.meta, target)], 'demote');
-      await msg.reply(`ᰔᩚ *Sin admin »* @${baseJid(target)}\n\n> *${global.botname2} • ${global.dev}*`);
+      await msg.reply(`✿ *Sin admin »* @${baseJid(target)}\n\n> ✐ Ya no es admin del grupo.\n\n> *${global.botname2} • ${global.dev}*`);
     } catch (e) {
       console.error('[demote]', e?.message || e);
       await msg.reply(global.msgglobal);

@@ -13,6 +13,6 @@ export default {
   run: async ({ msg, args }) => {
     if (!args.length) return msg.reply('❍ Hazme una pregunta. Ej: *.8ball* ¿apruebo mañana?');
     const r = RESPUESTAS[Math.floor(Math.random() * RESPUESTAS.length)];
-    await msg.reply(`• :･ﾟ⊹˚• \`『 Bola Mágica 』\` •˚⊹:･ﾟ•\n\nᰔᩚ *Pregunta »* ${args.join(' ')}\nᰔᩚ *Respuesta »* ${r}\n\n> *${global.botname2} • ${global.dev}*`);
+    await msg.reply(`• :･ﾟ⊹˚• \`『 Bola Mágica 』\` •˚⊹:･ﾟ•\n\n✿ *Pregunta »* ${args.join(' ')}\n✿ *Respuesta »* ${r}\n\n> *${global.botname2} • ${global.dev}*`);
   }
 };

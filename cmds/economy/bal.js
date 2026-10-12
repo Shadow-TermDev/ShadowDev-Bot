@@ -8,7 +8,7 @@ export default {
   run: async ({ msg }) => {
     try {
       const u = getUser(msg.sender);
-      await msg.reply(`• :･ﾟ⊹˚• \`『 Balance 』\` •˚⊹:･ﾟ•\n\nᰔᩚ *Monedas »* ${(u.coins || 0).toLocaleString()} 🪙\n\n> *${global.botname2} • ${global.dev}*`);
+      await msg.reply(`• :･ﾟ⊹˚• \`『 Balance 』\` •˚⊹:･ﾟ•\n\n✿ *Monedas »* ${(u.coins || 0).toLocaleString()} 🪙\n\n> *${global.botname2} • ${global.dev}*`);
     } catch {
       await msg.reply(global.msgglobal);
     }

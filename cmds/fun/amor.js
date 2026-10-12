@@ -16,7 +16,7 @@ export default {
       const barra = '█'.repeat(Math.round(pct / 10)) + '░'.repeat(10 - Math.round(pct / 10));
       const veredicto = pct > 80 ? 'Boda ya 💍' : pct > 60 ? 'Hay química 🔥' : pct > 40 ? 'Como amigos 💫' : pct > 20 ? 'Complicado... 🌧️' : 'Ni en otro universo 💔';
       await msg.reply(
-        `• :･ﾟ⊹˚• \`『 Amor 』\` •˚⊹:･ﾟ•\n\nᰔᩚ *@${clean(a) || a}* ❤ *@${clean(b) || b}*\nᰔᩚ *${pct}%* ${barra}\n> ✦ ${veredicto}\n\n> *${global.botname2} • ${global.dev}*`
+        `• :･ﾟ⊹˚• \`『 Amor 』\` •˚⊹:･ﾟ•\n\n✿ *@${clean(a) || a}* ❤ *@${clean(b) || b}*\n✿ *${pct}%* ${barra}\n> ✐ ${veredicto}\n\n> *${global.botname2} • ${global.dev}*`
       );
     } catch {
       await msg.reply(global.msgglobal);
