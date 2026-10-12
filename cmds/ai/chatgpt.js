@@ -1,5 +1,6 @@
 // .ia — pregunta a la IA (Pollinations, gratis, sin key). Edita el mensaje.
-import { preguntarIA } from '../../lib/ia.js';
+import { parsearNombre, preguntarIA } from '../../lib/ia.js';
+import { getUser, setApodo } from '../../lib/users.js';
 
 export default {
   command: ['ia', 'chatgpt', 'gpt'],
@@ -15,7 +16,9 @@ export default {
         { text: '> ✦ _La IA está procesando tu respuesta..._' },
         { quoted: { key: msg.key, message: {} } }
       );
-      const out = (await preguntarIA(text, undefined, 90000))?.trim();
+      const raw = await preguntarIA(text, undefined, 90000);
+      const { text: out, nombre } = parsearNombre(raw);
+      if (nombre && msg.sender && getUser(msg.sender).apodo !== nombre) setApodo(msg.sender, nombre);
       if (!out || /^\s*\{[^}]*\}\s*$/.test(out)) {
         await sock.sendMessage(msg.chat, { text: '❍ La IA no respondió, intenta de nuevo.', edit: key });
         return;

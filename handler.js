@@ -1,7 +1,7 @@
 // Router de comandos con prefijos . / ! # (estilo Hutao).
 import chalk from 'chalk';
-import { SYSTEM_BOT, preguntarIA } from './lib/ia.js';
-import { displayName, touchUser } from './lib/users.js';
+import { SYSTEM_BOT, parsearNombre, preguntarIA } from './lib/ia.js';
+import { addCoins, displayName, getUser, setApodo, touchUser } from './lib/users.js';
 
 const PREFIXES = ['.', '/', '!', '#'];
 const KEYWORDS = /\b(shadowdev|shadow|dev|bot|samy)\b/i;
@@ -45,10 +45,15 @@ export default async function handler(sock, m) {
       global.kwCooldown.set(m.chat, Date.now());
       console.log(chalk.gray(`[kw] ${mentioned ? 'mención' : replyToBot ? 'respuesta' : 'keyword'} de ${m.pushName || m.sender}: ${text.slice(0, 80)}`));
       try {
-        const out = (await preguntarIA(
+        const raw = await preguntarIA(
           `En el chat dicen: "${text.slice(0, 300)}"`,
           `${SYSTEM_BOT}\nEstás hablando con ${userName}.`
-        ))?.trim();
+        );
+        const { text: out, nombre } = parsearNombre(raw);
+        if (nombre && m.sender && getUser(m.sender).apodo !== nombre) {
+          setApodo(m.sender, nombre);
+          console.log(`[kw] nombre guardado: ${nombre} (${m.sender.split('@')[0]})`);
+        }
         if (out && !/^\s*\{[^}]*\}\s*$/.test(out)) {
           await m.reply(out);
           return;
@@ -103,6 +108,9 @@ export default async function handler(sock, m) {
       usedPrefix: prefix,
       isOwner
     });
+    try {
+      if (m.sender) addCoins(m.sender, 10); // +10 🪙 por comando usado
+    } catch {}
     console.log(chalk.gray(`[ ✿ ] Respuesta enviada → ${prefix}${command} (${Date.now() - t0}ms)`));
   } catch (e) {
     console.error(chalk.red(`[ ✿ ] Falló ${typeof command !== 'undefined' ? prefix + command : 'comando'}: ${e?.message || e}`));
