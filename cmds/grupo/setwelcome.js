@@ -15,7 +15,8 @@ export default {
       if (!texto) return msg.reply('❍ Escribe el mensaje.\n> ✐ Variables: {user} {group} {desc} {members} {time} {link} {perfil} {prefix}\n> ✐ Ej: *.setwelcome* ❀ ¡Bienvenido a |{group}|! » {user}');
       setChat(msg.chat, 'welcomeMsg', texto.slice(0, 300));
       setChat(msg.chat, 'welcome', true);
-      await msg.reply(`✿ *Bienvenida guardada y activada ✅*\n\n> *${global.botname2} • ${global.dev}*`);
+      await msg.reply(`✿ *Bienvenida guardada y activada*\n\n> *${global.botname2} • ${global.dev}*
+> ${global.link}`);
     } catch {
       await msg.reply(global.msgglobal);
     }

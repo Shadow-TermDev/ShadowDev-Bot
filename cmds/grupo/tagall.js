@@ -16,7 +16,8 @@ export default {
       await sock.sendMessage(
         msg.chat,
         {
-          text: `• :･ﾟ⊹˚• \`『 Llamado 』\` •˚⊹:･ﾟ•\n\n> ✐ ${text}\n\n${lista}\n\n> *${global.botname2} • ${global.dev}*`,
+          text: `• :･ﾟ⊹˚• \`『 Llamado 』\` •˚⊹:･ﾟ•\n\n> ✐ ${text}\n\n${lista}\n\n> *${global.botname2} • ${global.dev}*
+> ${global.link}`,
           mentions
         },
         { quoted: { key: msg.key, message: {} } }

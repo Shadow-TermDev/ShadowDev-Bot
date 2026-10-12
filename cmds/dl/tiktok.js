@@ -17,7 +17,8 @@ async function byUrl(url) {
       `✿ *Título »* ${d.title || 'Sin título'}\n` +
       `✿ *Autor »* @${d.author?.unique_id || d.author?.nickname || '?'}\n` +
       `✿ *Likes »* ${(d.digg_count || 0).toLocaleString()}\n\n` +
-      `> *${global.botname2} • ${global.dev}*`
+      `> *${global.botname2} • ${global.dev}*
+> ${global.link}`
   };
 }
 

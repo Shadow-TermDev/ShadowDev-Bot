@@ -20,7 +20,8 @@ export default {
       if (!otro.characters.some((c) => c.name === pers.name)) otro.characters.push(pers);
       saveUsers();
       await msg.reply(
-        `• :･ﾟ⊹˚• \`『 Regalo 』\` •˚⊹:･ﾟ•\n\n✿ *${pers.name}* pasó de *${displayName(msg.sender, msg.pushName)}* a *@${target.split('@')[0]}* 🎁\n\n> *${global.botname2} • ${global.dev}*`
+        `• :･ﾟ⊹˚• \`『 Regalo 』\` •˚⊹:･ﾟ•\n\n✿ *${pers.name}* pasó de *${displayName(msg.sender, msg.pushName)}* a *@${target.split('@')[0]}*\n\n> *${global.botname2} • ${global.dev}*
+> ${global.link}`
       );
     } catch (e) {
       console.error('[regalar]', e?.message || e);

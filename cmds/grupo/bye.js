@@ -15,7 +15,8 @@ export default {
       if (!['on', 'off', '1', '0'].includes(v)) return msg.reply('❍ Usa *.bye on* u *.bye off*.');
       const on = v === 'on' || v === '1';
       setChat(msg.chat, 'bye', on);
-      await msg.reply(`✿ *Despedida »* ${on ? 'activada ✅' : 'apagada ❌'}\n\n> *${global.botname2} • ${global.dev}*`);
+      await msg.reply(`✿ *Despedida »* ${on ? 'activada' : 'apagada'}\n\n> *${global.botname2} • ${global.dev}*
+> ${global.link}`);
     } catch {
       await msg.reply(global.msgglobal);
     }

@@ -19,8 +19,9 @@ export default {
         `• :･ﾟ⊹˚• \`『 Reclamado 』\` •˚⊹:･ﾟ•\n\n` +
         `✿ *Personaje »* ${r.name}\n` +
         `✿ *Dueño »* @${String(msg.sender).split('@')[0]}\n` +
-        (bonus > 0 ? `✿ *Bonus »* +${bonus.toLocaleString()} 🪙\n` : '') +
-        `\n> *${global.botname2} • ${global.dev}*`
+        (bonus > 0 ? `✿ *Bonus »* +${bonus.toLocaleString()} moras\n` : '') +
+        `\n> *${global.botname2} • ${global.dev}*
+> ${global.link}`
       );
     } catch (e) {
       console.error('[claim]', e?.message || e);

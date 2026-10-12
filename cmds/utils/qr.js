@@ -14,7 +14,8 @@ export default {
       const buf = await QRCode.toBuffer(text, { width: 512, margin: 2 });
       await sock.sendMessage(
         msg.chat,
-        { image: buf, caption: `• :･ﾟ⊹˚• \`『 QR 』\` •˚⊹:･ﾟ•\n\n✿ *Contenido »* ${text.slice(0, 100)}\n\n> *${global.botname2} • ${global.dev}*` },
+        { image: buf, caption: `• :･ﾟ⊹˚• \`『 QR 』\` •˚⊹:･ﾟ•\n\n✿ *Contenido »* ${text.slice(0, 100)}\n\n> *${global.botname2} • ${global.dev}*
+> ${global.link}` },
         { quoted: { key: msg.key, message: {} } }
       );
     } catch (e) {

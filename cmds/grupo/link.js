@@ -10,7 +10,8 @@ export default {
       const g = await checkGroup(sock, msg);
       if (!g) return;
       const code = await sock.groupInviteCode(msg.chat);
-      await msg.reply(`• :･ﾟ⊹˚• \`『 Enlace 』\` •˚⊹:･ﾟ•\n\n✿ *Grupo »* ${g.meta.subject || ''}\n✿ *Link »* https://chat.whatsapp.com/${code}\n\n> *${global.botname2} • ${global.dev}*`);
+      await msg.reply(`• :･ﾟ⊹˚• \`『 Enlace 』\` •˚⊹:･ﾟ•\n\n✿ *Grupo »* ${g.meta.subject || ''}\n✿ *Link »* https://chat.whatsapp.com/${code}\n\n> *${global.botname2} • ${global.dev}*
+> ${global.link}`);
     } catch (e) {
       console.error('[link]', e?.message || e);
       await msg.reply(global.msgglobal);

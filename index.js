@@ -164,7 +164,7 @@ export async function startBot() {
           await sock.sendMessage(anu.id, { text: t, mentions: [jid] });
         }
         if ((anu.action === 'remove' || anu.action === 'leave') && cfg.bye) {
-          const t = fill(cfg.byeMsg || '✿ *Adiós* {user} 👋\n\n> ✐ Gracias por estar aquí.');
+          const t = fill(cfg.byeMsg || '✿ *Adiós* {user}\n\n> ✐ Gracias por estar aquí.');
           await sock.sendMessage(anu.id, { text: t, mentions: [jid] });
         }
       }

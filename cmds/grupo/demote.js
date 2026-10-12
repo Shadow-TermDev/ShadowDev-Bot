@@ -19,7 +19,8 @@ export default {
       if (meta2 && isAdminOf(meta2, target)) {
         return msg.reply(`❍ No se pudo quitar admin a @${baseJid(target)} (¿es el creador del grupo?).`);
       }
-      await msg.reply(`✿ *Sin admin »* @${baseJid(target)}\n\n> ✐ Ya no es admin del grupo.\n\n> *${global.botname2} • ${global.dev}*`);
+      await msg.reply(`✿ *Sin admin »* @${baseJid(target)}\n\n> ✐ Ya no es admin del grupo.\n\n> *${global.botname2} • ${global.dev}*
+> ${global.link}`);
     } catch (e) {
       console.error('[demote]', e?.message || e);
       await msg.reply(global.msgglobal);

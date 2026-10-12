@@ -14,9 +14,10 @@ export default {
       for (const ch of clean(a) + '❤' + clean(b)) h = (h * 31 + ch.codePointAt(0)) >>> 0;
       const pct = h % 101;
       const barra = '█'.repeat(Math.round(pct / 10)) + '░'.repeat(10 - Math.round(pct / 10));
-      const veredicto = pct > 80 ? 'Boda ya 💍' : pct > 60 ? 'Hay química 🔥' : pct > 40 ? 'Como amigos 💫' : pct > 20 ? 'Complicado... 🌧️' : 'Ni en otro universo 💔';
+      const veredicto = pct > 80 ? 'Boda ya' : pct > 60 ? 'Hay química' : pct > 40 ? 'Como amigos' : pct > 20 ? 'Complicado...' : 'Ni en otro universo';
       await msg.reply(
-        `• :･ﾟ⊹˚• \`『 Amor 』\` •˚⊹:･ﾟ•\n\n✿ *@${clean(a) || a}* ❤ *@${clean(b) || b}*\n✿ *${pct}%* ${barra}\n> ✐ ${veredicto}\n\n> *${global.botname2} • ${global.dev}*`
+        `• :･ﾟ⊹˚• \`『 Amor 』\` •˚⊹:･ﾟ•\n\n✿ *@${clean(a) || a}* + *@${clean(b) || b}*\n✿ *${pct}%* ${barra}\n> ✐ ${veredicto}\n\n> *${global.botname2} • ${global.dev}*
+> ${global.link}`
       );
     } catch {
       await msg.reply(global.msgglobal);

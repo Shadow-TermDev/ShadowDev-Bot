@@ -13,7 +13,7 @@ const PREFIXES = ['.', '/', '!', '#'];
 const KEYWORDS = /\b(shadowdev|shadow|dev|bot|samy)\b/i;
 
 const FALLBACK = [
-  '¿Me llamaban? 👀 Soy *ShadowDev*, usa *.menu* y ve lo que sé hacer.',
+  '¿Me llamaban? Soy *ShadowDev*, usa *.menu* y ve lo que sé hacer.',
   'Aquí ando ✦ Prueba con *.menu*.'
 ];
 

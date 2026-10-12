@@ -19,7 +19,8 @@ export default {
       if (!meta2 || !isAdminOf(meta2, target)) {
         return msg.reply(`❍ No se pudo dar admin a @${baseJid(target)} (¿es el creador o salió del grupo?).`);
       }
-      await msg.reply(`✿ *Admin »* @${baseJid(target)}\n\n> ✐ Ahora es admin del grupo.\n\n> *${global.botname2} • ${global.dev}*`);
+      await msg.reply(`✿ *Admin »* @${baseJid(target)}\n\n> ✐ Ahora es admin del grupo.\n\n> *${global.botname2} • ${global.dev}*
+> ${global.link}`);
     } catch (e) {
       console.error('[promote]', e?.message || e);
       await msg.reply(global.msgglobal);

@@ -20,9 +20,10 @@ export default {
         `• :･ﾟ⊹˚• \`『 Gacha 』\` •˚⊹:･ﾟ•\n\n` +
         `✿ *Personaje »* ${p.name}\n` +
         `✿ *Fuente »* ${p.source || '?'}\n` +
-        `✿ *Valor »* ${(p.value || 0).toLocaleString()} 🪙\n\n` +
+        `✿ *Valor »* ${(p.value || 0).toLocaleString()} moras\n\n` +
         `> ✐ Reclama con *.claim* (5 min)${previo && !previo.claimedBy ? `\n> ✐ Se fue sin reclamar: *${previo.name}*` : ''}\n\n` +
-        `> *${global.botname2} • ${global.dev}*`;
+        `> *${global.botname2} • ${global.dev}*
+> ${global.link}`;
       try {
         if (!img) throw new Error('sin imagen');
         const buf = await getBuffer(img);

@@ -16,7 +16,8 @@ export default {
       const letra = hit.plainLyrics.slice(0, 3000);
       await sock.sendMessage(
         msg.chat,
-        { text: `• :･ﾟ⊹˚• \`『 Letra 』\` •˚⊹:･ﾟ•\n\n✿ *Tema »* ${hit.trackName || q}\n✿ *Artista »* ${hit.artistName || '?'}\n\n${letra}\n\n> *${global.botname2} • ${global.dev}*` },
+        { text: `• :･ﾟ⊹˚• \`『 Letra 』\` •˚⊹:･ﾟ•\n\n✿ *Tema »* ${hit.trackName || q}\n✿ *Artista »* ${hit.artistName || '?'}\n\n${letra}\n\n> *${global.botname2} • ${global.dev}*
+> ${global.link}` },
         { quoted: { key: msg.key, message: {} } }
       );
     } catch (e) {

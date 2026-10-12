@@ -27,7 +27,8 @@ export default {
       `✿ *Latencia »* ${lat}ms\n` +
       `✿ *Activo »* ${fmt(Date.now() - boot)}\n` +
       `✿ *Comandos »* ${n}\n\n` +
-      `> *${global.botname2} • ${global.dev}*`;
+      `> *${global.botname2} • ${global.dev}*
+> ${global.link}`;
     try {
       await sock.sendMessage(msg.chat, { text: out, edit: key });
     } catch {

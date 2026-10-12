@@ -15,7 +15,8 @@ export default {
       if (!texto) return msg.reply('❍ Escribe el mensaje.\n> ✐ Variables: {user} {group} {desc} {members} {time} {link} {perfil} {prefix}');
       setChat(msg.chat, 'byeMsg', texto.slice(0, 300));
       setChat(msg.chat, 'bye', true);
-      await msg.reply(`✿ *Despedida guardada y activada ✅*\n\n> *${global.botname2} • ${global.dev}*`);
+      await msg.reply(`✿ *Despedida guardada y activada*\n\n> *${global.botname2} • ${global.dev}*
+> ${global.link}`);
     } catch {
       await msg.reply(global.msgglobal);
     }
