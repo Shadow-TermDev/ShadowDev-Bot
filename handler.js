@@ -1,8 +1,13 @@
 // Router de comandos con prefijos . / ! # (estilo Hutao).
 import chalk from 'chalk';
 import { SYSTEM_BOT, parsearNombre, preguntarIA } from './lib/ia.js';
-import { baseJid } from './lib/grupo.js';
+import { baseJid, botJid, isAdminOf } from './lib/grupo.js';
+import { addWarn, clearWarns, getChat } from './lib/chats.js';
 import { addCoins, displayName, getUser, setApodo, touchUser } from './lib/users.js';
+
+const LINKRE = /(https?:\/\/)?(chat\.whatsapp\.com\/[0-9A-Za-z]{20,24}|whatsapp\.com\/channel\/[0-9A-Za-z]{20,24})/i;
+global.spamMap ||= new Map();
+global.spamWarn ||= new Map();
 
 const PREFIXES = ['.', '/', '!', '#'];
 const KEYWORDS = /\b(shadowdev|shadow|dev|bot|samy)\b/i;
@@ -23,6 +28,51 @@ export default async function handler(sock, m) {
     if (m.sender) global.seenUsers.add(m.sender);
     if (m.sender) touchUser(m.sender, m.pushName);
     const userName = m.sender ? displayName(m.sender, m.pushName) : 'alguien';
+
+    // Anti-link + anti-spam (solo grupos, nunca a admins)
+    if (m.isGroup && m.body) {
+      try {
+        const cfg = getChat(m.chat);
+        if (cfg.antilink || cfg.antispam) {
+          const meta = await sock.groupMetadata(m.chat).catch(() => null);
+          const admin = meta ? isAdminOf(meta, m.sender) : true;
+          const botAdmin = meta ? isAdminOf(meta, botJid(sock)) : false;
+          if (meta && !admin && botAdmin) {
+            if (cfg.antilink && LINKRE.test(m.body)) {
+              await sock.sendMessage(m.chat, { delete: { remoteJid: m.chat, fromMe: false, id: m.key.id, participant: m.key.participant } }).catch(() => {});
+              const n = addWarn(m.chat, m.sender);
+              if (n >= 3) {
+                clearWarns(m.chat, m.sender);
+                await sock.groupParticipantsUpdate(m.chat, [m.sender], 'remove').catch(() => {});
+                await sock.sendMessage(m.chat, { text: `❍ *@${baseJid(m.sender)}* eliminado por anti-link.`, mentions: [m.sender] });
+              } else {
+                await sock.sendMessage(m.chat, { text: `❍ Nada de links aquí (@${baseJid(m.sender)} aviso ${n}/3).`, mentions: [m.sender] });
+              }
+              return;
+            }
+            if (cfg.antispam) {
+              const k = `${m.chat}:${baseJid(m.sender)}`;
+              const now = Date.now();
+              const arr = (global.spamMap.get(k) || []).filter((t) => now - t < 8000);
+              arr.push(now);
+              global.spamMap.set(k, arr);
+              if (arr.length > 6) {
+                global.spamMap.set(k, []);
+                await sock.sendMessage(m.chat, { delete: { remoteJid: m.chat, fromMe: false, id: m.key.id, participant: m.key.participant } }).catch(() => {});
+                const lw = global.spamWarn.get(k) || 0;
+                if (now - lw > 60000) {
+                  global.spamWarn.set(k, now);
+                  await sock.sendMessage(m.chat, { text: `❍ Afloja el spam, @${baseJid(m.sender)}.`, mentions: [m.sender] });
+                }
+                return;
+              }
+            }
+          }
+        }
+      } catch (e) {
+        console.error('[filtros]', e?.message || e);
+      }
+    }
     const text = (m.body || '').trim();
     if (!text) return;
     const prefix = PREFIXES.find((p) => text.startsWith(p));

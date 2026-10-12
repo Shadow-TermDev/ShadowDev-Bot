@@ -125,6 +125,32 @@ export async function startBot() {
 
   global.sock = sock;
   global.bootTime = Date.now();
+  // Bienvenidas y despedidas por grupo
+  sock.ev.on('group-participants.update', async (anu) => {
+    try {
+      const { getChat } = await import('./lib/chats.js');
+      const cfg = getChat(anu.id);
+      if (!cfg.welcome && !cfg.bye) return;
+      const meta = await sock.groupMetadata(anu.id).catch(() => null);
+      const yo = (sock.user?.id || '').split(':')[0];
+      for (const p of anu.participants || []) {
+        const jid = typeof p === 'string' ? p : p.id || p.jid || '';
+        if (!jid || jid.split('@')[0].split(':')[0] === yo) continue;
+        const tag = '@' + jid.split('@')[0];
+        const gname = meta?.subject || 'el grupo';
+        if (anu.action === 'add' && cfg.welcome) {
+          const t = (cfg.welcomeMsg || 'Bienvenido @user a @group 🎉').replace(/@user/g, tag).replace(/@group/g, gname);
+          await sock.sendMessage(anu.id, { text: t, mentions: [jid] });
+        }
+        if ((anu.action === 'remove' || anu.action === 'leave') && cfg.bye) {
+          const t = (cfg.byeMsg || 'Adiós @user 👋').replace(/@user/g, tag).replace(/@group/g, gname);
+          await sock.sendMessage(anu.id, { text: t, mentions: [jid] });
+        }
+      }
+    } catch (e) {
+      console.error('[events]', e?.message || e);
+    }
+  });
   // Registra lo que el bot envía (para detectar réplicas aunque cambie el JID/LID)
   global.botSent ||= new Map();
   const rawSend = sock.sendMessage.bind(sock);
