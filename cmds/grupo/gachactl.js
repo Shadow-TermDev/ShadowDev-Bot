@@ -1,6 +1,6 @@
 // .gacha on/off — apaga comandos gacha en el grupo. Solo admins.
 import { checkGroup } from '../../lib/grupo.js';
-import { setChat } from '../../lib/chats.js';
+import { getChat, setChat } from '../../lib/chats.js';
 
 export default {
   command: ['gacha', 'gachas'],
@@ -13,6 +13,7 @@ export default {
       if (!g) return;
       const v = (args[0] || '').toLowerCase();
       if (!['on', 'off'].includes(v)) return msg.reply('❍ Ej: *.gacha on* u *.gacha off*.');
+      if (getChat(msg.chat).gachaOff === (v === 'off')) return msg.reply('❍ El gacha ya está así.');
       setChat(msg.chat, 'gachaOff', v === 'off');
       await msg.reply(`✿ *Gacha »* ${v === 'off' ? 'apagado' : 'activado'}.\n\n> *${global.botname2} • ${global.dev}*`);
     } catch {

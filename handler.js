@@ -75,6 +75,16 @@ export default async function handler(sock, m) {
     }
     const text = (m.body || '').trim();
     if (!text) return;
+    // Owner temprano (lo necesitan los gates de apagado)
+    const ownerBases = (global.owner || []).map((n) => baseJid(n));
+    let senderBase = baseJid(m.sender);
+    let isOwner = ownerBases.includes(senderBase);
+    if (!isOwner && String(m.sender || '').endsWith('@lid')) {
+      try {
+        senderBase = await realPhone(sock, m.chat, m.sender);
+      } catch {}
+      isOwner = ownerBases.includes(senderBase);
+    }
     const prefix = PREFIXES.find((p) => text.startsWith(p));
     if (!prefix) {
       // Sin prefijo: responde a mención directa o palabras clave (con cooldown)
@@ -91,6 +101,7 @@ export default async function handler(sock, m) {
       const replyToBot = replyToBotJid || replyToBotText;
       const keyword = KEYWORDS.test(text);
       if (!mentioned && !keyword && !replyToBot) return;
+      if (m.isGroup && getChat(m.chat).botOff && !isOwner) return;
       global.kwCooldown ||= new Map();
       const last = global.kwCooldown.get(m.chat) || 0;
       if (Date.now() - last < 20000) {
@@ -150,17 +161,7 @@ export default async function handler(sock, m) {
 ❚ ▸ ${chalk.redBright('𝐓𝐈𝐏𝐎 ❱❱')} ${chalk.greenBright.bold('[Bot Log]')}
 𝄢 · • —– ٠ ✤ ٠ —– • · · • —– ٠ ✤ ٠ —– • ·✧༄`.trim());
 
-    const ownerBases = (global.owner || []).map((n) => baseJid(n));
-    let senderBase = baseJid(m.sender);
-    let isOwner = ownerBases.includes(senderBase);
-    if (!isOwner && String(m.sender || '').endsWith('@lid')) {
-      // En grupos LID el JID no es el teléfono: resolver número real
-      try {
-        senderBase = await realPhone(sock, m.chat, m.sender);
-      } catch {}
-      isOwner = ownerBases.includes(senderBase);
-    }
-
+    // isOwner ya calculado arriba (línea ~79)
     // Toggles por grupo (los comandos toggle siempre pasan)
     if (m.isGroup && !['bot', 'botcito'].includes(command)) {
       const cfg = getChat(m.chat);

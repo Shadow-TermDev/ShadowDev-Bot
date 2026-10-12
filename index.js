@@ -130,7 +130,7 @@ export async function startBot() {
     try {
       const { getChat } = await import('./lib/chats.js');
       const cfg = getChat(anu.id);
-      if (!cfg.welcome && !cfg.bye) return;
+      if ((!cfg.welcome && !cfg.bye) || cfg.botOff) return;
       const meta = await sock.groupMetadata(anu.id).catch(() => null);
       const { displayName } = await import('./lib/users.js');
       const { realPhone } = await import('./lib/grupo.js');

@@ -1,6 +1,6 @@
 // .welcome on/off — bienvenida del grupo. Solo admins.
 import { checkGroup } from '../../lib/grupo.js';
-import { setChat } from '../../lib/chats.js';
+import { getChat, setChat } from '../../lib/chats.js';
 
 export default {
   command: ['welcome', 'bienvenida'],
@@ -14,6 +14,7 @@ export default {
       const v = (args[0] || '').toLowerCase();
       if (!['on', 'off', '1', '0'].includes(v)) return msg.reply('❍ Usa *.welcome on* u *.welcome off*.');
       const on = v === 'on' || v === '1';
+      if (getChat(msg.chat).welcome === (v === 'on' || v === '1')) return msg.reply('❍ La bienvenida ya está así.');
       setChat(msg.chat, 'welcome', on);
       await msg.reply(`✿ *Bienvenida »* ${on ? 'activada' : 'apagada'}\n\n> *${global.botname2} • ${global.dev}*`);
     } catch {

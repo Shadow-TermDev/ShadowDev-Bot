@@ -80,6 +80,8 @@ Regla: toda API nueva se prueba con `curl` antes de integrarla.
   sale del `og:image` del sitio.
 - **NO responder a mensajes propios**: `if (m.fromMe) return` ya está en el handler.
 - **NO guardar sesión ni caché en git**: `Sessions/`, `cache/` están ignorados.
+- **NUNCA `rm -rf data` ni `cache` en la carpeta viva**: ahí están los usuarios,
+  monedas, gacha y toggles reales. Verificar solo con `node --check` y loader.
 
 ## 6. Verificación antes de commit
 

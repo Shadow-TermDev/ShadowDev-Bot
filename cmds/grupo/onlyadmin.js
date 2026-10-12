@@ -1,6 +1,6 @@
 // .onlyadmin on/off — solo admins usan comandos. Solo admins.
 import { checkGroup } from '../../lib/grupo.js';
-import { setChat } from '../../lib/chats.js';
+import { getChat, setChat } from '../../lib/chats.js';
 
 export default {
   command: ['onlyadmin', 'soloadmins'],
@@ -13,7 +13,8 @@ export default {
       if (!g) return;
       const v = (args[0] || '').toLowerCase();
       if (!['on', 'off'].includes(v)) return msg.reply('❍ Ej: *.onlyadmin on* u *.onlyadmin off*.');
-      setChat(msg.chat, 'onlyAdmin', v === 'off');
+      if (getChat(msg.chat).onlyAdmin === (v === 'on')) return msg.reply('❍ El onlyadmin ya está así.');
+      setChat(msg.chat, 'onlyAdmin', v === 'on');
       await msg.reply(`✿ *OnlyAdmin »* ${v === 'off' ? 'apagado' : 'activado'}.\n\n> *${global.botname2} • ${global.dev}*`);
     } catch {
       await msg.reply(global.msgglobal);
