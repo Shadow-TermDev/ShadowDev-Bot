@@ -69,18 +69,17 @@ export default {
       }
       menu += `\n˚₊· 𓂃 *${global.botname2} • ${global.dev}* 𓂃 ·₊˚\n> ${global.link}`;
 
-      // Tarjeta grande: thumbnail en bytes + renderLargerThumbnail.
-      // Si falla, cae al linkPreview clásico; si falla, a texto plano.
+      // Preview clásico a nivel mensaje: es lo único que WhatsApp entrega
+      // en este entorno (externalAdReply = descarte silencioso, probado 2 veces).
       const content = { text: menu.trim(), contextInfo: { mentionedJid: [msg.sender] } };
       try {
         const thumbBuffer = await bannerThumb();
-        content.contextInfo.externalAdReply = {
+        content.linkPreview = {
+          'canonical-url': global.link,
+          'matched-text': global.link,
           title: global.botname,
-          body: `${global.botname2} • ${global.dev}`,
-          mediaType: 1,
-          renderLargerThumbnail: true,
-          sourceUrl: global.link,
-          thumbnail: thumbBuffer
+          description: `${global.botname2} • ${global.dev}`,
+          jpegThumbnail: thumbBuffer
         };
       } catch (e) {
         console.error('[preview] texto plano:', e?.message || e);
