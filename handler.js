@@ -26,16 +26,17 @@ export default async function handler(sock, m) {
       const mentioned =
         (m.mentionedJid || []).some((j) => botIds.includes(String(j).split('@')[0])) ||
         botIds.some((id) => id && text.includes('@' + id));
+      const replyToBot = !!m.quotedSender && botIds.includes(String(m.quotedSender).split('@')[0].split(':')[0]);
       const keyword = KEYWORDS.test(text);
-      if (!mentioned && !keyword) return;
+      if (!mentioned && !keyword && !replyToBot) return;
       global.kwCooldown ||= new Map();
       const last = global.kwCooldown.get(m.chat) || 0;
       if (Date.now() - last < 20000) {
-        console.log(chalk.gray(`[kw] cooldown (${mentioned ? 'mención' : 'keyword'}) ${m.pushName || m.sender}`));
+        console.log(chalk.gray(`[kw] cooldown (${mentioned ? 'mención' : replyToBot ? 'respuesta' : 'keyword'}) ${m.pushName || m.sender}`));
         return;
       }
       global.kwCooldown.set(m.chat, Date.now());
-      console.log(chalk.gray(`[kw] ${mentioned ? 'mención' : 'keyword'} de ${m.pushName || m.sender}: ${text.slice(0, 80)}`));
+      console.log(chalk.gray(`[kw] ${mentioned ? 'mención' : replyToBot ? 'respuesta' : 'keyword'} de ${m.pushName || m.sender}: ${text.slice(0, 80)}`));
       try {
         const nombre = m.pushName || 'alguien';
         const out = await preguntarIA(
