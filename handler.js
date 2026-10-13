@@ -64,7 +64,7 @@ export default async function handler(sock, m) {
               const arr = (global.spamMap.get(k) || []).filter((e) => now - e.t < 8000);
               arr.push({ t: now, id: m.key.id, participant: m.key.participant });
               global.spamMap.set(k, arr);
-              if (arr.length > 6) {
+              if (arr.length > 10) {
                 global.spamMap.set(k, []);
                 let borrados = 0;
                 for (const e of arr) {
@@ -73,10 +73,16 @@ export default async function handler(sock, m) {
                     borrados++;
                   } catch {}
                 }
-                const lw = global.spamWarn.get(k) || 0;
-                if (now - lw > 60000) {
-                  global.spamWarn.set(k, now);
-                  await sock.sendMessage(m.chat, { text: `❍ Afloja el spam, @${baseJid(m.sender)} (${borrados} mensajes borrados).`, mentions: [m.sender] });
+                global.spamOff ||= new Map();
+                const prev = global.spamOff.get(k) || 0;
+                if (now - prev < 5 * 60 * 1000) {
+                  // Reincidente en 5min: fuera
+                  global.spamOff.delete(k);
+                  await sock.groupParticipantsUpdate(m.chat, [pidOf(meta, m.sender)], 'remove').catch(() => {});
+                  await sock.sendMessage(m.chat, { text: `❍ *@${baseJid(m.sender)}* expulsado por spam.`, mentions: [m.sender] });
+                } else {
+                  global.spamOff.set(k, now);
+                  await sock.sendMessage(m.chat, { text: `❍ Afloja el spam, @${baseJid(m.sender)} (${borrados} mensajes borrados, a la próxima te vas).`, mentions: [m.sender] });
                 }
                 return;
               }

@@ -1,13 +1,21 @@
 // .top — los más ricos (dinero + banco).
 import { displayName, todosUsuarios } from '../../lib/users.js';
+import { baseJid } from '../../lib/grupo.js';
 
 export default {
   command: ['top', 'ricos', 'millonarios'],
   category: 'economy',
   desc: 'Top de más ricos',
-  run: async ({ msg }) => {
+  run: async ({ msg, sock }) => {
     try {
-      const all = todosUsuarios().filter(([, u]) => (u.msgs || 0) > 0);
+      let all = todosUsuarios().filter(([, u]) => (u.msgs || 0) > 0);
+      if (msg.isGroup) {
+        try {
+          const meta = await sock.groupMetadata(msg.chat);
+          const set = new Set((meta.participants || []).flatMap((p) => [p.id, p.lid, p.phoneNumber].filter(Boolean).map((x) => baseJid(x))));
+          all = all.filter(([jid]) => set.has(baseJid(jid)));
+        } catch {}
+      }
       if (!all.length) return msg.reply('❍ Aún no hay datos.');
       const ricos = [...all]
         .sort((a, b) => ((b[1].coins || 0) + (b[1].bank || 0)) - ((a[1].coins || 0) + (a[1].bank || 0)))

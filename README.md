@@ -1,51 +1,153 @@
-# ShadowDev-Bot 🤖
+> [!NOTE]
+> **ShadowDev-Bot está en constante evolución.** Bot de WhatsApp para la comunidad **Shadow-TermDev**: descargas, gacha, economía, IA y gestión de grupos, gratis y open source. 🌐 https://Shadow-TermDev.github.io
 
-Bot de WhatsApp para el grupo **Shadow-TermDev** 🌐 https://Shadow-TermDev.github.io
+<p align="center">
+<img src="https://Shadow-TermDev.github.io/assets/og-banner.jpg" alt="ShadowDev" style="width: 75%; height: auto; max-width: 400px;">
 
-## APIs usadas
+<p align="center">
+<a href="#"><img title="ShadowDev" src="https://img.shields.io/badge/Bot-gratuito-multifunción-y-código-abierto-purple?colorA=%239b33b0&colorB=%231c007b&style=for-the-badge"></a>
+</p>
 
-| Comando | Servicio |
-|---|---|
-| `.play` `.play2` `.sp` | SaveTube (YouTube) |
-| `.tiktok` | tikwm |
-| `.twitter` | fxtwitter |
-| `.ia` | Pollinations |
-| `.translate` | Google Translate + MyMemory |
-| `.tourl` | `catbox.moe` |
-| `.wiki` | Wikipedia ES |
-| `.menu` | Solo texto + link (la vista previa con el banner la pone WhatsApp desde el `og:image` del sitio) |
+---
 
-## Instalación
+## 💥 Descripción
+
+ShadowDev-Bot es un bot de WhatsApp multifuncional basado en `baileys` oficial. Recicla lo mejor de Hutao (consola), Megumin (APIs libres) y Oguri (comandos), con estilo visual propio Rem.
+
+---
+
+## ☃️ Características
+
+- Descargas (YouTube, TikTok, X, Spotify, GitHub)
+- Gacha + economía con banco y robos
+- IA con personaje + memoria de usuarios
+- Gestión de grupos (warns, antilink, antispam, welcome)
+- Stickers con pack y autor
+
+---
+
+## 🌾 Informaciones Importantes
+
+<details>
+<summary><strong>⛄ Información</strong> — Recomendado</summary>
+
+Usa Baileys oficial y Node 22+. No uses dos instancias con la misma sesión:
+se desconectan entre sí. Una máquina = un vinculado.
+
+</details>
+
+<details>
+<summary><strong>⛄ Información</strong> — Datos</summary>
+
+Sesión (`Sessions/`), datos (`data/`) y caché (`cache/`) no se suben a GitHub.
+Si cambias de máquina, vincula de nuevo: cada una es un dispositivo distinto.
+
+</details>
+
+---
+
+### Instalaciones Básicas
+
+<details>
+<summary><strong>💣 Termux</strong> — Manualmente</summary>
 
 ```bash
-pkg install nodejs git
-git clone https://github.com/Shadow-TermDev/ShadowDev-Bot.git
+termux-setup-storage
+```
+
+```bash
+pkg update && pkg install -y git nodejs ffmpeg
+```
+
+```bash
+git clone https://github.com/Shadow-TermDev/ShadowDev-Bot
+```
+
+```bash
 cd ShadowDev-Bot
+```
+
+```bash
 npm install
 ```
 
-## Configuración (`settings.js`)
-
-1. `global.owner` → tus números con código país, sin `+`.
-
-## Uso
-
 ```bash
-npm start          # elige 1 (QR) o 2 (código 8 dígitos)
-npm run qr         # directo a QR
-npm run code       # directo a código de 8 dígitos
+npm start
 ```
 
-La sesión se guarda en `Sessions/ShadowDev/` (no se sube a GitHub).
+> *Elige **1** (QR) o **2** (código de 8 dígitos) y vincula desde WhatsApp.*
 
-## Ejmeplos de Comandos
+</details>
 
-- `.menu` — menú con banner local y link del grupo
+<details>
+<summary><strong>💣 VPS</strong> — Siempre activo</summary>
+
+```bash
+git clone https://github.com/Shadow-TermDev/ShadowDev-Bot
+```
+
+```bash
+cd ShadowDev-Bot
+```
+
+```bash
+source ~/.nvm/nvm.sh && nvm use 22
+```
+
+```bash
+npm install
+```
+
+```bash
+chmod +x start-vps.sh && ./start-vps.sh --code
+```
+
+> *`start-vps.sh` revive el bot si se cae. Para detener: `pkill -f "node index.js"`.*
+
+</details>
+
+<details>
+<summary><strong>💣 Comandos para tener más tiempo activo</strong> — Termux</summary>
+
+```bash
+termux-wake-lock && npm i -g pm2 && pm2 start index.js --name shadowdev && pm2 save && pm2 logs
+```
+
+> *Ver logs con Termux cerrado:*
+```bash
+pm2 logs
+```
+
+> *Detener:*
+```bash
+pm2 stop shadowdev
+```
+
+> *Reanudar:*
+```bash
+pm2 start shadowdev
+```
+
+> *Borrar historial PM2:*
+```bash
+pm2 delete shadowdev
+```
+
+</details>
+
+---
+
+## ⚙️ Configuración (`settings.js`)
+
+1. `global.owner` → tus números con código país, sin `+`.
+2. `global.api.key` / `key2` → keys de https://api.stellarwa.xyz (rotan solas).
+3. Vista previa del menú → `og:image` de tu web.
+
+## Ejemplos de Comandos
+
+- `.menu` — menú completo
 - `.play <nombre>` — audio de YouTube
-- `.play2 <nombre>` — video de YouTube
-- `.tiktok <url>` — video de TikTok
-- `.twitter <url>` — video/foto de X
-- `.translate <idioma> <texto>` — traductor
-- `.tourl` — (con imagen/video adjunto) devuelve URL
-
-Prefijos: `.` `/` `!` `#`
+- `.rw` → `.claim` — gacha
+- `.daily` / `.dep all` / `.rob @alguien` — economía
+- `.sticker` / `.kick` / `.tagall` — grupo y fun
+- `.ia <pregunta>` — IA con personaje

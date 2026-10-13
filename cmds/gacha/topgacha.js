@@ -1,13 +1,22 @@
 // .topgacha — mejores colecciones.
 import { displayName, todosUsuarios } from '../../lib/users.js';
+import { baseJid } from '../../lib/grupo.js';
 
 export default {
   command: ['topgacha', 'topcoleccion', 'topclaims'],
   category: 'gacha',
   desc: 'Top de coleccionistas',
-  run: async ({ msg }) => {
+  run: async ({ msg, sock }) => {
     try {
-      const col = todosUsuarios()
+      let all = todosUsuarios();
+      if (msg.isGroup) {
+        try {
+          const meta = await sock.groupMetadata(msg.chat);
+          const set = new Set((meta.participants || []).flatMap((p) => [p.id, p.lid, p.phoneNumber].filter(Boolean).map((x) => baseJid(x))));
+          all = all.filter(([jid]) => set.has(baseJid(jid)));
+        } catch {}
+      }
+      const col = all
         .map(([jid, u]) => ({ jid, u, valor: (u.characters || []).reduce((n, c) => n + (c.value || 0), 0) }))
         .filter((x) => (x.u.characters || []).length > 0)
         .sort((a, b) => b.valor - a.valor)
