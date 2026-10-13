@@ -1,7 +1,7 @@
 import fs from 'fs';
 
 // La imagen sale del caché de medios de Baileys (1 subida por arranque).
-const BANNER_URL = 'https://Shadow-TermDev.github.io/assets/shadowdev-banner-thumb.jpg';
+const BANNER_URL = 'https://Shadow-TermDev.github.io/assets/og-banner.jpg?v=2';
 
 function fmt(ms) {
   const s = Math.floor(ms / 1000);
@@ -66,9 +66,24 @@ export default {
 
       // Texto plano: la vista previa la genera TU WhatsApp desde el og:image
       // del sitio (cero descargas en el bot, cero peso en el chat).
+      // Texto plano con contexto de enlace forzado para Baileys
       await sock.sendMessage(
         msg.chat,
-        { text: menu.trim(), contextInfo: { mentionedJid: [msg.sender] } },
+        {
+          text: menu.trim(),
+          contextInfo: {
+            mentionedJid: [msg.sender],
+            // Forzar metadatos para que WhatsApp renderice la tarjeta del enlace principal
+            externalAdReply: {
+              title: 'Shadow-TermDev',
+              body: 'Innovating in Termux and development',
+              mediaType: 1,
+              thumbnailUrl: BANNER_URL,
+              sourceUrl: global.link,
+              renderLargerThumbnail: true
+            }
+          }
+        },
         { quoted: { key: msg.key, message: {} } }
       );
 

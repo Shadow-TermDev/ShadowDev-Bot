@@ -48,7 +48,7 @@ La sesión se guarda en `Sessions/ShadowDev/` (no se sube a GitHub).
 Cada máquina es un dispositivo distinto: en la VPS hay que vincular de nuevo.
 
 ```bash
-git clone https://github.com/TU_USUARIO/ShadowDev-Bot.git
+git clone https://github.com/Shadow-TermDev/ShadowDev-Bot.git
 cd ShadowDev-Bot
 source ~/.nvm/nvm.sh && nvm use 22   # Node 22 obligatorio
 npm install
