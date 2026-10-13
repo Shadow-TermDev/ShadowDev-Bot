@@ -10,7 +10,7 @@ function fmt(ms) {
 }
 
 export default {
-  command: ['ping', 'speed', 'estado'],
+  command: ['ping', 'speed', 'p'],
   category: 'info',
   desc: 'Latencia y tiempo activo',
   run: async ({ msg, sock }) => {

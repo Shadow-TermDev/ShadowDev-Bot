@@ -1,7 +1,7 @@
 // Router de comandos con prefijos . / ! # (estilo Hutao).
 import chalk from 'chalk';
-import { SYSTEM_BOT, parsearNombre, preguntarIA, responderBot } from './lib/ia.js';
-import { baseJid, botJid, isAdminOf, realPhone } from './lib/grupo.js';
+import { parsearNombre, responderBot } from './lib/ia.js';
+import { baseJid, botJid, isAdminOf, pidOf, realPhone } from './lib/grupo.js';
 import { addWarn, clearWarns, getChat } from './lib/chats.js';
 import { addCoins, displayName, getUser, setApodo, touchUser } from './lib/users.js';
 
@@ -43,10 +43,10 @@ export default async function handler(sock, m) {
               const n = addWarn(m.chat, baseJid(m.sender));
               if (n >= (cfg.warnLimit || 3)) {
                 clearWarns(m.chat, baseJid(m.sender));
-                await sock.groupParticipantsUpdate(m.chat, [m.sender], 'remove').catch(() => {});
+                await sock.groupParticipantsUpdate(m.chat, [pidOf(meta, m.sender)], 'remove').catch(() => {});
                 await sock.sendMessage(m.chat, { text: `❍ *@${baseJid(m.sender)}* eliminado por anti-link.`, mentions: [m.sender] });
               } else {
-                await sock.sendMessage(m.chat, { text: `❍ Nada de links aquí (@${baseJid(m.sender)} aviso ${n}/3).`, mentions: [m.sender] });
+                await sock.sendMessage(m.chat, { text: `❍ Nada de links aquí (@${baseJid(m.sender)} aviso ${n}/${cfg.warnLimit || 3}).`, mentions: [m.sender] });
               }
               return;
             }
@@ -101,7 +101,7 @@ export default async function handler(sock, m) {
       const replyToBot = replyToBotJid || replyToBotText;
       const keyword = KEYWORDS.test(text);
       if (!mentioned && !keyword && !replyToBot) return;
-        global.kwCooldown ||= new Map();
+      global.kwCooldown ||= new Map();
       const last = global.kwCooldown.get(m.chat) || 0;
       if (Date.now() - last < 20000) {
         console.log(chalk.gray(`[kw] cooldown (${mentioned ? 'mención' : replyToBot ? 'respuesta' : 'keyword'}) ${m.pushName || m.sender}`));
@@ -196,7 +196,7 @@ export default async function handler(sock, m) {
       isOwner
     });
     try {
-      if (m.sender) addCoins(m.sender, 10); // +10 🪙 por comando usado
+      if (m.sender) addCoins(m.sender, 10); // +10 monedas por comando usado
     } catch {}
     console.log(chalk.gray(`[ ✿ ] Respuesta enviada → ${prefix}${command} (${Date.now() - t0}ms)`));
   } catch (e) {

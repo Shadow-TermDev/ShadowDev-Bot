@@ -108,8 +108,10 @@ export async function startBot() {
   console.info = () => {};
   console.debug = () => {};
 
-  // Caché de medios en memoria: repetir la misma imagen (menú) no la resube
-  const mediaMap = new Map();
+  // Caché de medios en memoria (sobrevive reconexiones): repetir la misma
+  // imagen (menú) no la resube
+  global.mediaMap ||= new Map();
+  const mediaMap = global.mediaMap;
   const mediaCache = {
     get: (k) => mediaMap.get(k),
     set: (k, v) => mediaMap.set(k, v),
@@ -258,7 +260,7 @@ export async function startBot() {
       reconexion = 0;
       isRestarting = false;
       log.success(`Conectado a: ${sock.user?.name || 'Desconocido'}`);
-      log.info(`Grupo oficial: ${global.link}`);
+      log.info(`Web oficial: ${global.link}`);
     }
     if (connection === 'close') {
       const reason = lastDisconnect?.error?.output?.statusCode || 0;
