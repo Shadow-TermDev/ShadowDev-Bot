@@ -43,6 +43,23 @@ npm run code       # directo a código de 8 dígitos
 
 La sesión se guarda en `Sessions/ShadowDev/` (no se sube a GitHub).
 
+## VPS (segunda máquina = nuevo vinculado)
+
+Cada máquina es un dispositivo distinto: en la VPS hay que vincular de nuevo.
+
+```bash
+git clone https://github.com/TU_USUARIO/ShadowDev-Bot.git
+cd ShadowDev-Bot
+source ~/.nvm/nvm.sh && nvm use 22   # Node 22 obligatorio
+npm install
+chmod +x start-vps.sh
+./start-vps.sh --code   # o --qr; Ctrl+C NO basta: mata con pkill -f "node index.js"
+```
+
+`start-vps.sh` usa Node 22 vía nvm si existe y **reinicia solo** si el proceso
+muere. Una sola instancia por máquina: dos bots con la misma sesión se
+desconectan entre sí. Para detener: `pkill -f "node index.js"`.
+
 ## Comandos
 
 - `.menu` — menú con banner local y link del grupo

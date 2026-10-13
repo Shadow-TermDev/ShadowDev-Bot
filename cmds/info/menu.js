@@ -64,32 +64,13 @@ export default {
       }
       menu += `\n˚₊· 𓂃 *${global.botname2} • ${global.dev}* 𓂃 ·₊˚`;
 
-      // Burbuja NUEVA por cada .menu. La imagen sale del caché de medios
-      // (1 subida por arranque); si la URL falla, archivo local; si no, texto.
-      try {
-        await sock.sendMessage(
-          msg.chat,
-          { image: { url: BANNER_URL }, caption: menu.trim(), mentions: [msg.sender] },
-          { quoted: { key: msg.key, message: {} } }
-        );
-      } catch (e) {
-        console.error('[menu] url falló, local:', e?.message || e);
-        try {
-          const banner = fs.readFileSync('./media/banner.jpg');
-          await sock.sendMessage(
-            msg.chat,
-            { image: banner, caption: menu.trim(), mentions: [msg.sender] },
-            { quoted: { key: msg.key, message: {} } }
-          );
-        } catch (e2) {
-          console.error('[menu] texto plano:', e2?.message || e2);
-          await sock.sendMessage(
-            msg.chat,
-            { text: menu.trim(), contextInfo: { mentionedJid: [msg.sender] } },
-            { quoted: { key: msg.key, message: {} } }
-          );
-        }
-      }
+      // Texto plano: la vista previa la genera TU WhatsApp desde el og:image
+      // del sitio (cero descargas en el bot, cero peso en el chat).
+      await sock.sendMessage(
+        msg.chat,
+        { text: menu.trim(), contextInfo: { mentionedJid: [msg.sender] } },
+        { quoted: { key: msg.key, message: {} } }
+      );
 
     } catch (e) {
       console.error('Fail: [menu.js]', e?.stack || e);
