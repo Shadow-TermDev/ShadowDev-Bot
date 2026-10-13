@@ -62,28 +62,15 @@ export default {
           body += `> ✐ ${c.desc || 'Sin descripción.'}\n`;
         }
       }
-      const foot = `\n˚₊· 𓂃 *${global.botname2} • ${global.dev}* 𓂃 ·₊˚`;
+      const foot = `\n˚₊· 𓂃 *${global.botname2} • ${global.dev}* 𓂃 ·₊˚\n> ${global.link}`;
       const quoted = { quoted: { key: msg.key, message: {} } };
 
-      // Caption corta (límite ~1024): imagen + cabecera. La lista va aparte.
-      const caption = `${head}${foot}`;
-      let img = null;
-      try {
-        img = { url: BANNER_URL };
-        await sock.sendMessage(msg.chat, { image: img, caption, mentions: [msg.sender] }, quoted);
-      } catch (e) {
-        console.error('[menu] url falló, local:', e?.message || e);
-        try {
-          const banner = fs.readFileSync('./media/banner.jpg');
-          await sock.sendMessage(msg.chat, { image: banner, caption, mentions: [msg.sender] }, quoted);
-        } catch (e2) {
-          console.error('[menu] texto plano:', e2?.message || e2);
-          await sock.sendMessage(msg.chat, { text: caption, contextInfo: { mentionedJid: [msg.sender] } }, quoted);
-        }
-      }
-      if (body.trim()) {
-        await sock.sendMessage(msg.chat, { text: body.trim() + foot }, quoted);
-      }
+      // UN SOLO mensaje de texto: el caption corta en ~1024 y partía el menú
+      await sock.sendMessage(
+        msg.chat,
+        { text: `${head}${body}${foot}`.trim(), contextInfo: { mentionedJid: [msg.sender] } },
+        quoted
+      );
     } catch (e) {
       console.error('Fail: [menu.js]', e?.stack || e);
       await msg.reply(global.msgglobal || 'Ocurrió un error al generar el menú.');

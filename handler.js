@@ -39,30 +39,44 @@ export default async function handler(sock, m) {
           const botAdmin = meta ? isAdminOf(meta, botJid(sock)) : false;
           if (meta && !admin && botAdmin) {
             if (cfg.antilink && LINKRE.test(m.body)) {
-              await sock.sendMessage(m.chat, { delete: { remoteJid: m.chat, fromMe: false, id: m.key.id, participant: m.key.participant } }).catch(() => {});
-              const n = addWarn(m.chat, baseJid(m.sender));
-              if (n >= (cfg.warnLimit || 3)) {
-                clearWarns(m.chat, baseJid(m.sender));
-                await sock.groupParticipantsUpdate(m.chat, [pidOf(meta, m.sender)], 'remove').catch(() => {});
-                await sock.sendMessage(m.chat, { text: `❍ *@${baseJid(m.sender)}* eliminado por anti-link.`, mentions: [m.sender] });
-              } else {
-                await sock.sendMessage(m.chat, { text: `❍ Nada de links aquí (@${baseJid(m.sender)} aviso ${n}/${cfg.warnLimit || 3}).`, mentions: [m.sender] });
+              // Propio link del grupo: permitido
+              let propio = false;
+              try {
+                const code = await sock.groupInviteCode(m.chat);
+                if (code && m.body.includes(code)) propio = true;
+              } catch {}
+              if (!propio) {
+                await sock.sendMessage(m.chat, { delete: { remoteJid: m.chat, fromMe: false, id: m.key.id, participant: m.key.participant } }).catch(() => {});
+                const n = addWarn(m.chat, baseJid(m.sender));
+                if (n >= (cfg.warnLimit || 3)) {
+                  clearWarns(m.chat, baseJid(m.sender));
+                  await sock.groupParticipantsUpdate(m.chat, [pidOf(meta, m.sender)], 'remove').catch(() => {});
+                  await sock.sendMessage(m.chat, { text: `❍ *@${baseJid(m.sender)}* eliminado por anti-link.`, mentions: [m.sender] });
+                } else {
+                  await sock.sendMessage(m.chat, { text: `❍ Nada de links aquí (@${baseJid(m.sender)} aviso ${n}/${cfg.warnLimit || 3}).`, mentions: [m.sender] });
+                }
+                return;
               }
-              return;
             }
             if (cfg.antispam) {
               const k = `${m.chat}:${baseJid(m.sender)}`;
               const now = Date.now();
-              const arr = (global.spamMap.get(k) || []).filter((t) => now - t < 8000);
-              arr.push(now);
+              const arr = (global.spamMap.get(k) || []).filter((e) => now - e.t < 8000);
+              arr.push({ t: now, id: m.key.id, participant: m.key.participant });
               global.spamMap.set(k, arr);
               if (arr.length > 6) {
                 global.spamMap.set(k, []);
-                await sock.sendMessage(m.chat, { delete: { remoteJid: m.chat, fromMe: false, id: m.key.id, participant: m.key.participant } }).catch(() => {});
+                let borrados = 0;
+                for (const e of arr) {
+                  try {
+                    await sock.sendMessage(m.chat, { delete: { remoteJid: m.chat, fromMe: false, id: e.id, participant: e.participant } });
+                    borrados++;
+                  } catch {}
+                }
                 const lw = global.spamWarn.get(k) || 0;
                 if (now - lw > 60000) {
                   global.spamWarn.set(k, now);
-                  await sock.sendMessage(m.chat, { text: `❍ Afloja el spam, @${baseJid(m.sender)}.`, mentions: [m.sender] });
+                  await sock.sendMessage(m.chat, { text: `❍ Afloja el spam, @${baseJid(m.sender)} (${borrados} mensajes borrados).`, mentions: [m.sender] });
                 }
                 return;
               }
