@@ -1,6 +1,7 @@
 // Router de comandos con prefijos . / ! # (estilo Hutao).
 import chalk from 'chalk';
 import { parsearNombre, responderBot } from './lib/ia.js';
+import { tryAgent } from './lib/agent.js';
 import { tryIntent } from './lib/intents.js';
 import { baseJid, botJid, isAdminOf, pidOf, realPhone } from './lib/grupo.js';
 import { addWarn, clearWarns, getChat } from './lib/chats.js';
@@ -134,6 +135,11 @@ export default async function handler(sock, m) {
         if (await tryIntent(sock, m, text)) return;
       } catch (e) {
         console.error('[intent]', e?.message || e);
+      }
+      try {
+        if (text.trim().length >= 12 && (await tryAgent(sock, m, text, isOwner))) return;
+      } catch (e) {
+        console.error('[agent]', e?.message || e);
       }
       try {
         const ficha = getUser(m.sender);
