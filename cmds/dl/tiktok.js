@@ -49,7 +49,7 @@ export default {
   category: 'downloader',
   desc: 'Baja videos o busca en TikTok',
   uso: '<url o texto>',
-  run: async ({ msg, sock, args }) => {
+  run: async ({ msg, sock, args, limit }) => {
     try {
       if (!args.length) return msg.reply('❍ Envía un enlace o un texto para buscar. Ej: *.tiktok* https://vt.tiktok.com/...');
       const url = args.find((a) => a.includes('tiktok.com'));
@@ -86,8 +86,9 @@ export default {
         return msg.reply('❍ Sin resultados, intenta con otras palabras o envía el link directo.');
       }
       let n = 0;
+      const lim = Math.min(Math.max(limit || 10, 1), 10);
       const items = [];
-      for (const v of videos.slice(0, 10)) {
+      for (const v of videos.slice(0, lim)) {
         const dl = v?.dl || v?.play || v?.wmplay;
         if (!dl) continue;
         n++;
