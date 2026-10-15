@@ -1,5 +1,5 @@
 // .demote — quita admin. Solo admins.
-import { baseJid, checkGroup, isAdminOf, pidOf, resolveTarget } from '../../lib/grupo.js';
+import { baseJid, checkGroup, esBot, isAdminOf, objetivoHumano, pidOf } from '../../lib/grupo.js';
 
 export default {
   command: ['demote', 'degradar', 'quitaradmin'],
@@ -10,7 +10,9 @@ export default {
     try {
       const g = await checkGroup(sock, msg);
       if (!g) return;
-      const target = resolveTarget(msg, args);
+      const target = objetivoHumano(sock, msg, args);
+      if (target && esBot(sock, target)) return msg.reply('❍ Conmigo no, que me quedo sin grupo.');
+      if (target && esBot(sock, target)) return msg.reply('❍ Conmigo no, que me quedo sin grupo.');
       if (!target) return msg.reply('❍ Responde al mensaje, menciona o escribe el número.');
       if (!isAdminOf(g.meta, target)) return msg.reply(`❍ @${baseJid(target)} ni siquiera es admin.`);
       await sock.groupParticipantsUpdate(msg.chat, [pidOf(g.meta, target)], 'demote');

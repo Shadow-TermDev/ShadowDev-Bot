@@ -50,6 +50,8 @@ export default {
   Confundirlos revienta al catch con "Ocurrió un problema".
 - `msg.reply(texto)` para texto simple.
 - Comandos de grupo: usar `lib/grupo.js` (`checkGroup`, `resolveTarget`).
+  Para acciones sobre personas usa `objetivoHumano(sock, msg, args)` (ignora al
+  bot, usa contexto) y verifica con `esBot()` + relectura post-acción.
 - IA: usar `lib/ia.js` (`preguntarIA`), nunca fetch directo a Pollinations.
 - Usuarios/monedas: `lib/users.js` (`getUser`, `addCoins`, `setApodo`, `saveUsers`).
   El handler ya suma +10 🪙 por comando y registra `msgs`. Datos en `data/` (ignorado).

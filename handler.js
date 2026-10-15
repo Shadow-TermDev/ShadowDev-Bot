@@ -30,6 +30,13 @@ export default async function handler(sock, m) {
     if (m.sender) global.seenUsers.add(m.sender);
     if (m.sender) touchUser(m.sender, m.pushName);
     const userName = m.sender ? displayName(m.sender, m.pushName) : 'alguien';
+    // Memoria conversacional corta por chat (para contexto y pronombres)
+    global.historial ||= new Map();
+    if (text) {
+      const h = global.historial.get(m.chat) || [];
+      h.push(`${userName}: ${text.slice(0, 150)}`);
+      global.historial.set(m.chat, h.slice(-6));
+    }
 
     // Anti-link + anti-spam (solo grupos, nunca a admins)
     if (m.isGroup && m.body) {
@@ -144,7 +151,8 @@ export default async function handler(sock, m) {
       try {
         const ficha = getUser(m.sender);
         const esNuevo = !ficha.apodo && (ficha.msgs || 0) <= 5;
-        const raw = await responderBot(text, userName + (esNuevo ? ' (nuevo, no sabes su nombre: preséntate y pregúntale cómo se llama)' : ''));
+        const hist = (global.historial.get(m.chat) || []).slice(-4, -1).join('\n');
+        const raw = await responderBot(text, userName + (esNuevo ? ' (nuevo, no sabes su nombre: preséntate y pregúntale cómo se llama)' : '') + (hist ? `\nContexto reciente:\n${hist}` : ''));
         const { text: out, nombre } = parsearNombre(raw);
         if (nombre && m.sender) {
           const actual = displayName(m.sender, m.pushName).toLowerCase();
