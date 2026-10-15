@@ -2,7 +2,8 @@
 > **ShadowDev-Bot está en constante evolución.** Bot de WhatsApp para la comunidad **Shadow-TermDev**: descargas, gacha, economía, IA y gestión de grupos, gratis y open source. 🌐 https://Shadow-TermDev.github.io
 
 <p align="center">
-<img src="https://Shadow-TermDev.github.io/assets/og-banner.jpg" alt="ShadowDev" style="width: 75%; height: auto; max-width: 400px;">
+  <img src="https://Shadow-TermDev.github.io/assets/shadowdev-banner-mini.jpg" alt="ShadowDev" style="width: 75%; height: auto; max-width: 400px;">
+</p>
 
 <p align="center">
 <a href="#"><img title="ShadowDev" src="https://img.shields.io/badge/Bot-gratuito-multifunción-y-código-abierto-purple?colorA=%239b33b0&colorB=%231c007b&style=for-the-badge"></a>
