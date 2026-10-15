@@ -12,7 +12,7 @@
 
 ## 💥 Descripción
 
-ShadowDev-Bot es un bot de WhatsApp multifuncional basado en `baileys` oficial. Recicla lo mejor de Hutao (consola), Megumin (APIs libres) y Oguri (comandos), con estilo visual propio Rem.
+ShadowDev-Bot es un bot de WhatsApp multifuncional basado en `baileys` oficial.
 
 ---
 
@@ -31,8 +31,7 @@ ShadowDev-Bot es un bot de WhatsApp multifuncional basado en `baileys` oficial. 
 <details>
 <summary><strong>⛄ Información</strong> — Recomendado</summary>
 
-Usa Baileys oficial y Node 22+. No uses dos instancias con la misma sesión:
-se desconectan entre sí. Una máquina = un vinculado.
+Usa Baileys oficial y Node 22+.
 
 </details>
 
@@ -40,7 +39,6 @@ se desconectan entre sí. Una máquina = un vinculado.
 <summary><strong>⛄ Información</strong> — Datos</summary>
 
 Sesión (`Sessions/`), datos (`data/`) y caché (`cache/`) no se suben a GitHub.
-Si cambias de máquina, vincula de nuevo: cada una es un dispositivo distinto.
 
 </details>
 
@@ -140,8 +138,7 @@ pm2 delete shadowdev
 ## ⚙️ Configuración (`settings.js`)
 
 1. `global.owner` → tus números con código país, sin `+`.
-2. `global.api.key` / `key2` → keys de https://api.stellarwa.xyz (rotan solas).
-3. Vista previa del menú → `og:image` de tu web.
+2. `global.api.key` / `key2` → keys de https://api.stellarwa.xyz.
 
 ## Ejemplos de Comandos
 

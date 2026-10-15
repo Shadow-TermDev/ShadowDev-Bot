@@ -1,6 +1,6 @@
 {
   "name": "shadowdev-bot",
-  "version": "2.5.0",
+  "version": "2.6.0",
   "description": "ShadowDev-Bot — Bot de WhatsApp para el grupo Shadow-TermDev.",
   "main": "index.js",
   "type": "module",
