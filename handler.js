@@ -30,13 +30,6 @@ export default async function handler(sock, m) {
     if (m.sender) global.seenUsers.add(m.sender);
     if (m.sender) touchUser(m.sender, m.pushName);
     const userName = m.sender ? displayName(m.sender, m.pushName) : 'alguien';
-    // Memoria conversacional corta por chat (para contexto y pronombres)
-    global.historial ||= new Map();
-    if (text) {
-      const h = global.historial.get(m.chat) || [];
-      h.push(`${userName}: ${text.slice(0, 150)}`);
-      global.historial.set(m.chat, h.slice(-6));
-    }
 
     // Anti-link + anti-spam (solo grupos, nunca a admins)
     if (m.isGroup && m.body) {
@@ -104,6 +97,13 @@ export default async function handler(sock, m) {
     }
     const text = (m.body || '').trim();
     if (!text) return;
+    // Memoria conversacional corta por chat (para contexto y pronombres)
+    global.historial ||= new Map();
+    {
+      const h = global.historial.get(m.chat) || [];
+      h.push(`${userName}: ${text.slice(0, 150)}`);
+      global.historial.set(m.chat, h.slice(-6));
+    }
     // Owner temprano (lo necesitan los gates de apagado)
     const ownerBases = (global.owner || []).map((n) => baseJid(n));
     let senderBase = baseJid(m.sender);
