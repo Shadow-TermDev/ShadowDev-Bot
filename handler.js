@@ -1,6 +1,7 @@
 // Router de comandos con prefijos . / ! # (estilo Hutao).
 import chalk from 'chalk';
 import { parsearNombre, responderBot } from './lib/ia.js';
+import { tryIntent } from './lib/intents.js';
 import { baseJid, botJid, isAdminOf, pidOf, realPhone } from './lib/grupo.js';
 import { addWarn, clearWarns, getChat } from './lib/chats.js';
 import { addCoins, displayName, getUser, setApodo, touchUser } from './lib/users.js';
@@ -129,6 +130,11 @@ export default async function handler(sock, m) {
       }
       global.kwCooldown.set(m.chat, Date.now());
       console.log(chalk.gray(`[kw] ${mentioned ? 'mención' : replyToBot ? 'respuesta' : 'keyword'} de ${m.pushName || m.sender}: ${text.slice(0, 80)}`));
+      try {
+        if (await tryIntent(sock, m, text)) return;
+      } catch (e) {
+        console.error('[intent]', e?.message || e);
+      }
       try {
         const ficha = getUser(m.sender);
         const esNuevo = !ficha.apodo && (ficha.msgs || 0) <= 5;

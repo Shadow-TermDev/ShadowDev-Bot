@@ -85,7 +85,19 @@ export async function startBot() {
   if (isRestarting) return;
   isRestarting = true;
   console.log(chalk.gray('[ ✿ ] Cargando sesión...'));
-  const { state, saveCreds } = await useMultiFileAuthState(SESSION_DIR);
+  let state, saveCreds;
+  try {
+    ({ state, saveCreds } = await useMultiFileAuthState(SESSION_DIR));
+  } catch (e) {
+    // Sesión corrupta (JSON roto, corte de luz): respaldar y empezar limpio
+    log.error(`Sesión corrupta: ${e?.message || e}`);
+    try {
+      const bak = `./Sessions/corrupta-${Date.now()}`;
+      fs.renameSync(SESSION_DIR, bak);
+      log.warn(`Sesión movida a ${bak}. Habrá que vincular de nuevo.`);
+    } catch {}
+    ({ state, saveCreds } = await useMultiFileAuthState(SESSION_DIR));
+  }
   console.log(chalk.gray('[ ✿ ] Sesión OK, obteniendo versión de WhatsApp...'));
   let version;
   for (let i = 1; i <= 3; i++) {
@@ -267,7 +279,18 @@ export async function startBot() {
       if (
         [DisconnectReason.loggedOut, DisconnectReason.forbidden].includes(reason)
       ) {
-        log.warn(`Sesión cerrada (${reason}), elimina ${SESSION_DIR} y vuelve a vincular.`);
+        log.warn(`Sesión cerrada (${reason}), limpiando y saliendo...`);
+        try {
+          fs.rmSync(SESSION_DIR, { recursive: true, force: true });
+        } catch {}
+        isRestarting = false;
+        process.exit(1);
+      }
+      if (reason === DisconnectReason.badSession) {
+        log.warn('Sesión inválida, limpiando y saliendo...');
+        try {
+          fs.rmSync(SESSION_DIR, { recursive: true, force: true });
+        } catch {}
         isRestarting = false;
         process.exit(1);
       }
