@@ -47,7 +47,8 @@ export default {
 
       if (fromAgent) {
         const code = added === nums.length ? 'added' : added > 0 ? 'partial' : 'privacy';
-        return { ok: added > 0, code, data: { added, total: nums.length, failed, link, dm } };
+        const uno = nums.length === 1 ? nums[0] : null;
+        return { ok: added > 0, code, data: { added, total: nums.length, failed, link, dm, num: uno, mention: uno ? uno + '@s.whatsapp.net' : null } };
       }
 
       if (!failed.length) {

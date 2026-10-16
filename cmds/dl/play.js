@@ -1,4 +1,6 @@
 // .play — audio de YouTube con título y portada (estilo Megumin, vía SaveTube).
+// fromAgent: envía el contenido (tarjeta + audio) y retorna { ok, code, data }
+// para que el agente narre con personalidad; en prefijo, la tarjeta es la respuesta.
 import ytsearch from 'yt-search';
 import { getBuffer } from '../../lib/serialize.js';
 import { downloadAudio, safeName, tagAudio } from '../../lib/ytdl.js';
@@ -8,13 +10,22 @@ export default {
   category: 'downloader',
   desc: 'Baja audio en MP3 con portada',
   uso: '<nombre o url>',
-  run: async ({ msg, sock, args }) => {
+  run: async ({ msg, sock, args, fromAgent }) => {
     try {
-      if (!args[0]) return msg.reply('❍ Escribe el nombre o URL del video.');
+      if (!args[0]) {
+        if (fromAgent) return { ok: false, code: 'need_query', data: {} };
+        return msg.reply('❍ Escribe el nombre o URL del video.');
+      }
       const search = await ytsearch(args.join(' '));
       const video = search.videos?.[0];
-      if (!video) return msg.reply('❍ No se encontró el video.');
-      if ((video.seconds || 0) > 1800) return msg.reply('❍ Muy largo (máx 30 min). Busca otro tema o usa *.playaudio*.');
+      if (!video) {
+        if (fromAgent) return { ok: false, code: 'not_found', data: { query: args.join(' ').slice(0, 60) } };
+        return msg.reply('❍ No se encontró el video.');
+      }
+      if ((video.seconds || 0) > 1800) {
+        if (fromAgent) return { ok: false, code: 'too_long', data: { duracion: video.timestamp || '' } };
+        return msg.reply('❍ Muy largo (máx 30 min). Busca otro tema o usa *.playaudio*.');
+      }
       const canal = video.author?.name || 'Desconocido';
 
       const caption =
@@ -51,9 +62,17 @@ export default {
         { quoted: { key: msg.key, message: {} } }
       );
       await msg.react('✔️');
+      if (fromAgent) {
+        return {
+          ok: true,
+          code: 'played',
+          data: { titulo: video.title, canal, duracion: video.timestamp || '', vistas: video.views || 0, url: video.url }
+        };
+      }
     } catch (e) {
       console.error('[play]', e?.message || e);
       try { await msg.react('✖️'); } catch {}
+      if (fromAgent) return { ok: false, code: 'error', data: {}, detail: e?.message };
       await msg.reply('❍ No se pudo descargar el audio, intenta con otro tema.');
     }
   }

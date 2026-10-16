@@ -13,7 +13,7 @@ export default {
   command: ['menu', 'help', 'allmenu'],
   category: 'info',
   desc: 'Muestra este menú',
-  run: async ({ msg, sock, args, prefix }) => {
+  run: async ({ msg, sock, args, prefix, fromAgent }) => {
     try {
       const seen = new Set();
       const cats = new Map();
@@ -71,8 +71,12 @@ export default {
         { text: `${head}${body}${foot}`.trim(), contextInfo: { mentionedJid: [msg.sender] } },
         quoted
       );
+      // fromAgent: el menú ES el contenido (no se reescribe); el agente suma su
+      // línea de personalidad aparte con el resultado.
+      if (fromAgent) return { ok: true, code: 'menu', data: { total: totalCmds, categorias: cats.size } };
     } catch (e) {
       console.error('Fail: [menu.js]', e?.stack || e);
+      if (fromAgent) return { ok: false, code: 'error', data: {}, detail: e?.message };
       await msg.reply(global.msgglobal || 'Ocurrió un error al generar el menú.');
     }
   }

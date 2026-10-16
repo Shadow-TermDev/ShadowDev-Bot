@@ -22,7 +22,7 @@ ShadowDev-Bot es un bot de WhatsApp multifuncional basado en `baileys` oficial.
 - Descargas (YouTube, TikTok, X, Spotify, GitHub)
 - Gacha + economía con banco y robos
 - IA con personaje + memoria de usuarios
-- Agente inteligente: comandos por lenguaje natural (`public` / `admin` / `owner`)
+- Agente inteligente con router IA: comandos por lenguaje natural (`public` / `admin` / `owner`)
 - Gestión de grupos (warns, antilink, antispam, welcome)
 - Stickers con pack y autor
 
@@ -150,16 +150,19 @@ pm2 delete shadowdev
 
 ## 🧠 Agente inteligente
 
-Menciona al bot, respóndele o escribe su nombre y habla normal: el agente conoce
-el catálogo real de comandos, el grupo actual y decide entre **charla**,
-**consulta** o **acción**. El resultado de una acción lo narra con personalidad
-(IA) en vez de responder plantillas de log.
+Menciona al bot, respóndele o escribe su nombre y habla normal: la **IA router**
+elige con contexto entre **charla**, **consulta** o **acción** (solo alias
+reales del catálogo), el código valida permisos y gates, y el resultado lo
+narra otra IA con personalidad usando el resultado real del comando.
 
+- Con prefijo (`.play`, `.add`, `.menu`…) todo es clásico: plantillas del propio
+  comando, la IA no interviene.
 - Cada comando tiene un nivel de acceso: `public` (todos), `admin` (admins del
   grupo) u `owner` (solo owners). Ej: “saca a @alguien” funciona solo si eres admin.
 - Pregunta sin ejecutar: “¿qué comandos tienes?”, “¿cómo uso .play?”, “¿qué hace .rw?”
 - Conciencia de grupo: “¿cómo se llama este grupo?”, “cuántos miembros tiene”,
-  “link del grupo” se responden con datos reales del chat.
+  “link del grupo”, “¿de qué trata?” o “pon una descripción de este grupo” se
+  responden con datos reales del chat (nunca disparan `.play`).
 - `.add` inteligente: si WhatsApp bloquea por privacidad, el link de invitación
   se envía por privado al número y el agente lo explica.
 - `.testmode on/off` (owner) → modo prueba manual: solo el owner usa el bot.

@@ -35,30 +35,42 @@ export default {
   `access: 'owner'` de forma explícita (no borrarles el campo).
 - El handler aplica el gate solo (path con prefijo) y `lib/agent.js` en lenguaje
   natural: no hace falta repetir `isOwner`/`isAdminOf` salvo defensa extra.
-- `lib/agent.js` es el ÚNICO cerebro de lenguaje natural (clasifica
-  CHARLA | CONSULTA | ACCIÓN contra el catálogo real). `lib/intents.js` fue
-  eliminado en v3.2.0: PROHIBIDO reintroducirlo o duplicar INTENTS fuera del agente.
+- `lib/agent.js` es el ÚNICO cerebro de lenguaje natural. **Router IA**
+  (`routearIntencion` en `lib/ia.js`, v3.4.0) decide con contexto
+  `charla | consulta | accion` sobre un catálogo CERRADO (solo alias reales de
+  `global.cmds`); el código valida SIEMPRE `access` + gates tras la decisión.
+  Si el router no responde (Gemini caído, JSON inválido, comando inexistente)
+  cae al clasificador determinista regex+score (INTENTS + `pickPorScore`).
+  `lib/intents.js` fue eliminado en v3.2.0: PROHIBIDO reintroducirlo o
+  duplicar INTENTS fuera del agente.
 - `.testmode on/off` (owner) → `global.testMode` persistido en `data/config.json`.
   Solo manual: nunca activar modo prueba automático desde otro comando.
 
-### Modo agente en comandos (`fromAgent`) — v3.3.0
+### Modo agente en comandos (`fromAgent`) — v3.4.0
 
 - El agente llama `cmd.run({ ..., fromAgent: true })` tras validar por su cuenta
   grupo + admin + bot admin (con `ctx` del chat, sin duplicar `checkGroup`).
-- Un comando CON soporte agente, cuando `fromAgent`, **no responde**: retorna
-  `{ ok, code, data, detail }` y el agente narra (IA `narrarHecho` o plantilla
-  por `code` en `fallbackNarracion`). Debe soportar también `mention` en `data`
-  para acciones sobre personas (códigos actuales: add → added/partial/privacy/
-  need_numbers · kick → kicked/kick_failed/kick_self · promote/demote →
-  promoted/demoted/already_admin/not_admin · warn → warned/warned_out ·
-  del → deleted/nothing · need_target · error).
-- Sin soporte agente (media, gacha, toggles, `menu`): el comando responde como
+- Un comando CON soporte agente, cuando `fromAgent`, **no responde su plantilla
+  final de éxito/error**: retorna `{ ok, code, data, detail }` (los side-effects
+  y el contenido SÍ se envían: audio, menú, tarjeta con link) y el agente narra
+  (IA `narrarHecho` o plantilla por `code` en `fallbackNarracion`). Debe
+  soportar también `mention` en `data` para acciones sobre personas.
+- Códigos actuales: add → added/partial/privacy/need_numbers · kick →
+  kicked/kick_failed/kick_self · promote/demote → promoted/demoted/
+  already_admin/not_admin · warn → warned/warned_out · del → deleted/nothing ·
+  play → played/need_query/not_found/too_long · menu → menu · sys → sys ·
+  link → link · need_target · error.
+- Con soporte agente: `add, kick, promote, demote, warn, del, play, menu, sys,
+  link`. Sin soporte (media, gacha, toggles, hora…): el comando responde como
   en prefijo; el agente solo enruta (retorna true sin narrar).
-- En prefijo la plantilla clásica se mantiene intacta (`checkGroup` incluido).
-- Conciencia de grupo: `esPreguntaGrupo()` responde nombre/miembros/link con
-  metadata real antes de clasificar; la narración y los rechazos incluyen el
-  nombre del grupo y el rol (`narrarHecho` en `lib/ia.js`, Gemini-Stellar con
-  timeout 10s; si falla se usa la plantilla por código, nunca se cuelga).
+- En prefijo la plantilla clásica se mantiene intacta (`checkGroup` incluido)
+  y la IA NO reescribe nada.
+- Reglas duras ANTES del router: testMode → solo owner; preguntas de
+  nombre/link/miembros/**descripción**/info de este grupo → metadata real
+  (`esPreguntaGrupo` → `responderGrupo`), NUNCA play ni del.
+- Conciencia de grupo y narración: contexto incluye grupo, miembros, rol y
+  resultado `code`+`data` exactos (`narrarHecho` en `lib/ia.js`, Gemini oficial
+  → Stellar con timeout corto; si falla se usa la plantilla por código).
 - Rechazos por permisos y ejecuciones se narran con la IA; NO volver a las
   plantillas fijas para acciones (excepto fallback por si la IA no responde).
 
@@ -90,8 +102,9 @@ export default {
 - Comandos de grupo: usar `lib/grupo.js` (`checkGroup`, `resolveTarget`).
   Para acciones sobre personas usa `objetivoHumano(sock, msg, args)` (ignora al
   bot, usa contexto) y verifica con `esBot()` + relectura post-acción.
-- IA: usar `lib/ia.js` (`preguntarIA` para contenido, `responderBot` para charla
-  con roles, `narrarHecho` para narrar acciones del agente), nunca fetch directo
+- IA: usar `lib/ia.js` (`routearIntencion` para decidir acciones por NL,
+  `preguntarIA` para contenido, `responderBot` para charla con roles,
+  `narrarHecho` para narrar acciones del agente), nunca fetch directo
   a Pollinations ni a Stellar fuera de `lib/stellar.js`.
 - Usuarios/monedas: `lib/users.js` (`getUser`, `addCoins`, `setApodo`, `saveUsers`).
   El handler ya suma +10 🪙 por comando y registra `msgs`. Datos en `data/` (ignorado).
