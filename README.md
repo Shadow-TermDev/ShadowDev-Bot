@@ -141,17 +141,27 @@ pm2 delete shadowdev
 
 1. `global.owner` → tus números con código país, sin `+`.
 2. `global.api.key` / `key2` → keys de https://api.stellarwa.xyz.
+3. Gemini (opcional): exporta `GEMINI_KEY` o pon `geminiKey` en
+   `data/config.json` (ignorado por git) — key gratuita de Google AI Studio.
+   Primera opción del cerebro del agente; si falla, cae a Stellar →
+   Pollinations. Opcional: `global.api.gemini.model` (default `gemini-3.8-flash`).
 
 ---
 
 ## 🧠 Agente inteligente
 
 Menciona al bot, respóndele o escribe su nombre y habla normal: el agente conoce
-el catálogo real de comandos y decide entre **charla**, **consulta** o **acción**.
+el catálogo real de comandos, el grupo actual y decide entre **charla**,
+**consulta** o **acción**. El resultado de una acción lo narra con personalidad
+(IA) en vez de responder plantillas de log.
 
 - Cada comando tiene un nivel de acceso: `public` (todos), `admin` (admins del
   grupo) u `owner` (solo owners). Ej: “saca a @alguien” funciona solo si eres admin.
 - Pregunta sin ejecutar: “¿qué comandos tienes?”, “¿cómo uso .play?”, “¿qué hace .rw?”
+- Conciencia de grupo: “¿cómo se llama este grupo?”, “cuántos miembros tiene”,
+  “link del grupo” se responden con datos reales del chat.
+- `.add` inteligente: si WhatsApp bloquea por privacidad, el link de invitación
+  se envía por privado al número y el agente lo explica.
 - `.testmode on/off` (owner) → modo prueba manual: solo el owner usa el bot.
   Sin activarlo, no hay modo prueba automático.
 

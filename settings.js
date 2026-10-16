@@ -21,10 +21,15 @@ global.link = 'https://Shadow-TermDev.github.io';
 
 // ── API Stellar (key de prueba conseguida, VERIFICADA viva 12/10) ──
 // Se usa para búsqueda de TikTok; el resto sigue con métodos libres.
+// Gemini: key gratuita (puede fallar) vía env GEMINI_KEY o data/config.json
+// (ignorado por git) — nunca hardcodeada aquí.
 global.api = {
   url: 'https://api.stellarwa.xyz',
   key: 'api_de_prueba',
-  key2: 'proyectsV2'
+  key2: 'proyectsV2',
+  gemini: {
+    key: process.env.GEMINI_KEY || getConfig().geminiKey || '',
+  }
 };
 
 global.msgglobal = '❍ Ocurrió un problema, contacte al creador.';

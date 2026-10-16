@@ -41,6 +41,27 @@ export default {
 - `.testmode on/off` (owner) → `global.testMode` persistido en `data/config.json`.
   Solo manual: nunca activar modo prueba automático desde otro comando.
 
+### Modo agente en comandos (`fromAgent`) — v3.3.0
+
+- El agente llama `cmd.run({ ..., fromAgent: true })` tras validar por su cuenta
+  grupo + admin + bot admin (con `ctx` del chat, sin duplicar `checkGroup`).
+- Un comando CON soporte agente, cuando `fromAgent`, **no responde**: retorna
+  `{ ok, code, data, detail }` y el agente narra (IA `narrarHecho` o plantilla
+  por `code` en `fallbackNarracion`). Debe soportar también `mention` en `data`
+  para acciones sobre personas (códigos actuales: add → added/partial/privacy/
+  need_numbers · kick → kicked/kick_failed/kick_self · promote/demote →
+  promoted/demoted/already_admin/not_admin · warn → warned/warned_out ·
+  del → deleted/nothing · need_target · error).
+- Sin soporte agente (media, gacha, toggles, `menu`): el comando responde como
+  en prefijo; el agente solo enruta (retorna true sin narrar).
+- En prefijo la plantilla clásica se mantiene intacta (`checkGroup` incluido).
+- Conciencia de grupo: `esPreguntaGrupo()` responde nombre/miembros/link con
+  metadata real antes de clasificar; la narración y los rechazos incluyen el
+  nombre del grupo y el rol (`narrarHecho` en `lib/ia.js`, Gemini-Stellar con
+  timeout 10s; si falla se usa la plantilla por código, nunca se cuelga).
+- Rechazos por permisos y ejecuciones se narran con la IA; NO volver a las
+  plantillas fijas para acciones (excepto fallback por si la IA no responde).
+
 ## 3. Regla alias + parámetro + desc (el menú los une solo)
 
 - El menú renderiza: `ᰔᩚ *{alias} + {uso}*` y debajo `> ✦ {desc}`.
@@ -69,7 +90,9 @@ export default {
 - Comandos de grupo: usar `lib/grupo.js` (`checkGroup`, `resolveTarget`).
   Para acciones sobre personas usa `objetivoHumano(sock, msg, args)` (ignora al
   bot, usa contexto) y verifica con `esBot()` + relectura post-acción.
-- IA: usar `lib/ia.js` (`preguntarIA`), nunca fetch directo a Pollinations.
+- IA: usar `lib/ia.js` (`preguntarIA` para contenido, `responderBot` para charla
+  con roles, `narrarHecho` para narrar acciones del agente), nunca fetch directo
+  a Pollinations ni a Stellar fuera de `lib/stellar.js`.
 - Usuarios/monedas: `lib/users.js` (`getUser`, `addCoins`, `setApodo`, `saveUsers`).
   El handler ya suma +10 🪙 por comando y registra `msgs`. Datos en `data/` (ignorado).
 - Gacha: `lib/gacha.js` + catálogo `lib/characters.json` (1350). Cooldowns y
@@ -82,6 +105,9 @@ export default {
 ## 5. APIs permitidas (verificadas, sin keys)
 
 SaveTube (`lib/ytdl.js`) · tikwm · fxtwitter · Pollinations (`lib/ia.js`) ·
+Gemini API oficial (`global.api.gemini.key` = env `GEMINI_KEY` o
+`data/config.json`; model `gemini-3.8-flash`, vía `lib/ia.js`; primera opción
+de IA con timeout corto y fallback) ·
 Google Translate + MyMemory · Catbox · lrclib · TinyURL · JokeAPI ·
 Wikipedia · yt-search · GitHub codeload · Stellar con keys rotativas
 (`global.api.key` + `key2` vía `lib/stellar.js` → `sfetch`/`sbuffer`:
