@@ -5,6 +5,7 @@ import { getChat, setChat } from '../../lib/chats.js';
 export default {
   command: ['antilink', 'antienlace'],
   category: 'grupo',
+  access: 'admin',
   desc: 'Activa o apaga el anti-links',
   uso: '<on/off>',
   run: async ({ msg, sock, args }) => {

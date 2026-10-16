@@ -4,6 +4,7 @@ import { baseJid, checkGroup, esBot, findParticipant, objetivoHumano, pidOf } fr
 export default {
   command: ['kick', 'expulsar', 'echar'],
   category: 'grupo',
+  access: 'admin',
   desc: 'Expulsa un miembro del grupo',
   uso: '<@mención | número | responder>',
   run: async ({ msg, sock, args }) => {

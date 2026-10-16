@@ -4,6 +4,7 @@ import { checkGroup } from '../../lib/grupo.js';
 export default {
   command: ['abrir', 'open'],
   category: 'grupo',
+  access: 'admin',
   desc: 'Abre el grupo (todos escriben)',
   run: async ({ msg, sock }) => {
     try {

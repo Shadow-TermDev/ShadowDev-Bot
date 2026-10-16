@@ -13,6 +13,7 @@ function fmt(ms) {
 export default {
   command: ['sys', 'sistema', 'info-sys'],
   category: 'owner',
+  access: 'owner',
   desc: 'Info del sistema del bot',
   run: async ({ msg, sock, isOwner }) => {
     try {

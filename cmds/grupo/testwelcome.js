@@ -5,6 +5,7 @@ import { getChat } from '../../lib/chats.js';
 export default {
   command: ['testwelcome', 'testbye', 'probarbienvenida'],
   category: 'grupo',
+  access: 'admin',
   desc: 'Prueba bienvenida/despedida',
   run: async ({ msg, sock, command }) => {
     try {

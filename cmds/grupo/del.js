@@ -4,6 +4,7 @@ import { checkGroup } from '../../lib/grupo.js';
 export default {
   command: ['del', 'delete', 'borrar'],
   category: 'grupo',
+  access: 'admin',
   desc: 'Borra el mensaje citado',
   run: async ({ msg, sock }) => {
     try {

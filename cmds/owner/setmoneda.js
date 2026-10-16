@@ -5,6 +5,7 @@ import { setConfig } from '../../lib/config.js';
 export default {
   command: ['setmoneda', 'setcoin'],
   category: 'owner',
+  access: 'owner',
   desc: 'Cambia el nombre de la moneda',
   uso: '<nombre>',
   run: async ({ msg, args, isOwner }) => {

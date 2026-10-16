@@ -4,6 +4,7 @@ import { baseJid, checkGroup, esBot, isAdminOf, objetivoHumano, pidOf } from '..
 export default {
   command: ['demote', 'degradar', 'quitaradmin'],
   category: 'grupo',
+  access: 'admin',
   desc: 'Quita admin a un miembro',
   uso: '<@mención | número | responder>',
   run: async ({ msg, sock, args }) => {

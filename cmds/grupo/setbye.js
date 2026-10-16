@@ -5,6 +5,7 @@ import { setChat } from '../../lib/chats.js';
 export default {
   command: ['setbye', 'setdespedida'],
   category: 'grupo',
+  access: 'admin',
   desc: 'Define el mensaje de despedida',
   uso: '<texto con @user y @group>',
   run: async ({ msg, sock, args }) => {

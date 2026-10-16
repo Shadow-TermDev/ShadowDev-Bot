@@ -1,8 +1,7 @@
 // Router de comandos con prefijos . / ! # (estilo Hutao).
 import chalk from 'chalk';
 import { parsearNombre, responderBot } from './lib/ia.js';
-import { tryAgent } from './lib/agent.js';
-import { tryIntent } from './lib/intents.js';
+import { inferAccess, tryAgent } from './lib/agent.js';
 import { baseJid, botJid, isAdminOf, pidOf, realPhone } from './lib/grupo.js';
 import { addWarn, clearWarns, getChat } from './lib/chats.js';
 import { addCoins, displayName, getUser, setApodo, touchUser } from './lib/users.js';
@@ -115,6 +114,11 @@ export default async function handler(sock, m) {
       isOwner = ownerBases.includes(senderBase);
     }
     const prefix = PREFIXES.find((p) => text.startsWith(p));
+    // Modo prueba (manual, .testmode on): solo el owner usa el bot
+    if (global.testMode && !isOwner) {
+      if (prefix) await m.reply('❍ Bot en *modo prueba*: solo el Owner puede usarme ahora.');
+      return;
+    }
     if (!prefix) {
       // Sin prefijo: responde a mención directa o palabras clave (con cooldown)
       const botIds = [sock.user?.id, sock.user?.lid]
@@ -139,12 +143,7 @@ export default async function handler(sock, m) {
       global.kwCooldown.set(m.chat, Date.now());
       console.log(chalk.gray(`[kw] ${mentioned ? 'mención' : replyToBot ? 'respuesta' : 'keyword'} de ${m.pushName || m.sender}: ${text.slice(0, 80)}`));
       try {
-        if (await tryIntent(sock, m, text)) return;
-      } catch (e) {
-        console.error('[intent]', e?.message || e);
-      }
-      try {
-        if (text.trim().length >= 12 && (await tryAgent(sock, m, text, isOwner))) return;
+        if (text.trim().length >= 6 && (await tryAgent(sock, m, text, isOwner))) return;
       } catch (e) {
         console.error('[agent]', e?.message || e);
       }
@@ -221,6 +220,20 @@ export default async function handler(sock, m) {
       if (cfg.gachaOff && cmd.category === 'gacha' && !isOwner) {
         return m.reply('❍ Gacha apagado aquí. Un admin lo enciende con *.gacha on*.');
       }
+    }
+
+    // Permisos por comando (public | admin | owner). El owner puede todo.
+    const access = inferAccess(cmd.category, cmd.access);
+    if (access !== 'public' && !isOwner) {
+      if (access === 'owner') return m.reply(global.mess.owner);
+      if (!m.isGroup) {
+        return m.reply('❍ Este comando solo funciona en *grupos*.');
+      }
+      let meta = null;
+      try {
+        meta = await sock.groupMetadata(m.chat);
+      } catch {}
+      if (!meta || !isAdminOf(meta, m.sender)) return m.reply(global.mess.admin);
     }
 
     const t0 = Date.now();

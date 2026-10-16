@@ -4,6 +4,7 @@ import { baseJid, checkGroup, esBot, isAdminOf, objetivoHumano, pidOf } from '..
 export default {
   command: ['promote', 'promover', 'daradmin'],
   category: 'grupo',
+  access: 'admin',
   desc: 'Da admin a un miembro',
   uso: '<@mención | número | responder>',
   run: async ({ msg, sock, args }) => {

@@ -5,6 +5,7 @@ import { setChat } from '../../lib/chats.js';
 export default {
   command: ['setwelcome', 'setbienvenida'],
   category: 'grupo',
+  access: 'admin',
   desc: 'Define el mensaje de bienvenida',
   uso: '<texto con @user y @group>',
   run: async ({ msg, sock, args }) => {

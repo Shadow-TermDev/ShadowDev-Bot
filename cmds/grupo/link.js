@@ -4,6 +4,7 @@ import { checkGroup } from '../../lib/grupo.js';
 export default {
   command: ['link', 'enlace', 'invite'],
   category: 'grupo',
+  access: 'admin',
   desc: 'Muestra el enlace del grupo',
   run: async ({ msg, sock }) => {
     try {

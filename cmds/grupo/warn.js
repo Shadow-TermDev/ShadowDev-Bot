@@ -5,6 +5,7 @@ import { addWarn, clearWarns, getChat } from '../../lib/chats.js';
 export default {
   command: ['warn', 'advertir', 'aviso'],
   category: 'grupo',
+  access: 'admin',
   desc: 'Advierte a un miembro',
   uso: '<@mención> <razón>',
   run: async ({ msg, sock, args }) => {

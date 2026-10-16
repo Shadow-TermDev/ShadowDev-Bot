@@ -5,6 +5,7 @@ import { getChat, setChat } from '../../lib/chats.js';
 export default {
   command: ['gacha', 'gachas'],
   category: 'grupo',
+  access: 'admin',
   desc: 'Apaga o enciende el gacha',
   uso: '<on/off>',
   run: async ({ msg, sock, args }) => {

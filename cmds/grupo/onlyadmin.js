@@ -5,6 +5,7 @@ import { getChat, setChat } from '../../lib/chats.js';
 export default {
   command: ['onlyadmin', 'soloadmins'],
   category: 'grupo',
+  access: 'admin',
   desc: 'Solo admins usan comandos',
   uso: '<on/off>',
   run: async ({ msg, sock, args }) => {

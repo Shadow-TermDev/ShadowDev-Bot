@@ -5,6 +5,7 @@ import { getChat, setChat } from '../../lib/chats.js';
 export default {
   command: ['economy', 'economia'],
   category: 'grupo',
+  access: 'admin',
   desc: 'Apaga o enciende la economía',
   uso: '<on/off>',
   run: async ({ msg, sock, args }) => {

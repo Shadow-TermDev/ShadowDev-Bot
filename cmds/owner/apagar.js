@@ -3,6 +3,7 @@
 export default {
   command: ['apagar', 'shutdown', 'off', 'matar'],
   category: 'owner',
+  access: 'owner',
   desc: 'Apaga el bot',
   run: async ({ msg, sock, isOwner }) => {
     if (!isOwner) return msg.reply(global.mess.owner);

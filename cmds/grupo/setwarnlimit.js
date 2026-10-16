@@ -5,6 +5,7 @@ import { setChat } from '../../lib/chats.js';
 export default {
   command: ['setwarnlimit', 'setwarn'],
   category: 'grupo',
+  access: 'admin',
   desc: 'Límite de advertencias',
   uso: '<número>',
   run: async ({ msg, sock, args }) => {

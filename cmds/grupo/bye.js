@@ -5,6 +5,7 @@ import { getChat, setChat } from '../../lib/chats.js';
 export default {
   command: ['bye', 'despedida'],
   category: 'grupo',
+  access: 'admin',
   desc: 'Activa o apaga la despedida',
   uso: '<on/off>',
   run: async ({ msg, sock, args }) => {

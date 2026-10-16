@@ -4,6 +4,7 @@ import { checkGroup } from '../../lib/grupo.js';
 export default {
   command: ['cerrar', 'close'],
   category: 'grupo',
+  access: 'admin',
   desc: 'Cierra el grupo (solo admins escriben)',
   run: async ({ msg, sock }) => {
     try {

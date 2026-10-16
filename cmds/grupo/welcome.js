@@ -5,6 +5,7 @@ import { getChat, setChat } from '../../lib/chats.js';
 export default {
   command: ['welcome', 'bienvenida'],
   category: 'grupo',
+  access: 'admin',
   desc: 'Activa o apaga la bienvenida',
   uso: '<on/off>',
   run: async ({ msg, sock, args }) => {

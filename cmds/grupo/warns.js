@@ -5,6 +5,7 @@ import { getChat } from '../../lib/chats.js';
 export default {
   command: ['warns', 'avisos', 'advertencias'],
   category: 'grupo',
+  access: 'admin',
   desc: 'Ver advertencias de alguien',
   run: async ({ msg, sock, args }) => {
     try {

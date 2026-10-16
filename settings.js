@@ -31,6 +31,9 @@ global.msgglobal = '❍ Ocurrió un problema, contacte al creador.';
 
 // ── Moneda de la economía (cambiable con .setmoneda) ──
 global.moneda = getConfig().moneda || 'moras';
+
+// ── Modo prueba (manual con .testmode on/off, persistido) ──
+global.testMode = !!getConfig().testMode;
 global.mess = {
   socket: '❍ Este comando solo puede usarlo un *Socket*.\n> ✦ Pide ayuda a un administrador.',
   admin: '❍ Este comando solo lo usan los *Admins del grupo*.',

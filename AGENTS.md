@@ -11,6 +11,7 @@ Archivo en `cmds/<categoria>/<nombre>.js`:
 export default {
   command: ['cmd', 'alias2'],   // minúsculas, sin prefijo
   category: 'fun',              // info | downloader | ai | search | utils | fun | grupo | owner | gacha | economy
+  access: 'public',             // public | admin | owner (ver sección 2)
   desc: 'Qué hace, en 3-6 palabras',   // OBLIGATORIO, estilo abajo
   uso: '<param>',               // SOLO si necesita parámetro, formato <...>
   run: async ({ msg, sock, args }) => {
@@ -24,7 +25,23 @@ export default {
 };
 ```
 
-## 2. Regla alias + parámetro + desc (el menú los une solo)
+## 2. Nivel de acceso (`access`) + agente inteligente
+
+- Valores: `public` (todos) · `admin` (admins del grupo + owners) · `owner` (solo owners).
+- `lib/cmdsloader.js` copia `access` a `global.cmds`; `lib/agent.js` lo infiere si falta:
+  - categorías `info, fun, dl, ai, search, utils, economy, gacha` → `public`
+  - `grupo` → `admin` · `owner` → `owner`
+- Los comandos de `cmds/grupo/` llevan `access: 'admin'` y los de `cmds/owner/`
+  `access: 'owner'` de forma explícita (no borrarles el campo).
+- El handler aplica el gate solo (path con prefijo) y `lib/agent.js` en lenguaje
+  natural: no hace falta repetir `isOwner`/`isAdminOf` salvo defensa extra.
+- `lib/agent.js` es el ÚNICO cerebro de lenguaje natural (clasifica
+  CHARLA | CONSULTA | ACCIÓN contra el catálogo real). `lib/intents.js` fue
+  eliminado en v3.2.0: PROHIBIDO reintroducirlo o duplicar INTENTS fuera del agente.
+- `.testmode on/off` (owner) → `global.testMode` persistido en `data/config.json`.
+  Solo manual: nunca activar modo prueba automático desde otro comando.
+
+## 3. Regla alias + parámetro + desc (el menú los une solo)
 
 - El menú renderiza: `ᰔᩚ *{alias} + {uso}*` y debajo `> ✦ {desc}`.
 - Ejemplo resultante:
@@ -36,7 +53,7 @@ export default {
 - `desc` imperativa y corta: ❌ "Descarga o busca videos" → ✅ "Baja videos o busca en TikTok".
 - Alias: pocos y útiles (2-4). Nada genérico (prohibido `buscar`, `url`, `x` solo si hay prefijo... `x` vale porque exige prefijo).
 
-## 3. Estilo visual Rem (mensajes del bot)
+## 4. Estilo visual Rem (mensajes del bot)
 
 - Títulos: `• :･ﾟ⊹˚• \`『 Nombre 』\` •˚⊹:･ﾟ•`
 - Filas: `ᰔᩚ *Etiqueta »* valor`
@@ -62,7 +79,7 @@ export default {
 - Emojis: SOLO set del menú (✿ ❍ ✐ ᰔᩚ 🜸 ❀ ✦ ✰ ✧ + Reactions 🕒✔️✖️).
   Nada de 🪙🎉👋 (moneda = texto via `global.moneda`).
 
-## 4. APIs permitidas (verificadas, sin keys)
+## 5. APIs permitidas (verificadas, sin keys)
 
 SaveTube (`lib/ytdl.js`) · tikwm · fxtwitter · Pollinations (`lib/ia.js`) ·
 Google Translate + MyMemory · Catbox · lrclib · TinyURL · JokeAPI ·
@@ -79,7 +96,7 @@ Stellar (`api.stellarwa.xyz`) REVIVIÓ con key de prueba `api_de_prueba`
 
 Regla: toda API nueva se prueba con `curl` antes de integrarla.
 
-## 5. Prohibiciones técnicas (verificadas con sangre)
+## 6. Prohibiciones técnicas (verificadas con sangre)
 
 - **NO `externalAdReply`**: WhatsApp lo descarta en silencio (ACK sin entrega, 2 pruebas).
 - **NO `prepareWAMessageMedia`**: el pipeline de Baileys 7 no genera thumbs
@@ -91,7 +108,7 @@ Regla: toda API nueva se prueba con `curl` antes de integrarla.
 - **NUNCA `rm -rf data` ni `cache` en la carpeta viva**: ahí están los usuarios,
   monedas, gacha y toggles reales. Verificar solo con `node --check` y loader.
 
-## 6. Verificación antes de commit
+## 7. Verificación antes de commit
 
 ```bash
 node --check <archivo>

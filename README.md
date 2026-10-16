@@ -22,6 +22,7 @@ ShadowDev-Bot es un bot de WhatsApp multifuncional basado en `baileys` oficial.
 - Descargas (YouTube, TikTok, X, Spotify, GitHub)
 - Gacha + economía con banco y robos
 - IA con personaje + memoria de usuarios
+- Agente inteligente: comandos por lenguaje natural (`public` / `admin` / `owner`)
 - Gestión de grupos (warns, antilink, antispam, welcome)
 - Stickers con pack y autor
 
@@ -141,6 +142,19 @@ pm2 delete shadowdev
 1. `global.owner` → tus números con código país, sin `+`.
 2. `global.api.key` / `key2` → keys de https://api.stellarwa.xyz.
 
+---
+
+## 🧠 Agente inteligente
+
+Menciona al bot, respóndele o escribe su nombre y habla normal: el agente conoce
+el catálogo real de comandos y decide entre **charla**, **consulta** o **acción**.
+
+- Cada comando tiene un nivel de acceso: `public` (todos), `admin` (admins del
+  grupo) u `owner` (solo owners). Ej: “saca a @alguien” funciona solo si eres admin.
+- Pregunta sin ejecutar: “¿qué comandos tienes?”, “¿cómo uso .play?”, “¿qué hace .rw?”
+- `.testmode on/off` (owner) → modo prueba manual: solo el owner usa el bot.
+  Sin activarlo, no hay modo prueba automático.
+
 ## Ejemplos de Comandos
 
 - `.menu` — menú completo
@@ -149,3 +163,4 @@ pm2 delete shadowdev
 - `.daily` / `.dep all` / `.rob @alguien` — economía
 - `.sticker` / `.kick` / `.tagall` — grupo y fun
 - `.ia <pregunta>` — IA con personaje
+- `.testmode on` — modo prueba (solo owner)

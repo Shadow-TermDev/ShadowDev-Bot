@@ -4,6 +4,7 @@ import { checkGroup } from '../../lib/grupo.js';
 export default {
   command: ['tagall', 'todos', 'invocar'],
   category: 'grupo',
+  access: 'admin',
   desc: 'Menciona a todos los miembros',
   uso: '<mensaje>',
   run: async ({ msg, sock, args }) => {

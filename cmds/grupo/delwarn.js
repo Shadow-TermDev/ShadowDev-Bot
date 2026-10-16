@@ -5,6 +5,7 @@ import { clearWarns } from '../../lib/chats.js';
 export default {
   command: ['delwarn', 'quitarwarn', 'perdonar'],
   category: 'grupo',
+  access: 'admin',
   desc: 'Quita advertencias',
   run: async ({ msg, sock, args }) => {
     try {

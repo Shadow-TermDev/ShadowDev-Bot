@@ -4,6 +4,7 @@ import { checkGroup } from '../../lib/grupo.js';
 export default {
   command: ['add', 'agregar', 'invitar'],
   category: 'grupo',
+  access: 'admin',
   desc: 'Agrega miembros al grupo',
   uso: '<números con código país>',
   run: async ({ msg, sock, args }) => {

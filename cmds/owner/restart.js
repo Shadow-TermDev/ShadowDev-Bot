@@ -2,6 +2,7 @@
 export default {
   command: ['restart', 'reiniciar'],
   category: 'owner',
+  access: 'owner',
   desc: 'Reinicia el bot',
   run: async ({ msg, isOwner }) => {
     if (!isOwner) return msg.reply(global.mess.owner);

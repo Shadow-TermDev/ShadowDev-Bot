@@ -5,6 +5,7 @@ import { getChat, setChat } from '../../lib/chats.js';
 export default {
   command: ['bot', 'botcito'],
   category: 'grupo',
+  access: 'admin',
   desc: 'Apaga o enciende el bot',
   uso: '<on/off>',
   run: async ({ msg, sock, args }) => {
