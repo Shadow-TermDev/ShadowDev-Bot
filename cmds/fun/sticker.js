@@ -17,7 +17,7 @@ export default {
         return msg.reply(`❍ Envía una imagen o video (máx 6s) con *${prefix}s* en el pie de foto, cita uno o cita un sticker con *${prefix}s*.`);
       }
       const isQuotedSticker = !direct && !!qm.stickerMessage;
-      if ((target.seconds || 0) > 8) return msg.reply('❍ Video muy largo, máximo 6 segundos.');
+      if ((target.seconds || 0) > 6) return msg.reply('❍ Video muy largo, máximo 6 segundos.');
       const buffer = direct ? await msg.download() : await msg.downloadQuoted();
       if (!buffer) return msg.reply('❍ No se pudo descargar el archivo.');
       await msg.react('🕒');

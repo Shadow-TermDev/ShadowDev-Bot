@@ -11,7 +11,8 @@ export default {
       const top = [...all].sort((a, b) => (b.value || 0) - (a.value || 0)).slice(0, 10);
       const txt = top.map((c, i) => `${i + 1}. ${c.name} — ${(c.value || 0).toLocaleString()} ${global.moneda}`).join('\n');
       await msg.reply(`• :･ﾟ⊹˚• \`『 Top Waifus (${all.length}) 』\` •˚⊹:･ﾟ•\n\n${txt}\n\n> *${global.botname2} • ${global.dev}*`);
-    } catch {
+    } catch (e) {
+      console.error('[waifustop]', e?.message || e);
       await msg.reply(global.msgglobal);
     }
   }

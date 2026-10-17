@@ -21,7 +21,8 @@ export default {
       u.coins = (u.coins || 0) + PREMIO;
       saveUsers();
       await msg.reply(`• :･ﾟ⊹˚• \`『 Weekly 』\` •˚⊹:･ﾟ•\n\n✿ *Premio »* +${PREMIO.toLocaleString()} ${global.moneda}\n\n> *${global.botname2} • ${global.dev}*`);
-    } catch {
+    } catch (e) {
+      console.error('[weekly]', e?.message || e);
       await msg.reply(global.msgglobal);
     }
   }

@@ -14,8 +14,9 @@ export default {
       const target = resolveTarget(msg, args);
       if (!target) return msg.reply('❍ Responde, menciona o escribe el número.');
       clearWarns(msg.chat, baseJid(target));
-      await msg.reply(`✿ Advertencias de *@${baseJid(target)}* eliminadas.`);
-    } catch {
+      await msg.reply(`✿ Advertencias de *@${baseJid(target)}* eliminadas.`, { mentions: [target] });
+    } catch (e) {
+      console.error('[delwarn]', e?.message || e);
       await msg.reply(global.msgglobal);
     }
   }

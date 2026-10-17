@@ -17,7 +17,8 @@ export default {
       if (getChat(msg.chat).gachaOff === (v === 'off')) return msg.reply('❍ El gacha ya está así.');
       setChat(msg.chat, 'gachaOff', v === 'off');
       await msg.reply(`✿ *Gacha »* ${v === 'off' ? 'apagado' : 'activado'}.\n\n> *${global.botname2} • ${global.dev}*`);
-    } catch {
+    } catch (e) {
+      console.error('[gachactl]', e?.message || e);
       await msg.reply(global.msgglobal);
     }
   }

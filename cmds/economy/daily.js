@@ -34,7 +34,8 @@ export default {
         (racha > 1 ? `✿ *Racha »* ${racha} días seguidos\n` : `> ✦ Vuelve mañana y sube a +${(BASE + PASO).toLocaleString()}\n`) +
         `\n> *${global.botname2} • ${global.dev}*`
       );
-    } catch {
+    } catch (e) {
+      console.error('[daily]', e?.message || e);
       await msg.reply(global.msgglobal);
     }
   }

@@ -15,7 +15,8 @@ export default {
       u.coins = (u.coins || 0) + n;
       saveUsers();
       await msg.reply(`• :･ﾟ⊹˚• \`『 Mina 』\` •˚⊹:･ﾟ•\n\n✿ *Encontraste »* +${n.toLocaleString()} ${global.moneda}\n\n> *${global.botname2} • ${global.dev}*`);
-    } catch {
+    } catch (e) {
+      console.error('[mine]', e?.message || e);
       await msg.reply(global.msgglobal);
     }
   }

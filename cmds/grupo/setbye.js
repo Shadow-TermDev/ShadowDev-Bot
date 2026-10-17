@@ -17,7 +17,8 @@ export default {
       setChat(msg.chat, 'byeMsg', texto.slice(0, 300));
       setChat(msg.chat, 'bye', true);
       await msg.reply(`✿ *Despedida guardada y activada*\n\n> *${global.botname2} • ${global.dev}*`);
-    } catch {
+    } catch (e) {
+      console.error('[setbye]', e?.message || e);
       await msg.reply(global.msgglobal);
     }
   }

@@ -9,7 +9,7 @@ export default {
   run: async ({ msg, sock, args }) => {
     try {
       const language = args[0] || 'es';
-      const text = args.slice(1).join(' ') || msg.quoted?.extendedTextMessage?.text || '';
+      const text = args.slice(1).join(' ') || msg.quoted?.conversation || msg.quoted?.extendedTextMessage?.text || '';
       if (!text) return msg.reply('❍ Ejemplo: *.translate en* hola mundo');
       let out = '';
       try {
@@ -30,7 +30,8 @@ export default {
         { text: `• :･ﾟ⊹˚• \`『 Traductor 』\` •˚⊹:･ﾟ•\n\n✿ *${language}* » ${out}` },
         { quoted: { key: msg.key, message: {} } }
       );
-    } catch {
+    } catch (e) {
+      console.error('[translate]', e?.message || e);
       await msg.reply(global.msgglobal);
     }
   }

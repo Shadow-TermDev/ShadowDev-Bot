@@ -18,7 +18,8 @@ export default {
         `✿ *Tiros »* ${u.rolls || 0}\n\n` +
         `> *${global.botname2} • ${global.dev}*`
       );
-    } catch {
+    } catch (e) {
+      console.error('[gachainfo]', e?.message || e);
       await msg.reply(global.msgglobal);
     }
   }

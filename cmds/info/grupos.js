@@ -2,6 +2,7 @@
 export default {
   command: ['grupos', 'groups'],
   category: 'info',
+  access: 'owner',
   desc: 'Lista los grupos del bot',
   run: async ({ msg, sock, isOwner }) => {
     try {

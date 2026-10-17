@@ -19,6 +19,7 @@ export default {
       await msg.reply(`• :･ﾟ⊹˚• \`『 Music 』\` •˚⊹:･ﾟ•\n\n✿ *Título »* ${video.title}\n✿ *Artista »* ${canal}\n\n> ✐ _Enviando audio, espera..._\n> *${global.botname2} • ${global.dev}*`);
       await msg.react('🕒');
       const dlP = downloadAudio(video.url);
+      dlP.catch(() => {}); // evita unhandledRejection si falla durante el await intermedio
       let thumb = null;
       try {
         thumb = await getBuffer(video.image);

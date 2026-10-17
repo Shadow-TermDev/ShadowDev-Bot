@@ -15,6 +15,7 @@ export default {
       if (!video) return msg.reply('❍ No se encontró el video.');
       if ((video.seconds || 0) > 1800) return msg.reply('❍ Muy largo (máx 30 min). Busca otro tema.');
       const dlP = downloadAudio(video.url);
+      dlP.catch(() => {}); // evita unhandledRejection si falla durante el await intermedio
       await msg.reply(`> ✦ _Enviando audio *${video.title}*, espera..._`);
       const { dl } = await dlP;
       await sock.sendMessage(

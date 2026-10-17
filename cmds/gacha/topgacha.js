@@ -24,7 +24,8 @@ export default {
       if (!col.length) return msg.reply('❍ Nadie tiene personajes aún. Tira con *.rw*.');
       const txt = col.map((x, i) => `${i + 1}. ${displayName(x.jid, x.u.apodo || x.u.name)} — ${x.u.characters.length} pjs / ${x.valor.toLocaleString()} ${global.moneda}`).join('\n');
       await msg.reply(`• :･ﾟ⊹˚• \`『 Coleccionistas 』\` •˚⊹:･ﾟ•\n\n${txt}\n\n> ✦ Mira dinero con *.top*\n\n> *${global.botname2} • ${global.dev}*`);
-    } catch {
+    } catch (e) {
+      console.error('[topgacha]', e?.message || e);
       await msg.reply(global.msgglobal);
     }
   }

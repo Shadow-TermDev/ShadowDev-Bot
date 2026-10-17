@@ -20,7 +20,8 @@ export default {
       if (!top.length) return msg.reply('❍ Sin datos aún.');
       const txt = top.map(([jid, u], i) => `${i + 1}. ${displayName(jid, u.apodo || u.name)} — ${u.msgs} msgs`).join('\n');
       await msg.reply(`• :･ﾟ⊹˚• \`『 Habladores 』\` •˚⊹:･ﾟ•\n\n${txt}\n\n> *${global.botname2} • ${global.dev}*`);
-    } catch {
+    } catch (e) {
+      console.error('[topcount]', e?.message || e);
       await msg.reply(global.msgglobal);
     }
   }

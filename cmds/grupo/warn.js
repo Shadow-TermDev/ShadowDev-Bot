@@ -31,9 +31,19 @@ export default {
       const limite = getChat(msg.chat).warnLimit || 3;
       const datos = { mention: target, num: clave, n, limite, razon };
       if (n >= limite) {
-        clearWarns(msg.chat, clave);
-        await sock.groupParticipantsUpdate(msg.chat, [pidOf(meta, target)], 'remove').catch(() => {});
-        if (fromAgent) return { ok: true, code: 'warned_out', data: datos };
+        // Expulsar PRIMERO y limpiar solo si salió bien: si el kick falla
+        // (admin/creador/privacidad) el usuario no queda impune con 0 warns.
+        const ok = await sock
+          .groupParticipantsUpdate(msg.chat, [pidOf(meta, target)], 'remove')
+          .then(() => true)
+          .catch(() => false);
+        if (ok) clearWarns(msg.chat, clave);
+        if (fromAgent) {
+          return ok
+            ? { ok: true, code: 'warned_out', data: datos }
+            : { ok: false, code: 'kick_failed', data: { mention: target, num: clave } };
+        }
+        if (!ok) return msg.reply(`❍ No pude expulsar a *@${clave}* (¿es admin o creador?). Warns ${n}/${limite}.`, { mentions: [target] });
         await sock.sendMessage(msg.chat, { text: `✿ *@${clave}* expulsado (warns ${n}/${limite}: ${razon}).`, mentions: [target] });
       } else {
         if (fromAgent) return { ok: true, code: 'warned', data: datos };

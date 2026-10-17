@@ -12,8 +12,8 @@ export default {
       if (!q) return msg.reply('❍ Escribe qué buscar. Ej: *.pinterest* gatos');
       await msg.react('🕒');
       const res = await sfetch(`/search/pinterest?query=${encodeURIComponent(q)}`);
-      const arr = Array.isArray(res?.data) ? res.data : [];
-      const imgs = arr.map((x) => x?.hd || x?.mini).filter(Boolean).slice(0, 5);
+      const arr = Array.isArray(res?.data) ? res.data : Array.isArray(res?.result) ? res.result : [];
+      const imgs = arr.map((x) => x?.hd || x?.mini || x?.url || x).filter((u) => typeof u === 'string' && u.startsWith('http')).slice(0, 5);
       if (!imgs.length) return msg.reply('❍ Sin resultados.');
       for (const u of imgs) {
         await sock.sendMessage(msg.chat, { image: { url: u }, caption: `✿ *${q}*\n\n> *${global.botname2} • ${global.dev}*` }, { quoted: { key: msg.key, message: {} } });

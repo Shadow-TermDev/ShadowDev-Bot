@@ -12,8 +12,8 @@ export default {
       const u = getUser(msg.sender);
       const queda = (u.workCooldown || 0) - Date.now();
       if (queda > 0) {
-        const m = Math.floor(queda / 60000);
-        const s = Math.floor((queda % 60000) / 1000);
+        const m = Math.ceil(queda / 60000);
+        const s = Math.ceil((queda % 60000) / 1000);
         return msg.reply(`❍ Descansa *${m}m ${s}s* antes de trabajar.`);
       }
       const pago = Math.floor(Math.random() * 5000);
@@ -22,7 +22,8 @@ export default {
       u.coins = (u.coins || 0) + pago;
       saveUsers();
       await msg.reply(`• :･ﾟ⊹˚• \`『 Trabajo 』\` •˚⊹:･ﾟ•\n\n✿ *Oficio »* ${oficio}\n✿ *Ganaste »* +${pago.toLocaleString()} ${global.moneda}\n\n> *${global.botname2} • ${global.dev}*`);
-    } catch {
+    } catch (e) {
+      console.error('[work]', e?.message || e);
       await msg.reply(global.msgglobal);
     }
   }

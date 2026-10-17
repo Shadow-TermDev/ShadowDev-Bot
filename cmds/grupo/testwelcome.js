@@ -19,7 +19,8 @@ export default {
       const base = bye ? cfg.byeMsg : cfg.welcomeMsg;
       const t = (base || (bye ? 'Adiós @user' : 'Bienvenido @user')).replace(/@user/g, tag).replace(/@group/g, g.meta.subject || '');
       await sock.sendMessage(msg.chat, { text: `[prueba] ${t}`, mentions: [msg.sender] });
-    } catch {
+    } catch (e) {
+      console.error('[testwelcome]', e?.message || e);
       await msg.reply(global.msgglobal);
     }
   }

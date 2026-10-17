@@ -21,8 +21,8 @@ export default {
       }
       const target = objetivoHumano(sock, msg, args);
       if (target && esBot(sock, target)) {
-        if (fromAgent) return { ok: false, code: 'kick_self', data: { mention: target, num: baseJid(target) } };
-        return msg.reply('❍ Conmigo no, que me quedo sin grupo.');
+        if (fromAgent) return { ok: false, code: 'self_target', data: { mention: target, num: baseJid(target) } };
+        return msg.reply('❍ Conmigo no. Pide lo mismo para otro miembro.');
       }
       if (!target) {
         if (fromAgent) return { ok: false, code: 'need_target', data: {} };

@@ -22,7 +22,8 @@ export default {
         `✿ *Mensajes »* ${u.msgs || 0} / ${next}\n\n` +
         `> *${global.botname2} • ${global.dev}*`
       );
-    } catch {
+    } catch (e) {
+      console.error('[level]', e?.message || e);
       await msg.reply(global.msgglobal);
     }
   }

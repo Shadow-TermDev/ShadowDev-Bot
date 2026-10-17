@@ -17,7 +17,8 @@ export default {
         return `✿ *${nombre} »* ${h}`;
       }).join('\n');
       await msg.reply(`• :･ﾟ⊹˚• \`『 Hora 』\` •˚⊹:･ﾟ•\n\n${lineas}\n\n> *${global.botname2} • ${global.dev}*`);
-    } catch {
+    } catch (e) {
+      console.error('[hora]', e?.message || e);
       await msg.reply(global.msgglobal);
     }
   }

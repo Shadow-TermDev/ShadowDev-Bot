@@ -13,8 +13,9 @@ export default {
       if (!g) return;
       const target = resolveTarget(msg, args) || msg.sender;
       const n = getChat(msg.chat).warns[baseJid(target)] || 0;
-      await msg.reply(`✿ *@${baseJid(target)}* tiene *${n}* advertencias.`);
-    } catch {
+      await msg.reply(`✿ *@${baseJid(target)}* tiene *${n}* advertencias.`, { mentions: [target] });
+    } catch (e) {
+      console.error('[warns]', e?.message || e);
       await msg.reply(global.msgglobal);
     }
   }

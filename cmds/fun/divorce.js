@@ -15,7 +15,8 @@ export default {
       if (otro.spouse === msg.sender) otro.spouse = null;
       saveUsers();
       await msg.reply(`✿ Divorcio firmado con *@${String(ex).split('@')[0]}*.\n\n> *${global.botname2} • ${global.dev}*`);
-    } catch {
+    } catch (e) {
+      console.error('[divorce]', e?.message || e);
       await msg.reply(global.msgglobal);
     }
   }

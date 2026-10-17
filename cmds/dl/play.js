@@ -39,6 +39,7 @@ export default {
       // La descarga arranca ANTES del aviso: se solapan y se ahorra ~2s
       await msg.react('🕒');
       const dlP = downloadAudio(video.url);
+      dlP.catch(() => {}); // evita unhandledRejection si falla durante el await intermedio
       let thumb = null;
       try {
         thumb = await getBuffer(video.image);

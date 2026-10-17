@@ -12,7 +12,7 @@ export default {
       const u = getUser(msg.sender);
       const queda = (u.fishCooldown || 0) - Date.now();
       if (queda > 0) {
-        const m = Math.floor(queda / 60000);
+        const m = Math.ceil(queda / 60000);
         return msg.reply(`❍ Recoge la caña *${m}m* y vuelve.`);
       }
       u.fishCooldown = Date.now() + 8 * 60 * 1000;
@@ -25,7 +25,8 @@ export default {
           ? `• :･ﾟ⊹˚• \`『 Pesca 』\` •˚⊹:･ﾟ•\n\n✿ *Atrapaste »* ${pez}\n✿ *Vale »* +${n.toLocaleString()} ${global.moneda}\n\n> *${global.botname2} • ${global.dev}*`
           : `• :･ﾟ⊹˚• \`『 Pesca 』\` •˚⊹:･ﾟ•\n\n✿ *Atrapaste »* ${pez}... no vale nada\n\n> *${global.botname2} • ${global.dev}*`
       );
-    } catch {
+    } catch (e) {
+      console.error('[fish]', e?.message || e);
       await msg.reply(global.msgglobal);
     }
   }

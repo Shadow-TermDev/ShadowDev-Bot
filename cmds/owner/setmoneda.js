@@ -16,7 +16,8 @@ export default {
       setConfig('moneda', nombre);
       global.moneda = nombre;
       await msg.reply(`✿ *Moneda »* ahora es *${nombre}*.\n> ✐ Lo anuncia ${displayName(msg.sender, msg.pushName)}\n\n> *${global.botname2} • ${global.dev}*`);
-    } catch {
+    } catch (e) {
+      console.error('[setmoneda]', e?.message || e);
       await msg.reply(global.msgglobal);
     }
   }

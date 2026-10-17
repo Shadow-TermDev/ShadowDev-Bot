@@ -19,7 +19,8 @@ export default {
       } catch {
         await msg.reply('❍ Sin foto de perfil.');
       }
-    } catch {
+    } catch (e) {
+      console.error('[getpic]', e?.message || e);
       await msg.reply(global.msgglobal);
     }
   }

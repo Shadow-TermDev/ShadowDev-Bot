@@ -21,7 +21,8 @@ export default {
       if (getChat(msg.chat).botOff === (v === 'off')) return msg.reply('❍ El bot ya está así.');
       setChat(msg.chat, 'botOff', v === 'off');
       await msg.reply(`✿ *Bot »* ${v === 'off' ? 'apagado. Me callo.' : 'activado de nuevo.'}\n\n> *${global.botname2} • ${global.dev}*`);
-    } catch {
+    } catch (e) {
+      console.error('[bot]', e?.message || e);
       await msg.reply(global.msgglobal);
     }
   }

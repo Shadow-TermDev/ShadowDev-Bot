@@ -18,7 +18,8 @@ export default {
       u.coins = (u.coins || 0) + n;
       saveUsers();
       await msg.reply(`• :･ﾟ⊹˚• \`『 Caza 』\` •˚⊹:･ﾟ•\n\n✿ *Cazaste »* ${presa}\n✿ *Vale »* +${n.toLocaleString()} ${global.moneda}\n\n> *${global.botname2} • ${global.dev}*`);
-    } catch {
+    } catch (e) {
+      console.error('[hunt]', e?.message || e);
       await msg.reply(global.msgglobal);
     }
   }

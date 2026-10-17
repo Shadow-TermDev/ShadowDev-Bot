@@ -15,6 +15,7 @@ export default {
       if (!video) return msg.reply('❍ No se encontró el video.');
       await msg.react('🕒');
       const dlP = downloadVideo(video.url);
+      dlP.catch(() => {}); // evita unhandledRejection si falla durante el await intermedio
       await msg.reply(`> ✐ _Enviando video *${video.title}*, espera..._`);
       const { dl } = await dlP;
       const name = safeName(video.title, 'video');

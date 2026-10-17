@@ -22,7 +22,8 @@ export default {
         .slice(0, 10);
       const txt = ricos.map(([jid, u], i) => `${i + 1}. ${displayName(jid, u.apodo || u.name)} — ${((u.coins || 0) + (u.bank || 0)).toLocaleString()} ${global.moneda}`).join('\n');
       await msg.reply(`• :･ﾟ⊹˚• \`『 Ricos 』\` •˚⊹:･ﾟ•\n\n${txt}\n\n> ✦ Mira colecciones con *.topgacha*\n\n> *${global.botname2} • ${global.dev}*`);
-    } catch {
+    } catch (e) {
+      console.error('[top]', e?.message || e);
       await msg.reply(global.msgglobal);
     }
   }

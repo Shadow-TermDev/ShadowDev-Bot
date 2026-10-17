@@ -17,7 +17,8 @@ export default {
       if (getChat(msg.chat).onlyAdmin === (v === 'on')) return msg.reply('❍ El onlyadmin ya está así.');
       setChat(msg.chat, 'onlyAdmin', v === 'on');
       await msg.reply(`✿ *OnlyAdmin »* ${v === 'off' ? 'apagado' : 'activado'}.\n\n> *${global.botname2} • ${global.dev}*`);
-    } catch {
+    } catch (e) {
+      console.error('[onlyadmin]', e?.message || e);
       await msg.reply(global.msgglobal);
     }
   }

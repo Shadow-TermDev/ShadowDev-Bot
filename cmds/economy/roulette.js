@@ -26,7 +26,8 @@ export default {
         saveUsers();
         await msg.reply(`• :･ﾟ⊹˚• \`『 Ruleta 』\` •˚⊹:･ﾟ•\n\n✿ *Salió »* ${sale}\n✿ *Perdiste »* -${n.toLocaleString()} ${global.moneda}\n\n> *${global.botname2} • ${global.dev}*`);
       }
-    } catch {
+    } catch (e) {
+      console.error('[roulette]', e?.message || e);
       await msg.reply(global.msgglobal);
     }
   }

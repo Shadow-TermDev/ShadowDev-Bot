@@ -1,5 +1,5 @@
 // .rob — roba dinero (no del banco). Solo a inactivos 1h+, cooldown 30min.
-import { displayName, getUser, saveUsers } from '../../lib/users.js';
+import { displayName, existeUser, getUser, saveUsers } from '../../lib/users.js';
 
 const MIN = 50;
 const CD = 30 * 60 * 1000;
@@ -14,6 +14,7 @@ export default {
     try {
       const target = (msg.mentionedJid || [])[0] || msg.quotedSender || null;
       if (!target || target === msg.sender) return msg.reply(`❍ Menciona a quién robarle ${global.moneda}.`);
+      if (!existeUser(target)) return msg.reply('❍ Esa persona aún no usa el bot (no tiene cuenta).');
       const yo = getUser(msg.sender);
       const el = getUser(target);
       if (Date.now() - (el.lastSeen || 0) < HORA) {
@@ -24,7 +25,7 @@ export default {
       }
       const queda = (yo.lastRob || 0) + CD - Date.now();
       if (queda > 0) {
-        const m = Math.floor(queda / 60000);
+        const m = Math.ceil(queda / 60000);
         return msg.reply(`❍ Espera *${m}m* antes de robar de nuevo.`);
       }
       yo.lastRob = Date.now();

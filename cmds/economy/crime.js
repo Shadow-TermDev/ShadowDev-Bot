@@ -10,7 +10,7 @@ export default {
       const u = getUser(msg.sender);
       const queda = (u.crimeCooldown || 0) - Date.now();
       if (queda > 0) {
-        const m = Math.floor(queda / 60000);
+        const m = Math.ceil(queda / 60000);
         return msg.reply(`❍ Escóndete *${m}m* antes del próximo golpe.`);
       }
       u.crimeCooldown = Date.now() + 10 * 60 * 1000;
@@ -26,7 +26,8 @@ export default {
       }
       saveUsers();
       await msg.reply(texto);
-    } catch {
+    } catch (e) {
+      console.error('[crime]', e?.message || e);
       await msg.reply(global.msgglobal);
     }
   }

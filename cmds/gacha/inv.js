@@ -17,7 +17,8 @@ export default {
         (chars.length > 20 ? `\n> ✐ ...y ${chars.length - 20} más\n` : '') +
         `\n✿ *Total »* ${chars.length} personajes / ${total.toLocaleString()} ${global.moneda}\n\n> *${global.botname2} • ${global.dev}*`
       );
-    } catch {
+    } catch (e) {
+      console.error('[inv]', e?.message || e);
       await msg.reply(global.msgglobal);
     }
   }

@@ -18,7 +18,8 @@ export default {
       if (getChat(msg.chat).bye === (v === 'on' || v === '1')) return msg.reply('❍ La despedida ya está así.');
       setChat(msg.chat, 'bye', on);
       await msg.reply(`✿ *Despedida »* ${on ? 'activada' : 'apagada'}\n\n> *${global.botname2} • ${global.dev}*`);
-    } catch {
+    } catch (e) {
+      console.error('[bye]', e?.message || e);
       await msg.reply(global.msgglobal);
     }
   }

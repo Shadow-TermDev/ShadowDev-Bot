@@ -17,7 +17,8 @@ export default {
       setChat(msg.chat, 'welcomeMsg', texto.slice(0, 300));
       setChat(msg.chat, 'welcome', true);
       await msg.reply(`✿ *Bienvenida guardada y activada*\n\n> *${global.botname2} • ${global.dev}*`);
-    } catch {
+    } catch (e) {
+      console.error('[setwelcome]', e?.message || e);
       await msg.reply(global.msgglobal);
     }
   }

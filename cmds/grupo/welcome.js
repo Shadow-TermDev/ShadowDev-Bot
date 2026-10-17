@@ -18,7 +18,8 @@ export default {
       if (getChat(msg.chat).welcome === (v === 'on' || v === '1')) return msg.reply('❍ La bienvenida ya está así.');
       setChat(msg.chat, 'welcome', on);
       await msg.reply(`✿ *Bienvenida »* ${on ? 'activada' : 'apagada'}\n\n> *${global.botname2} • ${global.dev}*`);
-    } catch {
+    } catch (e) {
+      console.error('[welcome]', e?.message || e);
       await msg.reply(global.msgglobal);
     }
   }

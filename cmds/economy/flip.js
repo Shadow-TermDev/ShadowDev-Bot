@@ -25,7 +25,8 @@ export default {
         saveUsers();
         await msg.reply(`• :･ﾟ⊹˚• \`『 Flip 』\` •˚⊹:･ﾟ•\n\n✿ *Salió »* ${sale}\n✿ *Perdiste »* -${n.toLocaleString()} ${global.moneda}\n\n> *${global.botname2} • ${global.dev}*`);
       }
-    } catch {
+    } catch (e) {
+      console.error('[flip]', e?.message || e);
       await msg.reply(global.msgglobal);
     }
   }

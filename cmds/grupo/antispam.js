@@ -18,7 +18,8 @@ export default {
       if (getChat(msg.chat).antispam === (v === 'on' || v === '1')) return msg.reply('❍ El anti-spam ya está así.');
       setChat(msg.chat, 'antispam', on);
       await msg.reply(`✿ *Anti-spam »* ${on ? 'activado' : 'apagado'}\n\n> *${global.botname2} • ${global.dev}*`);
-    } catch {
+    } catch (e) {
+      console.error('[antispam]', e?.message || e);
       await msg.reply(global.msgglobal);
     }
   }

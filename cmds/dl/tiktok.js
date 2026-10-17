@@ -57,6 +57,7 @@ export default {
       if (url) {
         await msg.react('🕒');
         const req = byUrl(url);
+        req.catch(() => {}); // evita unhandledRejection si falla durante el await intermedio
         await msg.reply('> ✐ _Descargando TikTok, espera..._');
         const v = await req;
         if (!v) return msg.reply('❍ No se pudo descargar (verifica que sea público).');
@@ -93,7 +94,9 @@ export default {
         if (!dl) continue;
         n++;
         const titulo = v.title || 'Sin título';
-        const enlace = v.id ? `https://www.tiktok.com/@i/video/${v.id}` : query;
+        const enlace = v.id
+          ? `https://www.tiktok.com/@${v.author?.unique_id || v.author?.nickname || 'user'}/video/${v.id}`
+          : query;
         items.push({ dl, caption: `✿ *${n}.* ${titulo}\n> ✐ ${enlace}` });
       }
       if (!items.length) return msg.reply('❍ Sin resultados descargables.');

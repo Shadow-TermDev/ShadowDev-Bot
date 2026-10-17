@@ -1,6 +1,6 @@
 // .trade — propone intercambio; el otro acepta con .trade si o rechaza con .trade no.
 import { displayName, getUser, saveUsers } from '../../lib/users.js';
-import { clearTrade, getTrade, setTrade } from '../../lib/gacha.js';
+import { buscarPersonaje, clearTrade, getTrade, setTrade } from '../../lib/gacha.js';
 
 export default {
   command: ['trade', 'intercambiar', 'cambiar'],
@@ -48,12 +48,12 @@ export default {
       }
       const yo = getUser(msg.sender);
       const el = getUser(target);
-      const tengo = (yo.characters || []).some((c) => c.name.toLowerCase().includes(miPJ.toLowerCase()));
-      const tiene = (el.characters || []).some((c) => c.name.toLowerCase().includes(suPJ.toLowerCase()));
-      if (!tengo) return msg.reply('❍ Ni siquiera tienes ese personaje. Mira tu *.inv*.');
-      if (!tiene) return msg.reply('❍ Esa persona no tiene ese personaje.');
-      const miReal = yo.characters.find((c) => c.name.toLowerCase().includes(miPJ.toLowerCase())).name;
-      const suReal = el.characters.find((c) => c.name.toLowerCase().includes(suPJ.toLowerCase())).name;
+      const iMio = buscarPersonaje(yo.characters, miPJ);
+      const iSuyo = buscarPersonaje(el.characters, suPJ);
+      if (iMio < 0) return msg.reply('❍ Ni siquiera tienes ese personaje. Mira tu *.inv*.');
+      if (iSuyo < 0) return msg.reply('❍ Esa persona no tiene ese personaje.');
+      const miReal = yo.characters[iMio].name;
+      const suReal = el.characters[iSuyo].name;
       setTrade(msg.chat, { from: msg.sender, to: target, give: miReal, take: suReal });
       await sock.sendMessage(
         msg.chat,

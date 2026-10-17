@@ -4,7 +4,7 @@ import { getUser, saveUsers } from '../../lib/users.js';
 import { duenoDe, getRoll, imagenDe, marcarTiro, msCorto, puedeTirar, setRoll, tirar } from '../../lib/gacha.js';
 
 export default {
-  command: ['rw', 'roll', 'rollwaifu'],
+  command: ['rw', 'rollwaifu'],
   category: 'gacha',
   desc: 'Tira un personaje aleatorio',
   run: async ({ msg, sock }) => {

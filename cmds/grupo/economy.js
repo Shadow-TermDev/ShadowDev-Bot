@@ -17,7 +17,8 @@ export default {
       if (getChat(msg.chat).economyOff === (v === 'off')) return msg.reply('❍ La economía ya está así.');
       setChat(msg.chat, 'economyOff', v === 'off');
       await msg.reply(`✿ *Economía »* ${v === 'off' ? 'apagada' : 'activada'}.\n\n> *${global.botname2} • ${global.dev}*`);
-    } catch {
+    } catch (e) {
+      console.error('[economy]', e?.message || e);
       await msg.reply(global.msgglobal);
     }
   }

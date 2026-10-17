@@ -19,6 +19,7 @@ const FALLBACK = [
 ];
 
 export default async function handler(sock, m) {
+  let command, prefix; // ámbito de función: visibles en el catch del log
   try {
     if (m.fromMe) return; // anti-loop: ignora mensajes propios
     try {
@@ -113,7 +114,7 @@ export default async function handler(sock, m) {
       } catch {}
       isOwner = ownerBases.includes(senderBase);
     }
-    const prefix = PREFIXES.find((p) => text.startsWith(p));
+    prefix = PREFIXES.find((p) => text.startsWith(p));
     // Modo prueba (manual, .testmode on): solo el owner usa el bot
     if (global.testMode && !isOwner) {
       if (prefix) await m.reply('❍ Bot en *modo prueba*: solo el Owner puede usarme ahora.');
@@ -173,7 +174,7 @@ export default async function handler(sock, m) {
 
     const [raw, ...rest] = text.slice(prefix.length).trim().split(/\s+/);
     if (!raw) return;
-    const command = raw.toLowerCase();
+    command = raw.toLowerCase();
     const args = rest;
     const cmdText = args.join(' ');
 
@@ -253,7 +254,7 @@ export default async function handler(sock, m) {
     } catch {}
     console.log(chalk.gray(`[ ✿ ] Respuesta enviada → ${prefix}${command} (${Date.now() - t0}ms)`));
   } catch (e) {
-    console.error(chalk.red(`[ ✿ ] Falló ${typeof command !== 'undefined' ? prefix + command : 'comando'}: ${e?.message || e}`));
+    console.error(chalk.red(`[ ✿ ] Falló ${command ? prefix + command : 'comando'}: ${e?.message || e}`));
     try {
       await m.reply(global.msgglobal);
     } catch {}

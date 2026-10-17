@@ -18,7 +18,8 @@ export default {
       if (getChat(msg.chat).antilink === (v === 'on' || v === '1')) return msg.reply('❍ El anti-link ya está así.');
       setChat(msg.chat, 'antilink', on);
       await msg.reply(`✿ *Anti-link »* ${on ? 'activado (al 3er aviso expulsa)' : 'apagado'}\n\n> *${global.botname2} • ${global.dev}*`);
-    } catch {
+    } catch (e) {
+      console.error('[antilink]', e?.message || e);
       await msg.reply(global.msgglobal);
     }
   }

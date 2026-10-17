@@ -16,7 +16,8 @@ export default {
       if (!n || n < 1 || n > 10) return msg.reply('❍ Número del 1 al 10. Ej: *.setwarnlimit 3*');
       setChat(msg.chat, 'warnLimit', n);
       await msg.reply(`✿ *Límite »* ${n} advertencias.\n\n> *${global.botname2} • ${global.dev}*`);
-    } catch {
+    } catch (e) {
+      console.error('[setwarnlimit]', e?.message || e);
       await msg.reply(global.msgglobal);
     }
   }

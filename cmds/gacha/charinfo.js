@@ -1,7 +1,7 @@
 // .charinfo — ficha de un personaje (con foto y dueño).
 import { getBuffer } from '../../lib/serialize.js';
 import { displayName } from '../../lib/users.js';
-import { duenoDe, imagenDe, personajes } from '../../lib/gacha.js';
+import { duenoDe, imagenDe, personajes, buscarPersonaje } from '../../lib/gacha.js';
 
 export default {
   command: ['charinfo', 'personaje', 'char'],
@@ -12,8 +12,9 @@ export default {
     try {
       const q = args.join(' ').toLowerCase();
       if (!q) return msg.reply('❍ Escribe el nombre. Ej: *.charinfo* Asuna');
-      const p = personajes().find((c) => c.name.toLowerCase().includes(q));
-      if (!p) return msg.reply('❍ Ese personaje no existe en el catálogo.');
+      const idx = buscarPersonaje(personajes(), q);
+      if (idx < 0) return msg.reply('❍ Ese personaje no existe en el catálogo.');
+      const p = personajes()[idx];
       const dueno = duenoDe(p.name);
       const texto =
         `• :･ﾟ⊹˚• \`『 ${p.name} 』\` •˚⊹:･ﾟ•\n\n` +
@@ -30,7 +31,8 @@ export default {
       } catch {
         await sock.sendMessage(msg.chat, { text: texto }, { quoted: { key: msg.key, message: {} } });
       }
-    } catch {
+    } catch (e) {
+      console.error('[charinfo]', e?.message || e);
       await msg.reply(global.msgglobal);
     }
   }
